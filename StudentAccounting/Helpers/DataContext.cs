@@ -8,7 +8,7 @@ namespace StudentAccounting.Helpers
     {
         protected readonly IConfiguration Configuration;
         public DbSet<User> Users { get; set; }
-        public DbSet<Сourse> Сourse { get; set; }
+        public DbSet<Course> Course { get; set; }
 
         public DataContext(IConfiguration configuration)
         {

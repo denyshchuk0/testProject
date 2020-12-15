@@ -2,21 +2,18 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
-using StudentAccounting.Resources;
 using StudentAccounting.Services;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace StudentAccounting.Controllers
 {
@@ -50,7 +47,8 @@ namespace StudentAccounting.Controllers
         {
             authenticateValidator.Validate(model);
             var user = userService.Authenticate(model);
-            if (user == null) {
+            if (user == null)
+            {
                 return NotFound(new { message = "User not found!" });
             }
             if (!user.isVerificated)
@@ -84,7 +82,7 @@ namespace StudentAccounting.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet,Route("[controller]/facebookLogin")]
+        [HttpGet("facebook-login")]
         public IActionResult FacebookLogin(string returnUrl, string provider = "facebook")
         {
             string authenticationScheme = string.Empty;
@@ -92,15 +90,17 @@ namespace StudentAccounting.Controllers
 
             var auth = new AuthenticationProperties
             {
-                RedirectUri = Url.Action(nameof(FacebookLoginCallback), new { provider, returnUrl })
+                RedirectUri = Url.Action(nameof(callback), new { provider, returnUrl })
             };
 
             return new ChallengeResult(authenticationScheme, auth);
         }
 
-        [HttpGet("callback")]
-        public IActionResult FacebookLoginCallback(string returnUrl = null, string remoteError = null)
+        [AllowAnonymous]
+        [Route("/[action]")]
+        public IActionResult callback(string returnUrl = null, string remoteError = null)
         {
+            var request = HttpContext.Request;
             return null;
 
         }
@@ -132,11 +132,28 @@ namespace StudentAccounting.Controllers
             return Ok();
         }
 
-        [HttpGet]
-        public IActionResult GetAll()
+        [AllowAnonymous]
+        [HttpGet("subscription")]
+        public IActionResult Subscription(int userId, int coursId)
         {
-            var users = userService.GetAll();
+            userService.CreateUsersCourse(userId, coursId);
+
+            return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult GetAllUserus()
+        {
+            var users = userService.GetAllUsers();
             var model = mapper.Map<IList<UserModel>>(users);
+            return Ok(model);
+        }
+        [AllowAnonymous]
+        [HttpPost("all-courses")]
+        public IActionResult GetAllCourses()
+        {
+            var сourses = userService.GetAllCourses();
+            var model = mapper.Map<IList<CourseModel>>(сourses);
             return Ok(model);
         }
 

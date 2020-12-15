@@ -16,10 +16,10 @@ namespace StudentAccounting.Entities
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
 
-        public ICollection<Сourse> Сourses { get; set; }
+        public ICollection<Course> Courses { get; set; }
         public User()
         {
-            Сourses = new List<Сourse>();
+            Courses = new List<Course>();
         }
 
     }

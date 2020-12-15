@@ -38,14 +38,15 @@ class LoginPage extends React.Component {
     fetch("https://localhost:44335/users/authenticate", request).then(
       (response) =>
         response.json().then((json) => {
-          console.log(json);
+          console.log(json.firstName);
           if (!response.ok) {
             console.log(json);
             window.alert(json.message);
           } else {
+            console.log(json);
+            localStorage.setItem("user", JSON.stringify(json));
             this.props.history.push("/main");
           }
-          localStorage.setItem("token", json.token);
         })
     );
   }
@@ -55,7 +56,7 @@ class LoginPage extends React.Component {
   }
 
   handleFacebookLogin(event) {
-    window.open("https://localhost:44335/users/facebookLogin");
+    window.open("https://localhost:44335/users/facebook-login");
   }
 
   render() {

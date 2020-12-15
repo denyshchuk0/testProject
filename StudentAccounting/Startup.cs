@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -84,12 +83,10 @@ namespace StudentAccounting
                   };
               })
               .AddFacebook(facebookOptions =>
-              {
+              {  
+                  facebookOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                   facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
                   facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-                  facebookOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                  //  facebookOptions.CallbackPath = "/";
-
               }).AddCookie();
 
             services.AddScoped<IFacebookService, FacebookService>();
@@ -101,7 +98,7 @@ namespace StudentAccounting
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext dataContext)
         {
-            dataContext.Database.EnsureCreated();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -123,6 +120,9 @@ namespace StudentAccounting
               .AllowAnyHeader());
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseCookiePolicy();
+
+
 
             app.UseEndpoints(endpoints =>
             {

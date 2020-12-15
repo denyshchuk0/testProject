@@ -1,7 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using StudentAccounting.Entities;
+﻿using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
 using StudentAccounting.Resources;
@@ -9,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StudentAccounting.Services
@@ -16,7 +14,9 @@ namespace StudentAccounting.Services
     public interface IUserService
     {
         User Authenticate(AuthenticateModel model);
-        IEnumerable<User> GetAll();
+        IEnumerable<User> GetAllUsers();
+        IEnumerable<Course> GetAllCourses();
+        void CreateUsersCourse(int userId, int coursId);
         User GetById(int id);
         void VerifyEmail(string token);
         User Create(User user, string password);
@@ -48,7 +48,7 @@ namespace StudentAccounting.Services
             {
                 return null;
             }
-
+            
             if (!VerifyPasswordHash(model.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return null;
@@ -64,7 +64,7 @@ namespace StudentAccounting.Services
             }
 
             var facebookUser = await facebookService.GetUserFromFacebookAsync(facebookLoginResource.facebookToken);
-            var domainUser =  context.Users.SingleOrDefault(x=>x.Email==facebookUser.Email);
+            var domainUser = context.Users.SingleOrDefault(x => x.Email == facebookUser.Email);
 
             return CreateAccessTokens(domainUser);
         }
@@ -77,9 +77,14 @@ namespace StudentAccounting.Services
             return new AuthorizationTokensResource { AccessToken = accessToken, RefreshToken = refreshToken };
         }
 
-        public IEnumerable<User> GetAll()
+        public IEnumerable<User> GetAllUsers()
         {
             return context.Users;
+        }
+
+        public IEnumerable<Course> GetAllCourses()
+        {
+            return context.Course;
         }
 
         public User GetById(int id)
@@ -102,13 +107,22 @@ namespace StudentAccounting.Services
                 user.PasswordSalt = passwordSalt;
                 user.RegisteredDate = DateTime.Now;
                 user.VerificationToken = RandomTokenString();
-
                 context.Users.Add(user);
                 context.SaveChanges();
 
-                emailService.SendEmailAsync(user.Email,"Confirm regist", $"https://localhost:44335/users/verify-email?token={user.VerificationToken}");
+                emailService.SendEmailAsync(user.Email, "Confirm regist", $"https://localhost:44335/users/verify-email?token={user.VerificationToken}");
             }
             return user;
+        }
+
+        public void CreateUsersCourse(int userId, int coursId )
+        {
+            var user= context.Users.SingleOrDefault(x => x.Id == userId);
+            var cours = context.Course.SingleOrDefault(x => x.Id == coursId);
+            user.Courses.Add(cours);
+            context.Users.Update(user);
+            context.SaveChanges();
+
         }
 
         public void VerifyEmail(string token)

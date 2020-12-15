@@ -47,6 +47,9 @@ class RegisrtyPage extends React.Component {
           .then((json) => {
             console.log(json);
             if (!response.ok) {
+              window.alert(json.message);
+            } else {
+              this.props.history.push("/confirm-email");
             }
             return json;
           })
@@ -55,10 +58,6 @@ class RegisrtyPage extends React.Component {
           });
       }
     );
-  }
-
-  handleRegisrtyClick(event) {
-    this.props.history.push("/confirm-email");
   }
 
   render() {
