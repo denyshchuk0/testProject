@@ -8,16 +8,11 @@ using MailKit.Net.Smtp;
 using System.Threading.Tasks;
 using MailKit.Security;
 using System.Diagnostics.Tracing;
+using StudentAccounting.Services.Interfase;
 
 namespace StudentAccounting.Services
-{
-    public interface IRegisterAccountService
-    {
-        // Task Register(string email, string baseUrl);
-        // void SendEmailToUser(string email,string body);
-        Task SendEmailAsync(string email, string subject, string message);
-    }
-    public class EmailService : IRegisterAccountService
+{ 
+    public class EmailService : IEmailService
     {
         private readonly AppSettings appSettings;
         public EmailService(IOptions<AppSettings> appSettings)

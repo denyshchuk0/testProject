@@ -35,19 +35,18 @@ class LoginPage extends React.Component {
       body: JSON.stringify(data),
     };
 
-    fetch("https://localhost:44335/users/authenticate", request).then(
-      (response) =>
-        response.json().then((json) => {
-          console.log(json.firstName);
-          if (!response.ok) {
-            console.log(json);
-            window.alert(json.message);
-          } else {
-            console.log(json);
-            localStorage.setItem("user", JSON.stringify(json));
-            this.props.history.push("/main");
-          }
-        })
+    fetch("https://localhost:44335/authenticate", request).then((response) =>
+      response.json().then((json) => {
+        console.log(json.firstName);
+        if (!response.ok) {
+          console.log(json);
+          window.alert(json.message);
+        } else {
+          console.log(json);
+          localStorage.setItem("user", JSON.stringify(json));
+          this.props.history.push("/main");
+        }
+      })
     );
   }
 

@@ -8,10 +8,7 @@ class CourseCard extends React.Component {
     console.log(props);
     const user = JSON.parse(localStorage.getItem("user"));
     this.state = {
-      studentId: user.id,
-      courseId: this.props.courseObj.id,
-      courseName: this.props.courseObj.name,
-      courseDescription: this.props.courseObj.description,
+      userId: user.id,
     };
   }
 
@@ -24,9 +21,9 @@ class CourseCard extends React.Component {
 
     fetch(
       "https://localhost:44335/users/subscription?userId=" +
-        this.state.studentId +
+        this.state.userId +
         "&coursId=" +
-        this.state.courseId,
+        this.props.courseObj.id,
       request
     ).then((response) =>
       response.json().then((json) => {
@@ -43,13 +40,13 @@ class CourseCard extends React.Component {
   render() {
     return (
       <Card>
-        <Card.Header as="h5">Cours #{this.state.courseId}</Card.Header>
+        <Card.Header as="h5">Cours #{this.props.courseObj.id}</Card.Header>
         <Card.Body>
-          <Card.Title>{this.state.courseName}</Card.Title>
-          <Card.Text>{this.state.courseDescription}</Card.Text>
+          <Card.Title>{this.props.courseObj.name}</Card.Title>
+          <Card.Text>{this.props.courseObj.description}</Card.Text>
           <Button
             variant="primary"
-            courseId={this.state.courseId}
+            courseId={this.props.courseObj.id}
             onClick={this.handleSubmit.bind(this)}
           >
             Submit

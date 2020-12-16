@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
 using StudentAccounting.Services;
+using StudentAccounting.Services.Interfase;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,7 +65,7 @@ namespace StudentAccounting
                       {
                           var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
                           var userId = int.Parse(context.Principal.Identity.Name);
-                          var user = userService.GetById(userId);
+                          var user = userService.GetUserById(userId);
                           if (user == null)
                           {
                               context.Fail("Unauthorized");
@@ -92,7 +93,10 @@ namespace StudentAccounting
             services.AddScoped<IFacebookService, FacebookService>();
             services.AddScoped<IJwtHandler, JwtHandler>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IRegisterAccountService, EmailService>();
+            services.AddScoped<IAuthenticateService, AuthenticateService>();
+            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IEmailService, EmailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
