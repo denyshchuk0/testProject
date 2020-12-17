@@ -18,7 +18,7 @@ using System.Text;
 namespace StudentAccounting.Controllers
 {
     [Microsoft.AspNetCore.Authorization.Authorize]
-    //[Route("[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AuthenticateController : ControllerBase
     {
@@ -55,14 +55,16 @@ namespace StudentAccounting.Controllers
             {
                 return BadRequest(new { message = "Email is not confirmed" });
             }
-
+           
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role?.Name)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
@@ -77,16 +79,17 @@ namespace StudentAccounting.Controllers
                 user.Email,
                 user.FirstName,
                 user.LastName,
+                user.Role.Name,
                 Token = tokenString
             });
         }
-
         [AllowAnonymous]
         [HttpPost("register")]
         public IActionResult Register([FromBody]RegisterModel model)
         {
             registerValidations.Validate(model);
             var user = mapper.Map<User>(model);
+            
             authenticateService.Register(user, model.Password);
             return Ok();
         }

@@ -6,7 +6,6 @@ import { withRouter } from "react-router";
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {
       email: "",
       password: "",
@@ -35,18 +34,21 @@ class LoginPage extends React.Component {
       body: JSON.stringify(data),
     };
 
-    fetch("https://localhost:44335/authenticate", request).then((response) =>
-      response.json().then((json) => {
-        console.log(json.firstName);
-        if (!response.ok) {
-          console.log(json);
-          window.alert(json.message);
-        } else {
-          console.log(json);
-          localStorage.setItem("user", JSON.stringify(json));
-          this.props.history.push("/main");
-        }
-      })
+    fetch("https://localhost:44335/authenticate/authenticate", request).then(
+      (response) =>
+        response.json().then((json) => {
+          if (!response.ok) {
+            window.alert(json.message);
+          } else {
+            localStorage.setItem("user", JSON.stringify(json));
+            var user = JSON.parse(localStorage.getItem("user"));
+            if (user.name === "admin") {
+              this.props.history.push("/admin");
+            } else {
+              this.props.history.push("/main");
+            }
+          }
+        })
     );
   }
 

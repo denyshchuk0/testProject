@@ -9,7 +9,7 @@ namespace StudentAccounting.Services.Interfase
     {
         User Login(AuthenticateModel model);
         void VerifyEmail(string token);
-        User Register(User user, string password);
+        Task<User> Register(User user, string password);
         Task<AuthorizationTokensResource> FacebookLoginAsync(FacebookLoginResource facebookLoginResource);
 
     }

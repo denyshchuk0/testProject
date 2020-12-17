@@ -18,7 +18,6 @@ using System.Text;
 
 namespace StudentAccounting.Controllers
 {
-    [Microsoft.AspNetCore.Authorization.Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UsersController : ControllerBase
@@ -71,23 +70,26 @@ namespace StudentAccounting.Controllers
         //    var authorizationTokens = await userService.FacebookLoginAsync(resource);
         //    return Ok(authorizationTokens);
         //}
-        [AllowAnonymous]
+
+        [Authorize]
         [HttpGet("subscription")]
-        public IActionResult Subscription(int userId, int coursId)
+        public IActionResult Subscription(int coursId)
         {
-            courseService.RegisterToCourse(userId, coursId);
+            courseService.RegisterToCourse(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), coursId);
             return Ok();
         }
 
-        [HttpGet]
+        [Authorize(Roles = "admin")]
+        [HttpGet("all-users")]
         public IActionResult GetAllUserus()
         {
             var users = userService.GetAllUsers();
             var model = mapper.Map<IList<UserModel>>(users);
             return Ok(model);
         }
+
         [AllowAnonymous]
-        [HttpPost("all-courses")]
+        [HttpGet("all-courses")]
         public IActionResult GetAllCourses()
         {
             var сourses = courseService.GetAllCourses();
@@ -102,6 +104,7 @@ namespace StudentAccounting.Controllers
             var model = mapper.Map<UserModel>(user);
             return Ok(model);
         }
+
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody]UpdateModel model)
         {

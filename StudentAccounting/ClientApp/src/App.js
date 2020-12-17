@@ -6,6 +6,7 @@ import "./custom.css";
 import LoginPage from "./components/LoginPage";
 import RegisterPage from "./components/RegisterPage";
 import ConfirmEmailPage from "./components/ConfirmEmailPage";
+import AdminPage from "./components/AdminPage";
 
 export default class App extends Component {
   static displayName = App.name;
@@ -18,6 +19,7 @@ export default class App extends Component {
           <Route path="/register" component={RegisterPage} />
           <Route path="/confirm-email" component={ConfirmEmailPage} />
           <Route path="/main" component={Home} />
+          <Route path="/admin" component={AdminPage} />
         </Switch>
       </Router>
     );

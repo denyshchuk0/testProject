@@ -5,21 +5,18 @@ import CourseCard from "./../CourseCard";
 export default class MainCards extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {
       courses: [],
     };
   }
 
   componentDidMount() {
-    const data = {
-      courses: this.state.courses,
-    };
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log(user.token);
 
     const request = {
-      method: "POST",
-      headers: new Headers({ "Content-Type": "application/json" }),
-      body: JSON.stringify(data),
+      method: "GET",
+      headers: new Headers({ Authorization: `Bearer ${user.token}` }),
     };
 
     fetch("https://localhost:44335/users/all-courses", request).then(

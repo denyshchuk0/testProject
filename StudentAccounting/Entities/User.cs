@@ -16,6 +16,9 @@ namespace StudentAccounting.Entities
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
 
+        public int? RoleId { get; set; }
+        public Role Role { get; set; }
+
         public ICollection<Course> Courses { get; set; }
         public User()
         {

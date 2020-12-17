@@ -40,12 +40,11 @@ class RegisrtyPage extends React.Component {
       body: JSON.stringify(data),
     };
 
-    fetch("https://localhost:44335/users/register", request).then(
+    fetch("https://localhost:44335/authenticate/register", request).then(
       (response) => {
         response
           .json()
           .then((json) => {
-            console.log(json);
             if (!response.ok) {
               window.alert(json.message);
             } else {

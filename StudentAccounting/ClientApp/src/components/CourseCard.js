@@ -5,8 +5,8 @@ import { withRouter } from "react-router";
 class CourseCard extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props);
     const user = JSON.parse(localStorage.getItem("user"));
+    console.log(user);
     this.state = {
       userId: user.id,
     };
@@ -14,15 +14,14 @@ class CourseCard extends React.Component {
 
   handleSubmit(event) {
     console.log(this.props);
+    const userTmp = JSON.parse(localStorage.getItem("user"));
     const request = {
       method: "GET",
-      headers: new Headers({ "Content-Type": "application/json" }),
+      headers: new Headers({ Authorization: `Bearer ${userTmp.token}` }),
     };
 
     fetch(
-      "https://localhost:44335/users/subscription?userId=" +
-        this.state.userId +
-        "&coursId=" +
+      "https://localhost:44335/users/subscription?coursId=" +
         this.props.courseObj.id,
       request
     ).then((response) =>

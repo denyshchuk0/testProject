@@ -24,7 +24,6 @@ namespace StudentAccounting.Services
             user.Courses.Add(cours);
             context.Users.Update(user);
             context.SaveChanges();
-
         }
         public IEnumerable<Course> GetAllCourses()
         {

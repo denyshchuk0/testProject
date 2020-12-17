@@ -1,10 +1,16 @@
-﻿using StudentAccounting.Entities;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
 using StudentAccounting.Resources;
 using StudentAccounting.Services.Interfase;
 using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -31,6 +37,7 @@ namespace StudentAccounting.Services
         public User Login(AuthenticateModel model)
         {
             var user = context.Users.SingleOrDefault(x => x.Email == model.Email || x.Email == model.Email.ToUpper());
+            user.Role = context.Roles.SingleOrDefault(x => x.Id == user.RoleId);
             if (user == null)
             {
                 return null;
@@ -55,32 +62,35 @@ namespace StudentAccounting.Services
 
             return CreateAccessTokens(domainUser);
         }
-        public User Register(User user, string password)
+        public async Task<User> Register(User user, string password)
         {
             if (context.Users.Any(x => x.Email == user.Email))
             {
                 throw new AppException("Username \"" + user.Email + "\" is already taken");
             }
-            else
+
+            byte[] passwordHash, passwordSalt;
+            CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+            user.RegisteredDate = DateTime.Now;
+            user.VerificationToken = RandomTokenString();
+            Role userRole =  context.Roles.FirstOrDefault(r => r.Name == "user");
+            if (userRole != null)
             {
-                byte[] passwordHash, passwordSalt;
-                CreatePasswordHash(password, out passwordHash, out passwordSalt);
-
-                user.PasswordHash = passwordHash;
-                user.PasswordSalt = passwordSalt;
-                user.RegisteredDate = DateTime.Now;
-                user.VerificationToken = RandomTokenString();
-                context.Users.Add(user);
-                context.SaveChanges();
-
-                emailService.SendEmailAsync(
-                    user.Email,
-                   "Confirm regist",
-                   $"https://localhost:44335/users/verify-email?token={user.VerificationToken}");
+                user.Role = userRole;
             }
+            context.Users.Add(user);
+            context.SaveChanges();
+
+            await emailService.SendEmailAsync(
+                user.Email,
+                "Confirm regist",
+                $"https://localhost:44335/users/verify-email?token={user.VerificationToken}");
+
             return user;
         }
-
         public void VerifyEmail(string token)
         {
             var account = context.Users.SingleOrDefault(x => x.VerificationToken == token);
