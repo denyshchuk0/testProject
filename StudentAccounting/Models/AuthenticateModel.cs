@@ -1,5 +1,4 @@
-﻿using StudentAccounting.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace StudentAccounting.Models
 {
@@ -10,7 +9,6 @@ namespace StudentAccounting.Models
 
         [Required]
         public string Password { get; set; }
-       
 
     }
 }

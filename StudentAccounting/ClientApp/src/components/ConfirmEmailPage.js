@@ -1,11 +1,11 @@
 import React from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import "./ConfirmEmailPage.css";
+import "././style/ConfirmEmailPage.css";
 import { withRouter } from "react-router";
 
 class ConfirmEmailPage extends React.Component {
-  handleSubmit(event) {
-    this.props.history.push("/authenticate");
+  handleSubmit() {
+    this.props.history.push("/");
   }
 
   render() {

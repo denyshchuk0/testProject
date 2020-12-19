@@ -15,7 +15,7 @@ namespace StudentAccounting.Services
             this.context = context;
         }
 
-        public IEnumerable<User> GetAllUsers()
+        public IQueryable<User> GetAllUsers()
         {
             return context.Users;
         }
@@ -41,14 +41,14 @@ namespace StudentAccounting.Services
 
             if (user == null)
             {
-                throw new AppException("User not found");
+                //throw new AppException("User not found");
             }
 
-            if (!string.IsNullOrWhiteSpace(userParam.Email) && userParam.Email != user.Email)
+            if (!string.IsNullOrWhiteSpace(userParam.Email) && userParam.Email.ToUpper() != user.Email.ToUpper())
             {
-                if (context.Users.Any(x => x.Email == userParam.Email))
+                if (context.Users.Any(x => x.Email.ToUpper() == userParam.Email.ToUpper()))
                 {
-                    throw new AppException("Username " + userParam.Email + " is already taken");
+                   // throw new AppException("Username " + userParam.Email + " is already taken");
                 }
 
                 user.Email = userParam.Email;

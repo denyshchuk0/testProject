@@ -16,7 +16,7 @@ namespace StudentAccounting.Services
         public TokenResource CreateRefreshToken(int userId);
     }
 
-    public class JwtHandler:IJwtHandler
+    public class JwtHandler: IJwtHandler
     {
         public TokenResource CreateAccessToken(int userId, string email)
         {
@@ -29,8 +29,6 @@ namespace StudentAccounting.Services
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
-           // var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Tokens:Secret"])),
-                //SecurityAlgorithms.HmacSha256);
             var jwt = CreateSecurityToken(claims, now);
             var token = new JwtSecurityTokenHandler().WriteToken(jwt);
 
@@ -46,9 +44,6 @@ namespace StudentAccounting.Services
                 new Claim(JwtRegisteredClaimNames.UniqueName, userId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
-
-           // var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Tokens:Key"])),
-               // SecurityAlgorithms.HmacSha256);
             var jwt = CreateSecurityToken(claims, now);
             var token = new JwtSecurityTokenHandler().WriteToken(jwt);
 

@@ -25,7 +25,7 @@ class RegisrtyPage extends React.Component {
     });
   };
 
-  handleSubmit(event) {
+  handleSubmit() {
     const data = {
       firstName: this.state.firstName,
       lastName: this.state.lastName,
@@ -42,19 +42,12 @@ class RegisrtyPage extends React.Component {
 
     fetch("https://localhost:44335/authenticate/register", request).then(
       (response) => {
-        response
-          .json()
-          .then((json) => {
-            if (!response.ok) {
-              window.alert(json.message);
-            } else {
-              this.props.history.push("/confirm-email");
-            }
-            return json;
-          })
-          .then((result) => {
-            localStorage.setItem("token", result.token);
-          });
+        if (!response.ok) {
+          window.alert(response.message);
+        } else {
+          this.props.history.push("/confirm-email");
+        }
+        return response;
       }
     );
   }

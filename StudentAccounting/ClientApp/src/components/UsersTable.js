@@ -3,7 +3,6 @@ import { withRouter } from "react-router";
 
 class UsersTable extends React.Component {
   render() {
-    console.log(this.props.usersObj);
     return (
       <tr>
         <td>{this.props.usersObj.id}</td>

@@ -1,16 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
-using StudentAccounting.Entities;
+﻿using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
 using StudentAccounting.Resources;
 using StudentAccounting.Services.Interfase;
 using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -22,6 +16,7 @@ namespace StudentAccounting.Services
         private readonly DataContext context;
         private readonly IFacebookService facebookService;
         private readonly IJwtHandler jwtHandler;
+
 
         public AuthenticateService(DataContext context,
                                    IEmailService emailService,
@@ -36,8 +31,8 @@ namespace StudentAccounting.Services
 
         public User Login(AuthenticateModel model)
         {
-            var user = context.Users.SingleOrDefault(x => x.Email == model.Email || x.Email == model.Email.ToUpper());
-            user.Role = context.Roles.SingleOrDefault(x => x.Id == user.RoleId);
+            var user = context.Users.FirstOrDefault(x => x.Email.ToUpper() == model.Email.ToUpper());
+            user.Role = context.Roles.FirstOrDefault(x => x.Id == user.RoleId); //f
             if (user == null)
             {
                 return null;
@@ -64,9 +59,9 @@ namespace StudentAccounting.Services
         }
         public async Task<User> Register(User user, string password)
         {
-            if (context.Users.Any(x => x.Email == user.Email))
+            if (context.Users.Any(x => x.Email.ToUpper() == user.Email.ToUpper()))
             {
-                throw new AppException("Username \"" + user.Email + "\" is already taken");
+                throw new ArgumentNullException("Username \"" + user.Email + "\" is already taken");
             }
 
             byte[] passwordHash, passwordSalt;
@@ -74,16 +69,16 @@ namespace StudentAccounting.Services
 
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
-            user.RegisteredDate = DateTime.Now;
+            user.RegisteredDate = DateTime.UtcNow;
             user.VerificationToken = RandomTokenString();
-            Role userRole =  context.Roles.FirstOrDefault(r => r.Name == "user");
+            Role userRole = context.Roles.FirstOrDefault(r => r.Name == "student");
             if (userRole != null)
             {
                 user.Role = userRole;
             }
+
             context.Users.Add(user);
             context.SaveChanges();
-
             await emailService.SendEmailAsync(
                 user.Email,
                 "Confirm regist",
@@ -97,7 +92,7 @@ namespace StudentAccounting.Services
 
             if (account == null)
             {
-                throw new AppException("Verification failed");
+                throw new ArgumentNullException("Verification failed");
             }
 
             account.VerificationToken = null;
@@ -125,13 +120,9 @@ namespace StudentAccounting.Services
 
         public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            if (password == null)
+            if (password == null || string.IsNullOrWhiteSpace(password))
             {
-                throw new ArgumentNullException("password");
-            }
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                throw new AppException("Value cannot be empty or whitespace only string.", "password");
+                throw new ArgumentNullException("Password cannot be empty or whitespace only string.");
             }
 
             using var hmac = new HMACSHA512();
@@ -143,17 +134,8 @@ namespace StudentAccounting.Services
         {
             if (string.IsNullOrWhiteSpace(password))
             {
-                throw new AppException("Value cannot be empty or whitespace only string.", "password");
+                throw new ArgumentNullException("Password cannot be empty or whitespace only string.");
             }
-            if (storedHash.Length != 64)
-            {
-                throw new AppException("Invalid length of password hash (64 bytes expected).", "passwordHash");
-            }
-            if (storedSalt.Length != 128)
-            {
-                throw new AppException("Invalid length of password salt (128 bytes expected).", "passwordHash");
-            }
-
             using (var hmac = new HMACSHA512(storedSalt))
             {
                 var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));

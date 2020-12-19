@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Route } from "react-router";
 import { BrowserRouter as Router, Switch } from "react-router-dom";
-import { Home } from "./components/Home";
+import { MainPage } from "./components/MainPage";
 import "./custom.css";
 import LoginPage from "./components/LoginPage";
 import RegisterPage from "./components/RegisterPage";
@@ -18,7 +18,7 @@ export default class App extends Component {
           <Route exact path="/" component={LoginPage} />
           <Route path="/register" component={RegisterPage} />
           <Route path="/confirm-email" component={ConfirmEmailPage} />
-          <Route path="/main" component={Home} />
+          <Route path="/main" component={MainPage} />
           <Route path="/admin" component={AdminPage} />
         </Switch>
       </Router>

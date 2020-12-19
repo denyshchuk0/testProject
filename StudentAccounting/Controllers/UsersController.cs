@@ -1,20 +1,13 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
-using StudentAccounting.Services;
 using StudentAccounting.Services.Interfase;
-using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace StudentAccounting.Controllers
 {
@@ -36,7 +29,7 @@ namespace StudentAccounting.Controllers
             this.userService = userService;
             this.courseService = courseService;
             this.mapper = mapper;
-           
+
         }
 
         //[AllowAnonymous]
@@ -88,6 +81,7 @@ namespace StudentAccounting.Controllers
             return Ok(model);
         }
 
+      //  [Authorize(Roles = "admin")]
         [AllowAnonymous]
         [HttpGet("all-courses")]
         public IActionResult GetAllCourses()

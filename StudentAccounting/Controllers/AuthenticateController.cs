@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -8,16 +6,14 @@ using Microsoft.IdentityModel.Tokens;
 using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
-using StudentAccounting.Services;
 using StudentAccounting.Services.Interfase;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 namespace StudentAccounting.Controllers
 {
-    [Microsoft.AspNetCore.Authorization.Authorize]
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class AuthenticateController : ControllerBase
@@ -55,7 +51,7 @@ namespace StudentAccounting.Controllers
             {
                 return BadRequest(new { message = "Email is not confirmed" });
             }
-           
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -89,7 +85,7 @@ namespace StudentAccounting.Controllers
         {
             registerValidations.Validate(model);
             var user = mapper.Map<User>(model);
-            
+
             authenticateService.Register(user, model.Password);
             return Ok();
         }

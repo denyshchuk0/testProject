@@ -4,7 +4,6 @@ import { Navbar, Nav, Container } from "react-bootstrap";
 export default class NavBarMain extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props);
     const user = JSON.parse(localStorage.getItem("user"));
 
     this.state = {
@@ -14,7 +13,6 @@ export default class NavBarMain extends React.Component {
       email: user.email,
       password: "",
     };
-    console.log(user.email);
   }
 
   render() {
@@ -25,9 +23,11 @@ export default class NavBarMain extends React.Component {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#link">{this.state.email}</Nav.Link>
+              <Nav.Link href="#home">My page</Nav.Link>
             </Nav>
+            <Navbar.Text>
+              Signed in as: <a href="/">{this.state.email}</a>
+            </Navbar.Text>
           </Navbar.Collapse>
         </Navbar>
       </Container>

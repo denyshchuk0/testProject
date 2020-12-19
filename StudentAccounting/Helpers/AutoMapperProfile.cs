@@ -11,8 +11,7 @@ namespace StudentAccounting.Helpers
             CreateMap<User, UserModel>();
             CreateMap<RegisterModel, User>();
             CreateMap<UpdateModel, User>();
-            CreateMap<Course, CourseModel>();
-            
+            CreateMap<Course, CourseModel>();   
         }
     }
 }

@@ -12,8 +12,6 @@ export default class MainCards extends React.Component {
 
   componentDidMount() {
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user.token);
-
     const request = {
       method: "GET",
       headers: new Headers({ Authorization: `Bearer ${user.token}` }),

@@ -1,6 +1,7 @@
 import React from "react";
 import { Table, Container } from "react-bootstrap";
 import UsersTable from "./UsersTable";
+import NavBarMain from "./Main/NavBarMain";
 
 export default class AdminPage extends React.Component {
   constructor(props) {
@@ -35,6 +36,7 @@ export default class AdminPage extends React.Component {
     const users = this.state.users;
     return (
       <Container>
+        <NavBarMain />
         <Table striped bordered hover>
           <thead>
             <tr>

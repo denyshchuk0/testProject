@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Button, Col, Container, Row } from "react-bootstrap";
-import "./LoginPage.css";
+import "././style/LoginPage.css";
 import { withRouter } from "react-router";
 
 class LoginPage extends React.Component {
@@ -69,6 +69,7 @@ class LoginPage extends React.Component {
               <Col>
                 <Form.Group controlId="formBasicEmail">
                   <h1>welcome</h1>
+                  <br />
                   <Form.Label>Email address</Form.Label>
                   <Form.Control
                     type="email"
@@ -106,12 +107,12 @@ class LoginPage extends React.Component {
                 >
                   Register
                 </Button>
-                <Button
+                {/* <Button
                   variant="primary"
                   onClick={this.handleFacebookLogin.bind(this)}
                 >
                   Facebook
-                </Button>
+                </Button> */}
               </Col>
             </Row>
           </Form.Row>

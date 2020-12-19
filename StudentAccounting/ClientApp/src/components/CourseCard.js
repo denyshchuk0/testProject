@@ -28,9 +28,9 @@ class CourseCard extends React.Component {
       response.json().then((json) => {
         console.log(json);
         if (!response.ok) {
-          // window.alert(json.message);
+          window.alert(json.message);
         } else {
-          //window.alert(json.message);
+          window.alert(json.message);
         }
       })
     );
@@ -38,7 +38,7 @@ class CourseCard extends React.Component {
 
   render() {
     return (
-      <Card>
+      <Card style={{ margin: 10 }}>
         <Card.Header as="h5">Cours #{this.props.courseObj.id}</Card.Header>
         <Card.Body>
           <Card.Title>{this.props.courseObj.name}</Card.Title>
@@ -48,7 +48,7 @@ class CourseCard extends React.Component {
             courseId={this.props.courseObj.id}
             onClick={this.handleSubmit.bind(this)}
           >
-            Submit
+            See more.
           </Button>
         </Card.Body>
       </Card>
