@@ -1,5 +1,4 @@
 import React from "react";
-import { Container } from "react-bootstrap";
 import CourseCard from "./../CourseCard";
 
 export default class MainCards extends React.Component {
@@ -34,11 +33,11 @@ export default class MainCards extends React.Component {
   render() {
     const courses = this.state.courses;
     return (
-      <Container>
+      <div>
         {courses.map((course) => (
           <CourseCard key={course.id} courseObj={course} />
         ))}
-      </Container>
+      </div>
     );
   }
 }

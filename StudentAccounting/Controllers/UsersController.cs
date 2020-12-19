@@ -81,8 +81,6 @@ namespace StudentAccounting.Controllers
             return Ok(model);
         }
 
-      //  [Authorize(Roles = "admin")]
-        [AllowAnonymous]
         [HttpGet("all-courses")]
         public IActionResult GetAllCourses()
         {
@@ -91,7 +89,8 @@ namespace StudentAccounting.Controllers
             return Ok(model);
         }
 
-        [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
+        [HttpGet("user/{id}")]
         public IActionResult GetById(int id)
         {
             var user = userService.GetUserById(id);
@@ -99,7 +98,8 @@ namespace StudentAccounting.Controllers
             return Ok(model);
         }
 
-        [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
+        [HttpPut("update-user/{id}")]
         public IActionResult Update(int id, [FromBody]UpdateModel model)
         {
             var user = mapper.Map<User>(model);
@@ -109,8 +109,9 @@ namespace StudentAccounting.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [Authorize(Roles = "admin")]
+        [HttpDelete("delete-user/{id}")]
+        public IActionResult DeleteUser(int id)
         {
             userService.DeleteUser(id);
             return Ok();

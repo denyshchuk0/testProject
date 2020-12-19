@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Container } from "react-bootstrap";
 import MainCards from "./Main/MainCards";
 import NavBarMain from "./Main/NavBarMain";
 
@@ -7,10 +8,10 @@ export class MainPage extends Component {
 
   render() {
     return (
-      <div>
+      <Container>
         <NavBarMain />
         <MainCards />
-      </div>
+      </Container>
     );
   }
 }

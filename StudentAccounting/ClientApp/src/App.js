@@ -7,6 +7,7 @@ import LoginPage from "./components/LoginPage";
 import RegisterPage from "./components/RegisterPage";
 import ConfirmEmailPage from "./components/ConfirmEmailPage";
 import AdminPage from "./components/AdminPage";
+import StudentProfilePage from "./components/StudentProfilePage";
 
 export default class App extends Component {
   static displayName = App.name;
@@ -20,6 +21,7 @@ export default class App extends Component {
           <Route path="/confirm-email" component={ConfirmEmailPage} />
           <Route path="/main" component={MainPage} />
           <Route path="/admin" component={AdminPage} />
+          <Route path="/student-profile" component={StudentProfilePage} />
         </Switch>
       </Router>
     );

@@ -6,14 +6,12 @@ class CourseCard extends React.Component {
   constructor(props) {
     super(props);
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user);
     this.state = {
       userId: user.id,
     };
   }
 
   handleSubmit(event) {
-    console.log(this.props);
     const userTmp = JSON.parse(localStorage.getItem("user"));
     const request = {
       method: "GET",
@@ -26,7 +24,6 @@ class CourseCard extends React.Component {
       request
     ).then((response) =>
       response.json().then((json) => {
-        console.log(json);
         if (!response.ok) {
           window.alert(json.message);
         } else {
@@ -48,7 +45,7 @@ class CourseCard extends React.Component {
             courseId={this.props.courseObj.id}
             onClick={this.handleSubmit.bind(this)}
           >
-            See more.
+            Sub.
           </Button>
         </Card.Body>
       </Card>

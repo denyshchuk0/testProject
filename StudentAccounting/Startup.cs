@@ -89,10 +89,8 @@ namespace StudentAccounting
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext c)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            c.Database.EnsureDeleted();
-            c.Database.EnsureCreated();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
