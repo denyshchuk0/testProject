@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StudentAccounting.Services.Interfase
 {
-    public interface IEmailService
+    public interface IEmailSender
     {
         Task SendEmailAsync(string email, string subject, string message);
     }

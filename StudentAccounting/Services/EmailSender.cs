@@ -12,10 +12,10 @@ using StudentAccounting.Services.Interfase;
 
 namespace StudentAccounting.Services
 { 
-    public class EmailService : IEmailService
+    public class EmailSender : IEmailSender
     {
         private readonly AppSettings appSettings;
-        public EmailService(IOptions<AppSettings> appSettings)
+        public EmailSender(IOptions<AppSettings> appSettings)
         {
             this.appSettings = appSettings.Value;
            

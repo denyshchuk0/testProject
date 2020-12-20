@@ -12,14 +12,14 @@ namespace StudentAccounting.Services
 {
     public class AuthenticateService : IAuthenticateService
     {
-        private readonly IEmailService emailService;
+        private readonly IEmailSender emailService;
         private readonly DataContext context;
         private readonly IFacebookService facebookService;
         private readonly IJwtHandler jwtHandler;
 
 
         public AuthenticateService(DataContext context,
-                                   IEmailService emailService,
+                                   IEmailSender emailService,
                                    IFacebookService facebookService,
                                    IJwtHandler jwtHandler)
         {
