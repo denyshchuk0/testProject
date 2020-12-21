@@ -22,20 +22,35 @@ namespace StudentAccounting.Services
             if (DateTime.Now < monthNotify)
             {
                 BackgroundJob.Schedule(() =>
-                emailSender.SendEmailAsync(email, "Montly Course start", $"Your course {courseName} will start at {startDate}"), monthNotify);
+                emailSender.SendEmailAsync(
+                    email,
+                    "Start of course in a month",
+                    $"Your {courseName} course will start at {startDate}"),
+                    monthNotify);
             }
             if (DateTime.Now < weekNotify)
             {
                 BackgroundJob.Schedule(() =>
-                emailSender.SendEmailAsync(email, "Weekly Course notification", $"Your course {courseName} will start at {startDate}"), weekNotify);
+                emailSender.SendEmailAsync(
+                    email,
+                    "Start of course in a week",
+                    $"Your {courseName} course will start at {startDate}"),
+                    weekNotify);
             }
             if (DateTime.Now < dayNotify)
             {
                 BackgroundJob.Schedule(() =>
-                emailSender.SendEmailAsync(email, "Daily Course notification", $"Your course {courseName} will start at {startDate}"), startDate);
+                emailSender.SendEmailAsync(
+                    email,
+                    "Start of course in a day",
+                    $"Your {courseName} course will start at {startDate}"),
+                    startDate);
             }
             BackgroundJob.Schedule(() =>
-                emailSender.SendEmailAsync(email, "Subscribed Course notification", $"Your course {courseName} will start at {startDate}"), DateTime.Now);
+                emailSender.SendEmailAsync(email,
+                "Subscribed Course notification",
+                $"Your {courseName} course will start at {startDate}"),
+                DateTime.UtcNow);
         }
     }
 }
