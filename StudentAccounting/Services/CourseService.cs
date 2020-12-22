@@ -20,12 +20,12 @@ namespace StudentAccounting.Services
         {
             var user = context.Users.FirstOrDefault(x => x.Id == userId);
             var course = context.Course.FirstOrDefault(x => x.Id == coursId);
+
             user.Courses.Add(course);
             context.Users.Update(user);
             context.SaveChanges();
 
             notificationEmailSender.SendNotificationEmails(user.Email, course.Name, course.StartDate);
-
         }
         public IQueryable<Course> GetAllCourses()
         {

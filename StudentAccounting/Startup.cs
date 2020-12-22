@@ -88,7 +88,6 @@ namespace StudentAccounting
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddTransient<INotificationEmailSender, NotificationEmailSender>();
 
-
             services.AddHangfire(config =>
                config.UseSqlServerStorage(Configuration.GetConnectionString("Connection")));
 
@@ -122,6 +121,7 @@ namespace StudentAccounting
               .AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader());
+
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseCookiePolicy();

@@ -61,7 +61,7 @@ namespace StudentAccounting.Services
         {
             if (context.Users.Any(x => x.Email.ToUpper() == user.Email.ToUpper()))
             {
-                throw new ArgumentNullException("Username \"" + user.Email + "\" is already taken");
+                throw new Exception("Username \"" + user.Email + "\" is already taken");
             }
 
             byte[] passwordHash, passwordSalt;
@@ -71,6 +71,7 @@ namespace StudentAccounting.Services
             user.PasswordSalt = passwordSalt;
             user.RegisteredDate = DateTime.UtcNow;
             user.VerificationToken = RandomTokenString();
+
             Role userRole = context.Roles.FirstOrDefault(r => r.Name == "student");
             if (userRole != null)
             {
@@ -82,7 +83,7 @@ namespace StudentAccounting.Services
             await emailService.SendEmailAsync(
                 user.Email,
                 "Confirm regist",
-                $"https://localhost:44335/users/verify-email?token={user.VerificationToken}");
+                $"https://localhost:44335/authenticate/verify-email?token={user.VerificationToken}");
 
             return user;
         }
@@ -92,7 +93,7 @@ namespace StudentAccounting.Services
 
             if (account == null)
             {
-                throw new ArgumentNullException("Verification failed");
+                throw new Exception("Verification failed");
             }
 
             account.VerificationToken = null;
@@ -122,7 +123,7 @@ namespace StudentAccounting.Services
         {
             if (password == null || string.IsNullOrWhiteSpace(password))
             {
-                throw new ArgumentNullException("Password cannot be empty or whitespace only string.");
+                throw new Exception("Password cannot be empty or whitespace only string.");
             }
 
             using var hmac = new HMACSHA512();
@@ -134,7 +135,7 @@ namespace StudentAccounting.Services
         {
             if (string.IsNullOrWhiteSpace(password))
             {
-                throw new ArgumentNullException("Password cannot be empty or whitespace only string.");
+                throw new Exception("Password cannot be empty or whitespace only string.");
             }
             using (var hmac = new HMACSHA512(storedSalt))
             {

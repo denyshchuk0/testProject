@@ -20,7 +20,7 @@ namespace StudentAccounting.Services
     {
         public TokenResource CreateAccessToken(int userId, string email)
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             var claims = new Claim[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),

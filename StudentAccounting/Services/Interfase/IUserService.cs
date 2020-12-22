@@ -7,7 +7,7 @@ namespace StudentAccounting.Services.Interfase
     {
         IQueryable<User> GetAllUsers();
         User GetUserById(int id);
-        void UpdateUser(User user, string password = null);
+        void UpdateUser(User user);
         void DeleteUser(int id);
     }
 }

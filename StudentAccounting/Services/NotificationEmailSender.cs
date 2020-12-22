@@ -15,9 +15,9 @@ namespace StudentAccounting.Services
 
         public void SendNotificationEmails(string email, string courseName, DateTime startDate)
         {
-            var monthNotify = startDate.AddMonths(1);
-            var weekNotify = startDate.AddDays(7);
-            var dayNotify = startDate.AddHours(-1);
+            var monthNotify = startDate.AddMonths(-1);
+            var weekNotify = startDate.AddDays(-7);
+            var dayNotify = startDate.AddHours(-8);
 
             if (DateTime.Now < monthNotify)
             {
@@ -46,11 +46,13 @@ namespace StudentAccounting.Services
                     $"Your {courseName} course will start at {startDate}"),
                     startDate);
             }
+
             BackgroundJob.Schedule(() =>
-                emailSender.SendEmailAsync(email,
-                "Subscribed Course notification",
-                $"Your {courseName} course will start at {startDate}"),
-                DateTime.UtcNow);
+                emailSender.SendEmailAsync(
+                    email,
+                    "Subscribed Course notification",
+                    $"Your {courseName} course will start at {startDate}"),
+                    DateTime.UtcNow);
         }
     }
 }

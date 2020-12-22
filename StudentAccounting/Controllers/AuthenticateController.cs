@@ -75,6 +75,9 @@ namespace StudentAccounting.Controllers
                 user.Email,
                 user.FirstName,
                 user.LastName,
+                user.Age,
+                user.RegisteredDate,
+                user.Courses,
                 user.Role.Name,
                 Token = tokenString
             });

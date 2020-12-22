@@ -1,7 +1,7 @@
 ﻿using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Services.Interfase;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 
 namespace StudentAccounting.Services
@@ -35,23 +35,20 @@ namespace StudentAccounting.Services
             }
         }
 
-        public void UpdateUser(User userParam, string password = null)
+        public void UpdateUser(User userParam)
         {
-            var user = context.Users.Find(userParam.Id);
+            var user = context.Users.FirstOrDefault(x=>x.Id==userParam.Id);
 
             if (user == null)
             {
-                //throw new AppException("User not found");
+                throw new Exception("User not found");
             }
 
-            if (!string.IsNullOrWhiteSpace(userParam.Email) && userParam.Email.ToUpper() != user.Email.ToUpper())
+            if (!string.IsNullOrWhiteSpace(userParam.Email))
             {
-                if (context.Users.Any(x => x.Email.ToUpper() == userParam.Email.ToUpper()))
-                {
-                   // throw new AppException("Username " + userParam.Email + " is already taken");
-                }
 
                 user.Email = userParam.Email;
+                user.Age = userParam.Age;
 
                 if (!string.IsNullOrWhiteSpace(userParam.FirstName))
                 {
@@ -62,15 +59,6 @@ namespace StudentAccounting.Services
                 {
                     user.LastName = userParam.LastName;
                 }
-
-                //if (!string.IsNullOrWhiteSpace(password))
-                //{
-                //    byte[] passwordHash, passwordSalt;
-                //    CreatePasswordHash(password, out passwordHash, out passwordSalt);
-
-                //    user.PasswordHash = passwordHash;
-                //    user.PasswordSalt = passwordSalt;
-                //}
                 context.Users.Update(user);
                 context.SaveChanges();
             }
