@@ -109,7 +109,7 @@ class RegisrtyPage extends React.Component {
             </Form.Group>
 
             <Button
-              style={{ backgroundColor: this.props.color }}
+              style={{ width: 110 }}
               variant="primary"
               onClick={this.handleSubmit.bind(this)}
             >

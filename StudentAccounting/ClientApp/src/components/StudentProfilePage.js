@@ -1,5 +1,13 @@
 import React from "react";
-import { Form, Dropdown, Col, Container, Row, Button } from "react-bootstrap";
+import {
+  Form,
+  Accordion,
+  Col,
+  Container,
+  Row,
+  Button,
+  Card,
+} from "react-bootstrap";
 import NavBarMain from "./Main/NavBarMain";
 import { Popconfirm } from "antd";
 
@@ -33,25 +41,25 @@ class StudentProfilePage extends React.Component {
     const userTmp = JSON.parse(localStorage.getItem("user"));
     const request = {
       method: "DELETE",
-      headers: new Headers({ Authorization: `Bearer ${userTmp.token}` }),
+      headers: new Headers({
+        Authorization: `Bearer ${userTmp.token}`,
+      }),
     };
 
     fetch(
       "https://localhost:44335/users/delete-user/" +
         this.props.location.state.user.id,
       request
-    ).then((response) =>
-      response.json().then((json) => {
-        if (!response.ok) {
-          window.alert(json.message);
-        } else {
-          this.props.history.push("/admin");
-        }
-      })
-    );
+    ).then((response) => {
+      if (!response.ok) {
+        window.alert(response.message);
+      } else {
+        this.props.history.push("/admin");
+      }
+    });
   }
 
-  handleUpdateUser(event) {
+  handleUpdateUser() {
     const data = {
       id: this.state.id,
       firstName: this.state.firstName,
@@ -86,83 +94,99 @@ class StudentProfilePage extends React.Component {
     return (
       <Container>
         <NavBarMain />
-        <Form style={{ margin: 10 }}>
-          <Form.Group as={Row} controlId="formName">
-            <Form.Label className="lbForm" column sm="6">
-              Name
-            </Form.Label>
-            <Col sm="6">
-              <Form.Control
-                value={this.state.firstName}
-                name="firstName"
-                onChange={this.handleChange.bind(this)}
-                plaintext
-              />
-            </Col>
-          </Form.Group>
-          <Form.Group as={Row} controlId="formSurname">
-            <Form.Label className="lbForm" column sm="6">
-              Surname
-            </Form.Label>
-            <Col sm="6">
-              <Form.Control
-                value={this.state.lastName}
-                name="lastName"
-                onChange={this.handleChange.bind(this)}
-                plaintext
-              />
-            </Col>
-          </Form.Group>
-          <Form.Group as={Row} controlId="formPlaintextEmail">
-            <Form.Label className="lbForm" column sm="6">
-              Email
-            </Form.Label>
-            <Col sm="6">
-              <Form.Control
-                value={this.state.email}
-                name="email"
-                onChange={this.handleChange.bind(this)}
-                plaintext
-              />
-            </Col>
-          </Form.Group>
-          <Form.Group as={Row} controlId="formAge">
-            <Form.Label className="lbForm" column sm="6">
-              Age
-            </Form.Label>
-            <Col sm="6">
-              <Form.Control
-                value={this.state.age}
-                name="age"
-                onChange={this.handleChange.bind(this)}
-                plaintext
-              />
-            </Col>
-          </Form.Group>
-          <Dropdown>
-            <Dropdown.Toggle
-              className="drobBtn"
-              variant="success"
-              id="dropdown-basic"
-            >
-              My subscriptions
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-
-          <Popconfirm
-            title="Sure to delete?"
-            onConfirm={this.handleDeleteUser.bind(this)}
-          >
-            <Button>Delete user</Button>
-          </Popconfirm>
-
-          <Button variant="warning" onClick={this.handleUpdateUser.bind(this)}>
-            Update
-          </Button>
-        </Form>
+        <Row noGutters className="justify-content-md-center">
+          <Col xs={6}>
+            <Form style={{ margin: 10 }}>
+              <Form.Group as={Row} controlId="formName">
+                <Form.Label className="lbForm" column sm="6">
+                  Name
+                </Form.Label>
+                <Col sm="6">
+                  <Form.Control
+                    value={this.state.firstName}
+                    name="firstName"
+                    onChange={this.handleChange.bind(this)}
+                    plaintext
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} controlId="formSurname">
+                <Form.Label className="lbForm" column sm="6">
+                  Surname
+                </Form.Label>
+                <Col sm="6">
+                  <Form.Control
+                    value={this.state.lastName}
+                    name="lastName"
+                    onChange={this.handleChange.bind(this)}
+                    plaintext
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} controlId="formPlaintextEmail">
+                <Form.Label className="lbForm" column sm="6">
+                  Email
+                </Form.Label>
+                <Col sm="6">
+                  <Form.Control
+                    value={this.state.email}
+                    name="email"
+                    onChange={this.handleChange.bind(this)}
+                    plaintext
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} controlId="formAge">
+                <Form.Label className="lbForm" column sm="6">
+                  Age
+                </Form.Label>
+                <Col sm="6">
+                  <Form.Control
+                    value={this.state.age}
+                    name="age"
+                    onChange={this.handleChange.bind(this)}
+                    plaintext
+                  />
+                </Col>
+              </Form.Group>
+              <Container>
+                <Row className="justify-content-md-center">
+                  <Col lg="4">
+                    <Button
+                      className="udBtn"
+                      variant="warning"
+                      onClick={this.handleUpdateUser.bind(this)}
+                    >
+                      Update
+                    </Button>
+                  </Col>
+                  <Col lg="4">
+                    <Popconfirm
+                      title="Sure to delete?"
+                      onConfirm={this.handleDeleteUser.bind(this)}
+                    >
+                      <Button className="udBtn" variant="danger">
+                        Delete user
+                      </Button>
+                    </Popconfirm>
+                  </Col>
+                </Row>
+              </Container>
+              <Accordion defaultActiveKey="0">
+                <Card>
+                  <Card.Header>
+                    <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                      Courses
+                    </Accordion.Toggle>
+                  </Card.Header>
+                  <Accordion.Collapse eventKey="0">
+                    <Card.Body>1--------------</Card.Body>
+                  </Accordion.Collapse>
+                </Card>
+              </Accordion>
+            </Form>
+          </Col>
+        </Row>
       </Container>
     );
   }

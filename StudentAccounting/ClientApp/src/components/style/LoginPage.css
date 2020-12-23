@@ -3,5 +3,10 @@ h1 {
 }
 .btnRegistry {
   background-color: darkcyan;
+  width: 110px;
   float: right;
+}
+.btnLogin {
+  width: 110px;
+  float: left;
 }

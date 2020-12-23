@@ -70,7 +70,7 @@ class LoginPage extends React.Component {
             <Row>
               <Col>
                 <Form.Group controlId="formBasicEmail">
-                  <h1>welcome</h1>
+                  <h1>Welcome</h1>
                   <br />
                   <Form.Label>Email address</Form.Label>
                   <Form.Control
@@ -96,7 +96,7 @@ class LoginPage extends React.Component {
                   />
                 </Form.Group>
                 <Button
-                  style={{ backgroundColor: this.state.color }}
+                  className="btnLogin"
                   variant="primary"
                   onClick={this.handleSubmit.bind(this)}
                 >
@@ -109,12 +109,6 @@ class LoginPage extends React.Component {
                 >
                   Register
                 </Button>
-                {/* <Button
-                  variant="primary"
-                  onClick={this.handleFacebookLogin.bind(this)}
-                >
-                  Facebook
-                </Button> */}
               </Col>
             </Row>
           </Form.Row>

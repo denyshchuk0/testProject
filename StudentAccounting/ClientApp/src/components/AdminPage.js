@@ -1,15 +1,7 @@
 import React from "react";
-import {
-  // Table,
-  Container,
-  Form,
-  FormControl,
-  Button,
-} from "react-bootstrap";
-import { Route, withRouter } from "react-router-dom";
-
-import UsersTable from "./UsersTable";
-import { Table, Popconfirm } from "antd";
+import { Container, Form, FormControl, Button } from "react-bootstrap";
+import { withRouter } from "react-router-dom";
+import { Table } from "antd";
 import NavBarMain from "./Main/NavBarMain";
 import "antd/dist/antd.css";
 
@@ -19,31 +11,35 @@ class AdminPage extends React.Component {
       {
         title: "Id",
         dataIndex: "id",
+        key: "0",
         sorter: (a, b) => a.id - b.id,
         sortDirections: ["descend"],
       },
       {
         title: "Name",
         dataIndex: "firstName",
+        key: "1",
         sorter: (a, b) => a.firstName.length - b.firstName.length,
         sortDirections: ["descend", "ascend"],
       },
       {
         title: "Surname",
         dataIndex: "lastName",
-
+        key: "2",
         sorter: (a, b) => a.lastName.length - b.lastName.length,
         sortDirections: ["descend", "ascend"],
       },
       {
         title: "Age",
         dataIndex: "age",
+        key: "3",
         sorter: (a, b) => a.age - b.age,
         sortDirections: ["descend", "ascend"],
       },
       {
         title: "Email",
         dataIndex: "email",
+        key: "4",
         defaultSortOrder: "descend",
         sorter: (a, b) => a.email - b.email,
       },
@@ -51,12 +47,13 @@ class AdminPage extends React.Component {
         title: "RegDate",
         dataIndex: "registeredDate",
         defaultSortOrder: "descend",
+        key: "5",
         sorter: (a, b) => a.registeredDate - b.registeredDate,
       },
       {
         title: "Action",
         dataIndex: "",
-
+        key: "6",
         render: (record) => (
           <Button onClick={() => this.handleSeeMore(record.id)}>
             See more
@@ -105,7 +102,7 @@ class AdminPage extends React.Component {
 
   handleSeeMore = (key) => {
     const dataSource = [...this.state.users];
-    const userObj = dataSource.find((item) => item.id == key);
+    const userObj = dataSource.find((item) => item.id === key);
     console.log(userObj);
 
     this.props.history.push({
@@ -132,7 +129,6 @@ class AdminPage extends React.Component {
       request
     ).then((response) =>
       response.json().then((json) => {
-        console.log(JSON);
         if (!response.ok) {
           window.alert(json.message);
         } else {
@@ -148,7 +144,7 @@ class AdminPage extends React.Component {
     return (
       <Container>
         <NavBarMain />
-        <Form inline>
+        <Form inline style={{ float: "right" }}>
           <FormControl
             type="text"
             placeholder="Search"
@@ -164,29 +160,12 @@ class AdminPage extends React.Component {
             Search
           </Button>
         </Form>
-        {/* <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Age</th>
-              <th>Email</th>
-              <th>Registered Date</th>
-            </tr>
-          </thead>
-          <tbody> */}
         <Table
           columns={this.state.columnsTmp}
           dataSource={users}
           onChange={this.onChange.bind(this)}
         />
         ,
-        {/* {users.map((user) => (
-              <UsersTable key={user.id} usersObj={user} />
-            ))}
-          </tbody> */}
-        {/* </Table> */}
       </Container>
     );
   }

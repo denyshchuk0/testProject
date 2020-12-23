@@ -5,8 +5,11 @@
   text-align: right;
 }
 
-.drobBtn {
-  display: block;
+.myCousesBtn {
   margin-left: auto;
   margin-right: auto;
+}
+
+.udBtn {
+  width: 157px;
 }
