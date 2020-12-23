@@ -1,37 +1,67 @@
 import React from "react";
 import {
-  Table,
+  // Table,
   Container,
   Form,
   FormControl,
   Button,
-  Dropdown,
 } from "react-bootstrap";
+import { Route, withRouter } from "react-router-dom";
+
 import UsersTable from "./UsersTable";
-//import { Table } from "antd";
+import { Table, Popconfirm } from "antd";
 import NavBarMain from "./Main/NavBarMain";
 import "antd/dist/antd.css";
 
-export default class AdminPage extends React.Component {
+class AdminPage extends React.Component {
   constructor(props) {
     const columns = [
       {
-        title: "Name",
-        dataIndex: "name",
-        sorter: (a, b) => a.name.length - b.name.length,
+        title: "Id",
+        dataIndex: "id",
+        sorter: (a, b) => a.id - b.id,
         sortDirections: ["descend"],
+      },
+      {
+        title: "Name",
+        dataIndex: "firstName",
+        sorter: (a, b) => a.firstName.length - b.firstName.length,
+        sortDirections: ["descend", "ascend"],
+      },
+      {
+        title: "Surname",
+        dataIndex: "lastName",
+
+        sorter: (a, b) => a.lastName.length - b.lastName.length,
+        sortDirections: ["descend", "ascend"],
       },
       {
         title: "Age",
         dataIndex: "age",
-        defaultSortOrder: "descend",
         sorter: (a, b) => a.age - b.age,
+        sortDirections: ["descend", "ascend"],
       },
       {
-        title: "Address",
-        dataIndex: "address",
-        sorter: (a, b) => a.address.length - b.address.length,
-        sortDirections: ["descend", "ascend"],
+        title: "Email",
+        dataIndex: "email",
+        defaultSortOrder: "descend",
+        sorter: (a, b) => a.email - b.email,
+      },
+      {
+        title: "RegDate",
+        dataIndex: "registeredDate",
+        defaultSortOrder: "descend",
+        sorter: (a, b) => a.registeredDate - b.registeredDate,
+      },
+      {
+        title: "Action",
+        dataIndex: "",
+
+        render: (record) => (
+          <Button onClick={() => this.handleSeeMore(record.id)}>
+            See more
+          </Button>
+        ),
       },
     ];
     super(props);
@@ -73,6 +103,21 @@ export default class AdminPage extends React.Component {
     });
   };
 
+  handleSeeMore = (key) => {
+    const dataSource = [...this.state.users];
+    const userObj = dataSource.find((item) => item.id == key);
+    console.log(userObj);
+
+    this.props.history.push({
+      pathname: "/student-profile",
+      state: { user: userObj },
+    });
+  };
+
+  onChange(pagination, filters, sorter, extra) {
+    console.log("params", pagination, filters, sorter, extra);
+  }
+
   handleSubmit(event) {
     const userTmp = JSON.parse(localStorage.getItem("user"));
     const request = {
@@ -104,18 +149,6 @@ export default class AdminPage extends React.Component {
       <Container>
         <NavBarMain />
         <Form inline>
-          <Dropdown>
-            <Dropdown.Toggle
-              className="drobBtn"
-              variant="success"
-              id="dropdown-basic"
-            >
-              Sort by
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1">Name</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
           <FormControl
             type="text"
             placeholder="Search"
@@ -131,7 +164,7 @@ export default class AdminPage extends React.Component {
             Search
           </Button>
         </Form>
-        <Table striped bordered hover>
+        {/* <Table striped bordered hover>
           <thead>
             <tr>
               <th>#</th>
@@ -142,14 +175,20 @@ export default class AdminPage extends React.Component {
               <th>Registered Date</th>
             </tr>
           </thead>
-          <tbody>
-            {/* <Table columns={this.state.columnsTmp} dataSource={users} />, */}
-            {users.map((user) => (
+          <tbody> */}
+        <Table
+          columns={this.state.columnsTmp}
+          dataSource={users}
+          onChange={this.onChange.bind(this)}
+        />
+        ,
+        {/* {users.map((user) => (
               <UsersTable key={user.id} usersObj={user} />
             ))}
-          </tbody>
-        </Table>
+          </tbody> */}
+        {/* </Table> */}
       </Container>
     );
   }
 }
+export default withRouter(AdminPage);

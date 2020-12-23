@@ -11,7 +11,7 @@ class CourseCard extends React.Component {
     };
   }
 
-  handleSubmit(event) {
+  handleSubmit() {
     const userTmp = JSON.parse(localStorage.getItem("user"));
     const request = {
       method: "GET",

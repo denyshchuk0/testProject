@@ -1,12 +1,15 @@
 import React from "react";
 import { Form, Dropdown, Col, Container, Row, Button } from "react-bootstrap";
 import NavBarMain from "./Main/NavBarMain";
+import { Popconfirm } from "antd";
+
 import "./style/StudentProfile.css";
 import { withRouter } from "react-router";
 
 class StudentProfilePage extends React.Component {
   constructor(props) {
     super(props);
+    console.log(this.props.location.state.user.id);
     this.state = {
       id: this.props.location.state.user.id,
       firstName: this.props.location.state.user.firstName,
@@ -148,9 +151,14 @@ class StudentProfilePage extends React.Component {
               <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-          <Button variant="danger" onClick={this.handleDeleteUser.bind(this)}>
-            Delete user
-          </Button>
+
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={this.handleDeleteUser.bind(this)}
+          >
+            <Button>Delete user</Button>
+          </Popconfirm>
+
           <Button variant="warning" onClick={this.handleUpdateUser.bind(this)}>
             Update
           </Button>
