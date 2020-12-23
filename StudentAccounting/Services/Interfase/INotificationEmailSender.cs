@@ -7,6 +7,6 @@ namespace StudentAccounting.Services
 {
     public interface INotificationEmailSender
     {
-         void SendNotificationEmails(string email, string courseName, DateTime startDate);
+         void ScheduleJobs(string email, string courseName, DateTime startDate);
     }
 }

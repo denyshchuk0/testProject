@@ -2,7 +2,7 @@ import React from "react";
 import { withRouter } from "react-router";
 
 class UsersTable extends React.Component {
-  handleSelect(event) {
+  handleSelect() {
     this.props.history.push({
       pathname: "/student-profile",
       state: { user: this.props.usersObj },

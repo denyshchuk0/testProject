@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar, Nav } from "react-bootstrap";
+import { Navbar, Nav, Form, FormControl, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export default class NavBarMain extends React.Component {
@@ -24,6 +24,7 @@ export default class NavBarMain extends React.Component {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
               <Nav.Link href="/main">Courses</Nav.Link>
+
               <Nav.Link
                 as={Link}
                 to={{
@@ -34,7 +35,8 @@ export default class NavBarMain extends React.Component {
                 My page
               </Nav.Link>
             </Nav>
-            <Navbar.Text>
+
+            <Navbar.Text style={{ margin: 10 }}>
               Signed in as: <a href="/">{this.state.email}</a>
             </Navbar.Text>
           </Navbar.Collapse>

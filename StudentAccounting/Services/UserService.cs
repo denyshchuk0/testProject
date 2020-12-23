@@ -19,7 +19,7 @@ namespace StudentAccounting.Services
         {
             return context.Users;
         }
-
+        
         public User GetUserById(int id)
         {
             return context.Users.Find(id);
@@ -64,5 +64,26 @@ namespace StudentAccounting.Services
             }
         }
 
+        public IQueryable<User> GetAllSortedUsers() {
+            return context.Users.OrderBy(x => x.FirstName);
+        }
+
+
+        public IQueryable<User> SearchUsers(string serachParam)
+        {
+        
+            if (!string.IsNullOrEmpty(serachParam)) {
+
+                var students = context.Users.Where(s => s.FirstName.ToLower().Equals(serachParam.ToLower())
+                || s.LastName.ToLower().Equals(serachParam.ToLower())
+                || (s.FirstName + ' ' + s.LastName).ToLower().Equals(serachParam.ToLower())
+                || (s.LastName + ' ' + s.FirstName).ToLower().Equals(serachParam.ToLower())
+                || s.FirstName.ToLower().StartsWith(serachParam.ToLower()));
+
+            return students; }
+            else {
+                return null;
+            }   
+        }
     }
 }

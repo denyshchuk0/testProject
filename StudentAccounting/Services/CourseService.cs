@@ -16,7 +16,7 @@ namespace StudentAccounting.Services
             this.notificationEmailSender = notificationEmailSender;
         }
 
-        public void RegisterToCourse(int userId, int coursId)
+        public void Subscribe(int userId, int coursId)
         {
             var user = context.Users.FirstOrDefault(x => x.Id == userId);
             var course = context.Course.FirstOrDefault(x => x.Id == coursId);
@@ -25,7 +25,7 @@ namespace StudentAccounting.Services
             context.Users.Update(user);
             context.SaveChanges();
 
-            notificationEmailSender.SendNotificationEmails(user.Email, course.Name, course.StartDate);
+            notificationEmailSender.ScheduleJobs(user.Email, course.Name, course.StartDate);
         }
         public IQueryable<Course> GetAllCourses()
         {

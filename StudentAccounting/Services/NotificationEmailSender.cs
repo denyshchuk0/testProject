@@ -13,13 +13,13 @@ namespace StudentAccounting.Services
             this.emailSender = emailSender;
         }
 
-        public void SendNotificationEmails(string email, string courseName, DateTime startDate)
+        public void ScheduleJobs(string email, string courseName, DateTime startDate)
         {
-            var monthNotify = startDate.AddMonths(-1);
+            var monthNotify = startDate.AddMonths(-1);//
             var weekNotify = startDate.AddDays(-7);
             var dayNotify = startDate.AddHours(-8);
 
-            if (DateTime.Now < monthNotify)
+            if (DateTime.UtcNow < monthNotify)
             {
                 BackgroundJob.Schedule(() =>
                 emailSender.SendEmailAsync(

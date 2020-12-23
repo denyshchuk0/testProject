@@ -41,6 +41,8 @@ class LoginPage extends React.Component {
             window.alert(json.message);
           } else {
             localStorage.setItem("user", JSON.stringify(json));
+            localStorage.setItem("token", json.token);
+            localStorage.setItem("role", json.name);
             var user = JSON.parse(localStorage.getItem("user"));
             if (user.name === "admin") {
               this.props.history.push("/admin");

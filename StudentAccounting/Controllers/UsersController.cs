@@ -68,18 +68,26 @@ namespace StudentAccounting.Controllers
         [HttpGet("subscription")]
         public IActionResult Subscription(int coursId)
         {
-            courseService.RegisterToCourse(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), coursId);
+            courseService.Subscribe(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), coursId);
             return Ok();
         }
 
         [Authorize(Roles = "admin")]
         [HttpGet("all-users")]
-        public IActionResult GetAllUserus()
+        public IActionResult GetAllUsers()
         {
             var users = userService.GetAllUsers();
             var model = mapper.Map<IList<UserModel>>(users);
             return Ok(model);
         }
+        //[Authorize(Roles = "admin")]
+        //[HttpGet("all-sorted-users")]
+        //public IActionResult GetAllSotredUsers()
+        //{
+        //    var users = userService.GetAllSortedUsers();
+        //    var model = mapper.Map<IList<UserModel>>(users);
+        //    return Ok(model);
+        //}
 
         [HttpGet("all-courses")]
         public IActionResult GetAllCourses()
@@ -88,6 +96,8 @@ namespace StudentAccounting.Controllers
             var model = mapper.Map<IList<CourseModel>>(сourses);
             return Ok(model);
         }
+
+
 
         [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
@@ -99,11 +109,20 @@ namespace StudentAccounting.Controllers
         }
 
         [Authorize(Roles = "admin")]
+        [HttpGet("search")]
+        public IActionResult Search(string searchParam)
+        {
+            var user = userService.SearchUsers(searchParam);
+            var modelList = mapper.Map< IList <UserModel> >(user);
+            return Ok(modelList);
+        }
+
+        [Authorize(Roles = "admin")]
         [HttpPut("update-user/{id}")]
         public IActionResult Update(int id,[FromBody]UpdateModel model)
         {
             var user = mapper.Map<User>(model);
-           user.Id = id;
+            user.Id = id;
 
             userService.UpdateUser(user);
             return Ok();

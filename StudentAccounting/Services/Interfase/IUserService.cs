@@ -8,6 +8,7 @@ namespace StudentAccounting.Services.Interfase
         IQueryable<User> GetAllUsers();
         User GetUserById(int id);
         void UpdateUser(User user);
+        IQueryable<User> SearchUsers(string serachParam);
         void DeleteUser(int id);
     }
 }
