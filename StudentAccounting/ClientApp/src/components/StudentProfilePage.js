@@ -172,7 +172,7 @@ class StudentProfilePage extends React.Component {
                   </Col>
                 </Row>
               </Container>
-              <Accordion defaultActiveKey="0">
+              <Accordion>
                 <Card>
                   <Card.Header>
                     <Accordion.Toggle as={Button} variant="link" eventKey="0">

@@ -32,7 +32,7 @@ namespace StudentAccounting.Services
         public User Login(AuthenticateModel model)
         {
             var user = context.Users.FirstOrDefault(x => x.Email.ToUpper() == model.Email.ToUpper());
-            user.Role = context.Roles.FirstOrDefault(x => x.Id == user.RoleId); //f
+           
             if (user == null)
             {
                 return null;
@@ -42,6 +42,7 @@ namespace StudentAccounting.Services
             {
                 return null;
             }
+            user.Role = context.Roles.FirstOrDefault(x => x.Id == user.RoleId); //f
             return user;
         }
 
