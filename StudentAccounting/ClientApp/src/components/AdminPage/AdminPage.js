@@ -1,11 +1,10 @@
 import React from "react";
 import { Container, Form, FormControl, Button } from "react-bootstrap";
-import { withRouter } from "react-router-dom";
 import { Table } from "antd";
 import NavBarMain from "../NavBarMain";
 import "antd/dist/antd.css";
 
-class AdminPage extends React.Component {
+export default class AdminPage extends React.Component {
   constructor(props) {
     const columns = [
       {
@@ -62,11 +61,16 @@ class AdminPage extends React.Component {
       },
     ];
     super(props);
+
+    this.onSearchParamChange = this.onSearchParamChange.bind(this);
+
     this.state = {
-      users: [],
-      searchParam: "",
       columnsTmp: columns,
     };
+  }
+
+  onSearchParamChange(event) {
+    this.props.setSearchParamText(event.target.value);
   }
 
   componentDidMount() {
@@ -77,30 +81,22 @@ class AdminPage extends React.Component {
         Authorization: `Bearer ${user.token}`,
       }),
     };
+
     fetch("https://localhost:44335/users/all-users", request).then((response) =>
       response.json().then((json) => {
-        console.log(JSON);
         if (!response.ok) {
           window.alert(json.message);
         } else {
-          this.setState({ users: json });
+          {
+            this.props.setUsers(json);
+          }
         }
       })
     );
   }
 
-  handleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    this.setState((prevstate) => {
-      const newState = { ...prevstate };
-      newState[name] = value;
-      return newState;
-    });
-  };
-
   handleSeeMore = (key) => {
-    const dataSource = [...this.state.users];
+    const dataSource = [...this.props.users];
     const userObj = dataSource.find((item) => item.id === key);
     this.props.history.push({
       pathname: "/student-profile",
@@ -108,36 +104,29 @@ class AdminPage extends React.Component {
     });
   };
 
-  onChange(pagination, filters, sorter, extra) {
-    console.log("params", pagination, filters, sorter, extra);
-  }
-
   handleSubmit() {
-    const userTmp = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
     const request = {
       method: "GET",
-      headers: new Headers({ Authorization: `Bearer ${userTmp.token}` }),
+      headers: new Headers({ Authorization: `Bearer ${token}` }),
     };
 
-    console.log(this.state.searchParam);
     fetch(
       "https://localhost:44335/users/search?searchParam=" +
-        this.state.searchParam,
+        this.props.searchParam,
       request
     ).then((response) =>
       response.json().then((json) => {
         if (!response.ok) {
           window.alert(json.message);
         } else {
-          console.log(json);
-          this.setState({ users: json });
+          this.props.setUsers(json);
         }
       })
     );
   }
 
   render() {
-    const users = this.state.users;
     return (
       <Container>
         <NavBarMain />
@@ -146,9 +135,9 @@ class AdminPage extends React.Component {
             type="text"
             placeholder="Search"
             className="mr-sm-2"
-            value={this.state.searchParam}
+            value={this.props.searchParam}
             name="searchParam"
-            onChange={this.handleChange.bind(this)}
+            onChange={this.onSearchParamChange}
           />
           <Button
             variant="outline-success"
@@ -157,14 +146,8 @@ class AdminPage extends React.Component {
             Search
           </Button>
         </Form>
-        <Table
-          columns={this.state.columnsTmp}
-          dataSource={users}
-          onChange={this.onChange.bind(this)}
-        />
-        ,
+        <Table columns={this.state.columnsTmp} dataSource={this.props.users} />,
       </Container>
     );
   }
 }
-export default withRouter(AdminPage);

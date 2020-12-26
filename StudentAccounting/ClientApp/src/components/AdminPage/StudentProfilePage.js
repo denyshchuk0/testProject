@@ -10,14 +10,12 @@ import {
 } from "react-bootstrap";
 import NavBarMain from "../NavBarMain";
 import { Popconfirm } from "antd";
-
 import "../style/StudentProfile.css";
 import { withRouter } from "react-router";
 
 class StudentProfilePage extends React.Component {
   constructor(props) {
     super(props);
-    console.log(this.props.location.state.user.id);
     this.state = {
       id: this.props.location.state.user.id,
       firstName: this.props.location.state.user.firstName,
@@ -37,12 +35,12 @@ class StudentProfilePage extends React.Component {
     });
   };
 
-  handleDeleteUser(event) {
-    const userTmp = JSON.parse(localStorage.getItem("user"));
+  handleDeleteUser() {
+    const token = localStorage.getItem("token");
     const request = {
       method: "DELETE",
       headers: new Headers({
-        Authorization: `Bearer ${userTmp.token}`,
+        Authorization: `Bearer ${token}`,
       }),
     };
 
@@ -67,12 +65,12 @@ class StudentProfilePage extends React.Component {
       age: this.state.age,
       email: this.state.email,
     };
-    const userTmp = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
     const request = {
       method: "PUT",
       headers: new Headers({
         "Content-Type": "application/json",
-        Authorization: `Bearer ${userTmp.token}`,
+        Authorization: `Bearer ${token}`,
       }),
       body: JSON.stringify(data),
     };
@@ -172,7 +170,7 @@ class StudentProfilePage extends React.Component {
                   </Col>
                 </Row>
               </Container>
-              <Accordion>
+              {/* <Accordion>
                 <Card>
                   <Card.Header>
                     <Accordion.Toggle as={Button} variant="link" eventKey="0">
@@ -183,7 +181,7 @@ class StudentProfilePage extends React.Component {
                     <Card.Body>1--------------</Card.Body>
                   </Accordion.Collapse>
                 </Card>
-              </Accordion>
+              </Accordion> */}
             </Form>
           </Col>
         </Row>

@@ -12,25 +12,21 @@ class CourseCard extends React.Component {
   }
 
   handleSubmit() {
-    const userTmp = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
     const request = {
       method: "GET",
-      headers: new Headers({ Authorization: `Bearer ${userTmp.token}` }),
+      headers: new Headers({ Authorization: `Bearer ${token}` }),
     };
 
     fetch(
       "https://localhost:44335/users/subscription?coursId=" +
         this.props.courseObj.id,
       request
-    ).then((response) =>
-      response.json().then((json) => {
-        if (!response.ok) {
-          window.alert(json.message);
-        } else {
-          window.alert(json.message);
-        }
-      })
-    );
+    ).then((response) => {
+      if (!response.ok) {
+        window.alert(response.message);
+      }
+    });
   }
 
   render() {

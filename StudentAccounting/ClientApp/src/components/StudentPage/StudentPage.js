@@ -1,37 +1,28 @@
 import React from "react";
 import CourseCard from "./CourseCard";
 
-export default class MainCards extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      courses: [],
-    };
-  }
-
+export default class SudentPage extends React.Component {
   componentDidMount() {
-    const user = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
     const request = {
       method: "GET",
-      headers: new Headers({ Authorization: `Bearer ${user.token}` }),
+      headers: new Headers({ Authorization: `Bearer ${token}` }),
     };
 
     fetch("https://localhost:44335/users/all-courses", request).then(
       (response) =>
         response.json().then((json) => {
-          console.log(JSON);
           if (!response.ok) {
             window.alert(json.message);
           } else {
-            console.log(json);
-            this.setState({ courses: json });
+            this.props.setCourses(json);
           }
         })
     );
   }
 
   render() {
-    const courses = this.state.courses;
+    const courses = this.props.courses;
     return (
       <div>
         {courses.map((course) => (

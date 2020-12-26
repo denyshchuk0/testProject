@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Route } from "react-router";
 import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
-import { MainPage } from "./components/MainPage";
 import "./custom.css";
+import MainPage from "./components/MainPage";
 import LoginContainer from "./components/Login/LoginContainer";
 import RegisterPageContainer from "./components/Registration/RegisterPageContainer";
 import ConfirmEmailPage from "./components/Registration/ConfirmEmailPage";
-import AdminPage from "./components/AdminPage/AdminPage";
+import AdminContainer from "./components/AdminPage/AdminContainer";
 import StudentProfilePage from "./components/AdminPage/StudentProfilePage";
 import { isLoggedIn, GetRole } from "./components/utils";
 import { createStore } from "redux";
@@ -67,7 +67,7 @@ export default class App extends Component {
             <Route path="/register" component={RegisterPageContainer} />
             <Route path="/confirm-email" component={ConfirmEmailPage} />
             <this.RoleRoute path="/admin">
-              <AdminPage />
+              <AdminContainer />
             </this.RoleRoute>
             <this.PrivateRoute path="/main">
               <MainPage />
