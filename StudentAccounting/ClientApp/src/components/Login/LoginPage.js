@@ -1,31 +1,26 @@
 import React from "react";
 import { Form, Button, Col, Container, Row } from "react-bootstrap";
-import "././style/LoginPage.css";
-import { withRouter } from "react-router";
+import "../style/LoginPage.css";
 
-class LoginPage extends React.Component {
+export default class LoginPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      email: "",
-      password: "",
-    };
+    this.onEmailChange = this.onEmailChange.bind(this);
+    this.onPasswordChange = this.onPasswordChange.bind(this);
   }
 
-  handleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    this.setState((prevstate) => {
-      const newState = { ...prevstate };
-      newState[name] = value;
-      return newState;
-    });
-  };
+  onEmailChange(event) {
+    this.props.setEmailText(event.target.value);
+  }
 
-  handleSubmit(event) {
+  onPasswordChange(event) {
+    this.props.setPasswordText(event.target.value);
+  }
+
+  handleSubmit() {
     const data = {
-      email: this.state.email,
-      password: this.state.password,
+      email: this.props.email,
+      password: this.props.password,
     };
 
     const request = {
@@ -54,11 +49,11 @@ class LoginPage extends React.Component {
     );
   }
 
-  handleRegistry(event) {
+  handleRegistry() {
     this.props.history.push("/register");
   }
 
-  handleFacebookLogin(event) {
+  handleFacebookLogin() {
     window.open("https://localhost:44335/users/facebook-login");
   }
 
@@ -76,9 +71,9 @@ class LoginPage extends React.Component {
                   <Form.Control
                     type="email"
                     placeholder="Enter email"
-                    value={this.state.email}
+                    value={this.props.email}
                     name="email"
-                    onChange={this.handleChange.bind(this)}
+                    onChange={this.onEmailChange}
                   />
                   <Form.Text className="text-muted">
                     We'll never share your email with anyone else.
@@ -91,8 +86,8 @@ class LoginPage extends React.Component {
                     type="password"
                     placeholder="Password"
                     name="password"
-                    value={this.state.password}
-                    onChange={this.handleChange.bind(this)}
+                    value={this.props.password}
+                    onChange={this.onPasswordChange}
                   />
                 </Form.Group>
                 <Button
@@ -117,4 +112,3 @@ class LoginPage extends React.Component {
     );
   }
 }
-export default withRouter(LoginPage);

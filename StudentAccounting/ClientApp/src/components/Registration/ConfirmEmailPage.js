@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import "././style/ConfirmEmailPage.css";
+import "../style/ConfirmEmailPage.css";
 import { withRouter } from "react-router";
 
 class ConfirmEmailPage extends React.Component {

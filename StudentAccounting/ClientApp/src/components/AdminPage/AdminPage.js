@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Form, FormControl, Button } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import { Table } from "antd";
-import NavBarMain from "./Main/NavBarMain";
+import NavBarMain from "../NavBarMain";
 import "antd/dist/antd.css";
 
 class AdminPage extends React.Component {
@@ -77,7 +77,6 @@ class AdminPage extends React.Component {
         Authorization: `Bearer ${user.token}`,
       }),
     };
-    console.log(request);
     fetch("https://localhost:44335/users/all-users", request).then((response) =>
       response.json().then((json) => {
         console.log(JSON);
@@ -103,8 +102,6 @@ class AdminPage extends React.Component {
   handleSeeMore = (key) => {
     const dataSource = [...this.state.users];
     const userObj = dataSource.find((item) => item.id === key);
-    console.log(userObj);
-
     this.props.history.push({
       pathname: "/student-profile",
       state: { user: userObj },
@@ -115,7 +112,7 @@ class AdminPage extends React.Component {
     console.log("params", pagination, filters, sorter, extra);
   }
 
-  handleSubmit(event) {
+  handleSubmit() {
     const userTmp = JSON.parse(localStorage.getItem("user"));
     const request = {
       method: "GET",

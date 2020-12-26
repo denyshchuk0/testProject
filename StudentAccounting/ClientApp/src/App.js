@@ -3,12 +3,17 @@ import { Route } from "react-router";
 import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
 import { MainPage } from "./components/MainPage";
 import "./custom.css";
-import LoginPage from "./components/LoginPage";
-import RegisterPage from "./components/RegisterPage";
-import ConfirmEmailPage from "./components/ConfirmEmailPage";
-import AdminPage from "./components/AdminPage";
-import StudentProfilePage from "./components/StudentProfilePage";
+import LoginContainer from "./components/Login/LoginContainer";
+import RegisterPageContainer from "./components/Registration/RegisterPageContainer";
+import ConfirmEmailPage from "./components/Registration/ConfirmEmailPage";
+import AdminPage from "./components/AdminPage/AdminPage";
+import StudentProfilePage from "./components/AdminPage/StudentProfilePage";
 import { isLoggedIn, GetRole } from "./components/utils";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import rootReducer from "./store/reducers";
+
+const store = createStore(rootReducer);
 
 export default class App extends Component {
   static displayName = App.name;
@@ -55,20 +60,22 @@ export default class App extends Component {
 
   render() {
     return (
-      <Router>
-        <Switch>
-          <Route exact path="/" component={LoginPage} />
-          <Route path="/register" component={RegisterPage} />
-          <Route path="/confirm-email" component={ConfirmEmailPage} />
-          <this.RoleRoute path="/admin">
-            <AdminPage />
-          </this.RoleRoute>
-          <this.PrivateRoute path="/main">
-            <MainPage />
-          </this.PrivateRoute>
-          <Route path="/student-profile" component={StudentProfilePage} />
-        </Switch>
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <Switch>
+            <Route exact path="/" component={LoginContainer} />
+            <Route path="/register" component={RegisterPageContainer} />
+            <Route path="/confirm-email" component={ConfirmEmailPage} />
+            <this.RoleRoute path="/admin">
+              <AdminPage />
+            </this.RoleRoute>
+            <this.PrivateRoute path="/main">
+              <MainPage />
+            </this.PrivateRoute>
+            <Route path="/student-profile" component={StudentProfilePage} />
+          </Switch>
+        </Router>
+      </Provider>
     );
   }
 }

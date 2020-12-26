@@ -2,36 +2,42 @@ import React from "react";
 import { Form, Button, Col } from "react-bootstrap";
 import { withRouter } from "react-router";
 
-class RegisrtyPage extends React.Component {
+export default class RegisrtyPage extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props);
-    this.state = {
-      firstName: "",
-      lastName: "",
-      age: "",
-      email: "",
-      password: "",
-    };
+    this.onFirstNameChange = this.onFirstNameChange.bind(this);
+    this.onLastNameChange = this.onLastNameChange.bind(this);
+    this.onAgeChange = this.onAgeChange.bind(this);
+    this.onEmailChange = this.onEmailChange.bind(this);
+    this.onPasswordChange = this.onPasswordChange.bind(this);
   }
 
-  handleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    this.setState((prevstate) => {
-      const newState = { ...prevstate };
-      newState[name] = value;
-      return newState;
-    });
-  };
+  onFirstNameChange(event) {
+    this.props.setFirstNameText(event.target.value);
+  }
+
+  onLastNameChange(event) {
+    this.props.setLastNameText(event.target.value);
+  }
+  onAgeChange(event) {
+    this.props.setAgeText(event.target.value);
+  }
+
+  onEmailChange(event) {
+    this.props.setEmailText(event.target.value);
+  }
+
+  onPasswordChange(event) {
+    this.props.setPasswordText(event.target.value);
+  }
 
   handleSubmit() {
     const data = {
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      age: this.state.age,
-      email: this.state.email,
-      password: this.state.password,
+      firstName: this.props.firstName,
+      lastName: this.props.lastName,
+      age: this.props.age,
+      email: this.props.email,
+      password: this.props.password,
     };
 
     const request = {
@@ -62,27 +68,27 @@ class RegisrtyPage extends React.Component {
               <Form.Label>First Name</Form.Label>
               <Form.Control
                 placeholder="Enter first name"
-                value={this.state.firstName}
+                value={this.props.firstName}
                 name="firstName"
-                onChange={this.handleChange.bind(this)}
+                onChange={this.onFirstNameChange}
               />
             </Form.Group>
             <Form.Group controlId="formLastName">
               <Form.Label>Last Name</Form.Label>
               <Form.Control
                 placeholder="Enter last name"
-                value={this.state.lastName}
+                value={this.props.lastName}
                 name="lastName"
-                onChange={this.handleChange.bind(this)}
+                onChange={this.onLastNameChange}
               />
               <Form.Group controlId="formAge">
                 <Form.Label>Age</Form.Label>
                 <Form.Control
                   type="age"
                   placeholder="Enter age"
-                  value={this.state.age}
+                  value={this.props.age}
                   name="age"
-                  onChange={this.handleChange.bind(this)}
+                  onChange={this.onAgeChange}
                 />
               </Form.Group>
             </Form.Group>
@@ -91,9 +97,9 @@ class RegisrtyPage extends React.Component {
               <Form.Control
                 type="email"
                 placeholder="Enter email"
-                value={this.state.email}
+                value={this.props.email}
                 name="email"
-                onChange={this.handleChange.bind(this)}
+                onChange={this.onEmailChange}
               />
             </Form.Group>
 
@@ -103,8 +109,8 @@ class RegisrtyPage extends React.Component {
                 type="password"
                 placeholder="Password"
                 name="password"
-                value={this.state.password}
-                onChange={this.handleChange.bind(this)}
+                value={this.props.password}
+                onChange={this.onPasswordChange}
               />
             </Form.Group>
 
@@ -121,4 +127,3 @@ class RegisrtyPage extends React.Component {
     );
   }
 }
-export default withRouter(RegisrtyPage);

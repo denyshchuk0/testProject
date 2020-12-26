@@ -8,10 +8,10 @@ import {
   Button,
   Card,
 } from "react-bootstrap";
-import NavBarMain from "./Main/NavBarMain";
+import NavBarMain from "../NavBarMain";
 import { Popconfirm } from "antd";
 
-import "./style/StudentProfile.css";
+import "../style/StudentProfile.css";
 import { withRouter } from "react-router";
 
 class StudentProfilePage extends React.Component {

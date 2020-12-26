@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Container } from "react-bootstrap";
-import MainCards from "./Main/MainCards";
-import NavBarMain from "./Main/NavBarMain";
+import CourseCard from "././StudentPage/CourseCard";
+import NavBarMain from "./NavBarMain";
 
 export class MainPage extends Component {
   static displayName = MainPage.name;
@@ -10,7 +10,7 @@ export class MainPage extends Component {
     return (
       <Container>
         <NavBarMain />
-        <MainCards />
+        <CourseCard />
       </Container>
     );
   }
