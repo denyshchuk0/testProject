@@ -3,8 +3,8 @@ import { Route } from "react-router";
 import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
 import "./custom.css";
 import MainPage from "./components/MainPage";
-import LoginContainer from "./components/Login/LoginContainer";
-import RegisterPageContainer from "./components/Registration/RegisterPageContainer";
+import LoginPage from "./components/Login/LoginPage";
+import RegisterPage from "./components/Registration/RegisterPage";
 import ConfirmEmailPage from "./components/Registration/ConfirmEmailPage";
 import AdminContainer from "./components/AdminPage/AdminContainer";
 import StudentProfilePage from "./components/AdminPage/StudentProfilePage";
@@ -63,8 +63,8 @@ export default class App extends Component {
       <Provider store={store}>
         <Router>
           <Switch>
-            <Route exact path="/" component={LoginContainer} />
-            <Route path="/register" component={RegisterPageContainer} />
+            <Route exact path="/" component={LoginPage} />
+            <Route path="/register" component={RegisterPage} />
             <Route path="/confirm-email" component={ConfirmEmailPage} />
             <this.RoleRoute path="/admin">
               <AdminContainer />

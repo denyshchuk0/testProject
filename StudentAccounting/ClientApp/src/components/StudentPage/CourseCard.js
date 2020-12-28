@@ -8,6 +8,7 @@ class CourseCard extends React.Component {
     const user = JSON.parse(localStorage.getItem("user"));
     this.state = {
       userId: user.id,
+      color: "primary",
     };
   }
 
@@ -23,8 +24,11 @@ class CourseCard extends React.Component {
         this.props.courseObj.id,
       request
     ).then((response) => {
-      if (response.ok) {
+      if (!response.ok) {
         window.alert(response.message);
+      } else {
+        this.setState({ color: "success" });
+        window.alert("You have signed up for the course.");
       }
     });
   }
@@ -37,7 +41,7 @@ class CourseCard extends React.Component {
           <Card.Title>{this.props.courseObj.name}</Card.Title>
           <Card.Text>{this.props.courseObj.description}</Card.Text>
           <Button
-            variant="primary"
+            variant={this.state.color}
             courseId={this.props.courseObj.id}
             onClick={this.handleSubmit.bind(this)}
           >

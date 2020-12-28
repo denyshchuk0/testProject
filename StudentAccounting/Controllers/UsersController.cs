@@ -29,40 +29,7 @@ namespace StudentAccounting.Controllers
             this.userService = userService;
             this.courseService = courseService;
             this.mapper = mapper;
-
         }
-
-        //[AllowAnonymous]
-        //[HttpGet("facebook-login")]
-        //public IActionResult FacebookLogin(string returnUrl, string provider = "facebook")
-        //{
-        //    string authenticationScheme = string.Empty;
-        //    authenticationScheme = FacebookDefaults.AuthenticationScheme;
-
-        //    var auth = new AuthenticationProperties
-        //    {
-        //        RedirectUri = Url.Action(nameof(callback), new { provider, returnUrl })
-        //    };
-
-        //    return new ChallengeResult(authenticationScheme, auth);
-        //}
-
-        //[AllowAnonymous]
-        //[Route("/[action]")]
-        //public IActionResult callback(string returnUrl = null, string remoteError = null)
-        //{
-        //    var request = HttpContext.Request;
-        //    return null;
-
-        //}
-
-        //[AllowAnonymous]
-        //[HttpGet("facebook")]
-        //public async Task<IActionResult> FacebookLoginAsync([FromBody] FacebookLoginResource resource)
-        //{
-        //    var authorizationTokens = await userService.FacebookLoginAsync(resource);
-        //    return Ok(authorizationTokens);
-        //}
 
         [Authorize]
         [HttpGet("subscription")]
@@ -80,14 +47,6 @@ namespace StudentAccounting.Controllers
             var model = mapper.Map<IList<UserModel>>(users);
             return Ok(model);
         }
-        //[Authorize(Roles = "admin")]
-        //[HttpGet("all-sorted-users")]
-        //public IActionResult GetAllSotredUsers()
-        //{
-        //    var users = userService.GetAllSortedUsers();
-        //    var model = mapper.Map<IList<UserModel>>(users);
-        //    return Ok(model);
-        //}
 
         [HttpGet("all-courses")]
         public IActionResult GetAllCourses()
@@ -96,8 +55,6 @@ namespace StudentAccounting.Controllers
             var model = mapper.Map<IList<CourseModel>>(сourses);
             return Ok(model);
         }
-
-
 
         [Authorize(Roles = "admin")]
         [HttpGet("{id}")]

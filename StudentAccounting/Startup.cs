@@ -80,8 +80,6 @@ namespace StudentAccounting
                   facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
               }).AddCookie();
 
-            services.AddScoped<IFacebookService, FacebookService>();
-            services.AddScoped<IJwtHandler, JwtHandler>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthenticateService, AuthenticateService>();
             services.AddScoped<ICourseService, CourseService>();

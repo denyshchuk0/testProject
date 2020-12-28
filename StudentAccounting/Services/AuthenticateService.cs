@@ -1,7 +1,6 @@
 ﻿using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
-using StudentAccounting.Resources;
 using StudentAccounting.Services.Interfase;
 using System;
 using System.Linq;
@@ -14,19 +13,16 @@ namespace StudentAccounting.Services
     {
         private readonly IEmailSender emailService;
         private readonly DataContext context;
-        private readonly IFacebookService facebookService;
-        private readonly IJwtHandler jwtHandler;
 
 
         public AuthenticateService(DataContext context,
-                                   IEmailSender emailService,
-                                   IFacebookService facebookService,
-                                   IJwtHandler jwtHandler)
+                                   IEmailSender emailService
+                                  )
         {
             this.context = context;
             this.emailService = emailService;
-            this.facebookService = facebookService;
-            this.jwtHandler = jwtHandler;
+       
+ 
         }
 
         public User Login(AuthenticateModel model)
@@ -46,18 +42,7 @@ namespace StudentAccounting.Services
             return user;
         }
 
-        public async Task<AuthorizationTokensResource> FacebookLoginAsync(FacebookLoginResource facebookLoginResource)
-        {
-            if (string.IsNullOrEmpty(facebookLoginResource.facebookToken))
-            {
-                throw new Exception("Token is null or empty");
-            }
-
-            var facebookUser = await facebookService.GetUserFromFacebookAsync(facebookLoginResource.facebookToken);
-            var domainUser = context.Users.SingleOrDefault(x => x.Email == facebookUser.Email);
-
-            return CreateAccessTokens(domainUser);
-        }
+       
         public async Task<User> Register(User user, string password)
         {
             if (context.Users.Any(x => x.Email.ToUpper() == user.Email.ToUpper()))
@@ -110,14 +95,6 @@ namespace StudentAccounting.Services
             var randomBytes = new byte[40];
             rngCryptoServiceProvider.GetBytes(randomBytes);
             return BitConverter.ToString(randomBytes).Replace("-", "");
-        }
-
-        private AuthorizationTokensResource CreateAccessTokens(User user)
-        {
-            var accessToken = jwtHandler.CreateAccessToken(user.Id, user.Email);
-            var refreshToken = jwtHandler.CreateRefreshToken(user.Id);
-
-            return new AuthorizationTokensResource { AccessToken = accessToken, RefreshToken = refreshToken };
         }
 
         public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

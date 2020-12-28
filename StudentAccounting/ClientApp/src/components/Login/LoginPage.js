@@ -5,22 +5,26 @@ import "../style/LoginPage.css";
 export default class LoginPage extends React.Component {
   constructor(props) {
     super(props);
-    this.onEmailChange = this.onEmailChange.bind(this);
-    this.onPasswordChange = this.onPasswordChange.bind(this);
+    this.state = {
+      email: "",
+      password: "",
+    };
   }
 
-  onEmailChange(event) {
-    this.props.setEmailText(event.target.value);
-  }
-
-  onPasswordChange(event) {
-    this.props.setPasswordText(event.target.value);
-  }
+  handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    this.setState((prevstate) => {
+      const newState = { ...prevstate };
+      newState[name] = value;
+      return newState;
+    });
+  };
 
   handleSubmit() {
     const data = {
-      email: this.props.email,
-      password: this.props.password,
+      email: this.state.email,
+      password: this.state.password,
     };
 
     const request = {
@@ -53,10 +57,6 @@ export default class LoginPage extends React.Component {
     this.props.history.push("/register");
   }
 
-  handleFacebookLogin() {
-    window.open("https://localhost:44335/users/facebook-login");
-  }
-
   render() {
     return (
       <Container>
@@ -71,9 +71,9 @@ export default class LoginPage extends React.Component {
                   <Form.Control
                     type="email"
                     placeholder="Enter email"
-                    value={this.props.email}
+                    value={this.state.email}
                     name="email"
-                    onChange={this.onEmailChange}
+                    onChange={this.handleChange.bind(this)}
                   />
                   <Form.Text className="text-muted">
                     We'll never share your email with anyone else.
@@ -86,8 +86,8 @@ export default class LoginPage extends React.Component {
                     type="password"
                     placeholder="Password"
                     name="password"
-                    value={this.props.password}
-                    onChange={this.onPasswordChange}
+                    value={this.state.password}
+                    onChange={this.handleChange.bind(this)}
                   />
                 </Form.Group>
                 <Button

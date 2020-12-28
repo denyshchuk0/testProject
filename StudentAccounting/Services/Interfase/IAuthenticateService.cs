@@ -1,6 +1,5 @@
 ﻿using StudentAccounting.Entities;
 using StudentAccounting.Models;
-using StudentAccounting.Resources;
 using System.Threading.Tasks;
 
 namespace StudentAccounting.Services.Interfase
@@ -10,7 +9,5 @@ namespace StudentAccounting.Services.Interfase
         User Login(AuthenticateModel model);
         void VerifyEmail(string token);
         Task<User> Register(User user, string password);
-        Task<AuthorizationTokensResource> FacebookLoginAsync(FacebookLoginResource facebookLoginResource);
-
     }
 }

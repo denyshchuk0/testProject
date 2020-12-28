@@ -4,39 +4,31 @@ import { Form, Button, Col } from "react-bootstrap";
 export default class RegisrtyPage extends React.Component {
   constructor(props) {
     super(props);
-    this.onFirstNameChange = this.onFirstNameChange.bind(this);
-    this.onLastNameChange = this.onLastNameChange.bind(this);
-    this.onAgeChange = this.onAgeChange.bind(this);
-    this.onEmailChange = this.onEmailChange.bind(this);
-    this.onPasswordChange = this.onPasswordChange.bind(this);
+    this.state = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      age: "",
+      password: "",
+    };
   }
 
-  onFirstNameChange(event) {
-    this.props.setFirstNameText(event.target.value);
-  }
-
-  onLastNameChange(event) {
-    this.props.setLastNameText(event.target.value);
-  }
-  onAgeChange(event) {
-    this.props.setAgeText(event.target.value);
-  }
-
-  onEmailChange(event) {
-    this.props.setEmailText(event.target.value);
-  }
-
-  onPasswordChange(event) {
-    this.props.setPasswordText(event.target.value);
-  }
-
+  handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    this.setState((prevstate) => {
+      const newState = { ...prevstate };
+      newState[name] = value;
+      return newState;
+    });
+  };
   handleSubmit() {
     const data = {
-      firstName: this.props.firstName,
-      lastName: this.props.lastName,
-      age: this.props.age,
-      email: this.props.email,
-      password: this.props.password,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      age: this.state.age,
+      email: this.state.email,
+      password: this.state.password,
     };
 
     const request = {
@@ -67,27 +59,27 @@ export default class RegisrtyPage extends React.Component {
               <Form.Label>First Name</Form.Label>
               <Form.Control
                 placeholder="Enter first name"
-                value={this.props.firstName}
+                value={this.state.firstName}
                 name="firstName"
-                onChange={this.onFirstNameChange}
+                onChange={this.handleChange.bind(this)}
               />
             </Form.Group>
             <Form.Group controlId="formLastName">
               <Form.Label>Last Name</Form.Label>
               <Form.Control
                 placeholder="Enter last name"
-                value={this.props.lastName}
+                value={this.state.lastName}
                 name="lastName"
-                onChange={this.onLastNameChange}
+                onChange={this.handleChange.bind(this)}
               />
               <Form.Group controlId="formAge">
                 <Form.Label>Age</Form.Label>
                 <Form.Control
                   type="age"
                   placeholder="Enter age"
-                  value={this.props.age}
+                  value={this.state.age}
                   name="age"
-                  onChange={this.onAgeChange}
+                  onChange={this.handleChange.bind(this)}
                 />
               </Form.Group>
             </Form.Group>
@@ -96,9 +88,9 @@ export default class RegisrtyPage extends React.Component {
               <Form.Control
                 type="email"
                 placeholder="Enter email"
-                value={this.props.email}
+                value={this.state.email}
                 name="email"
-                onChange={this.onEmailChange}
+                onChange={this.handleChange.bind(this)}
               />
             </Form.Group>
 
@@ -108,8 +100,8 @@ export default class RegisrtyPage extends React.Component {
                 type="password"
                 placeholder="Password"
                 name="password"
-                value={this.props.password}
-                onChange={this.onPasswordChange}
+                value={this.state.password}
+                onChange={this.handleChange.bind(this)}
               />
             </Form.Group>
 
