@@ -23,7 +23,7 @@ class CourseCard extends React.Component {
         this.props.courseObj.id,
       request
     ).then((response) => {
-      if (!response.ok) {
+      if (response.ok) {
         window.alert(response.message);
       }
     });

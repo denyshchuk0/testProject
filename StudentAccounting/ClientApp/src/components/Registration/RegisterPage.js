@@ -1,6 +1,5 @@
 import React from "react";
 import { Form, Button, Col } from "react-bootstrap";
-import { withRouter } from "react-router";
 
 export default class RegisrtyPage extends React.Component {
   constructor(props) {

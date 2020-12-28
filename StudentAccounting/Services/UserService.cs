@@ -1,8 +1,10 @@
-﻿using StudentAccounting.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Services.Interfase;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StudentAccounting.Services
 {
@@ -20,9 +22,10 @@ namespace StudentAccounting.Services
             return context.Users;
         }
         
-        public User GetUserById(int id)
+        public async Task<User> GetUserById(int id)
         {
-            return context.Users.Find(id);
+            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            return user;
         }
 
         public void DeleteUser(int id)

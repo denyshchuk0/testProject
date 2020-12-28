@@ -87,21 +87,14 @@ export default class AdminPage extends React.Component {
         if (!response.ok) {
           window.alert(json.message);
         } else {
-          {
-            this.props.setUsers(json);
-          }
+          this.props.setUsers(json);
         }
       })
     );
   }
 
   handleSeeMore = (key) => {
-    const dataSource = [...this.props.users];
-    const userObj = dataSource.find((item) => item.id === key);
-    this.props.history.push({
-      pathname: "/student-profile",
-      state: { user: userObj },
-    });
+    this.props.history.push(`/student-profile/${key}`);
   };
 
   handleSubmit() {

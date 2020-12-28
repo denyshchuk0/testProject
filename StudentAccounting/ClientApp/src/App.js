@@ -72,7 +72,7 @@ export default class App extends Component {
             <this.PrivateRoute path="/main">
               <MainPage />
             </this.PrivateRoute>
-            <Route path="/student-profile" component={StudentProfilePage} />
+            <Route path="/student-profile/:id" component={StudentProfilePage} />
           </Switch>
         </Router>
       </Provider>

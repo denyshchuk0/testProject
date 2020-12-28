@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Form,
-  Accordion,
-  Col,
-  Container,
-  Row,
-  Button,
-  Card,
-} from "react-bootstrap";
+import { Form, Col, Container, Row, Button } from "react-bootstrap";
 import NavBarMain from "../NavBarMain";
 import { Popconfirm } from "antd";
 import "../style/StudentProfile.css";
@@ -17,12 +9,38 @@ class StudentProfilePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: this.props.location.state.user.id,
-      firstName: this.props.location.state.user.firstName,
-      lastName: this.props.location.state.user.lastName,
-      age: this.props.location.state.user.age,
-      email: this.props.location.state.user.email,
+      id: "",
+      firstName: "",
+      lastName: "",
+      age: "",
+      email: "",
     };
+  }
+
+  componentDidMount() {
+    const token = localStorage.getItem("token");
+    const request = {
+      method: "GET",
+      headers: new Headers({ Authorization: `Bearer ${token}` }),
+    };
+    fetch(
+      `https://localhost:44335/users/${this.props.match.params.id}`,
+      request
+    ).then((response) => {
+      if (!response.ok) {
+        window.alert(response.message);
+      } else {
+        response.json().then((data) =>
+          this.setState({
+            id: data.id,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            age: data.age,
+            email: data.email,
+          })
+        );
+      }
+    });
   }
 
   handleChange = (e) => {
@@ -76,7 +94,7 @@ class StudentProfilePage extends React.Component {
     };
 
     fetch(
-      "https://localhost:44335/users/update-user/" + this.state.id,
+      "https://localhost:44335/users/update-user/" + this.state.user.id,
       request
     ).then((response) => {
       if (!response.ok) {
@@ -170,18 +188,6 @@ class StudentProfilePage extends React.Component {
                   </Col>
                 </Row>
               </Container>
-              {/* <Accordion>
-                <Card>
-                  <Card.Header>
-                    <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                      Courses
-                    </Accordion.Toggle>
-                  </Card.Header>
-                  <Accordion.Collapse eventKey="0">
-                    <Card.Body>1--------------</Card.Body>
-                  </Accordion.Collapse>
-                </Card>
-              </Accordion> */}
             </Form>
           </Col>
         </Row>
@@ -189,4 +195,5 @@ class StudentProfilePage extends React.Component {
     );
   }
 }
+
 export default withRouter(StudentProfilePage);

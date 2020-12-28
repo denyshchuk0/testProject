@@ -104,7 +104,7 @@ namespace StudentAccounting.Controllers
         public IActionResult GetById(int id)
         {
             var user = userService.GetUserById(id);
-            var model = mapper.Map<UserModel>(user);
+            var model = mapper.Map<UserModel>(user.Result);
             return Ok(model);
         }
 
