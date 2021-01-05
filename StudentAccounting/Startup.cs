@@ -35,6 +35,7 @@ namespace StudentAccounting
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>();
+            
 
             services.AddHttpContextAccessor();
             services.AddCors();
@@ -94,7 +95,7 @@ namespace StudentAccounting
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext dx)
         {
             if (env.IsDevelopment())
             {

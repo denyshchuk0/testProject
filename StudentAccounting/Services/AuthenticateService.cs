@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
@@ -28,7 +29,7 @@ namespace StudentAccounting.Services
         public User Login(AuthenticateModel model)
         {
             var user = context.Users.FirstOrDefault(x => x.Email.ToUpper() == model.Email.ToUpper());
-            user.Role = context.Roles.FirstOrDefault(x => x.Id == user.RoleId); //f
+            user.Role = context.Roles.FirstOrDefault(x => x.Id == user.RoleId);
 
             if (user == null)
             {

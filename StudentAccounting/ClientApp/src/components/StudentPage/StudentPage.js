@@ -32,13 +32,8 @@ export default class SudentPage extends React.Component {
         if (!response.ok) {
           window.alert(json.message);
         } else {
-          this.setState({
-            loading: false,
-          });
-          this.setState({
-            coursesCount: json.count,
-          });
-          console.log(this.state.coursesCount);
+          this.setState({ loading: false, coursesCount: json.count });
+
           this.props.setCourses(json.model);
         }
       })
@@ -55,19 +50,22 @@ export default class SudentPage extends React.Component {
       headers: new Headers({ Authorization: `Bearer ${token}` }),
     };
 
-    console.log(pagination);
-    fetch(BASE_URL + "users/all-courses/?page=" + pagination, request).then(
-      (response) =>
-        response.json().then((json) => {
-          if (!response.ok) {
-            window.alert(json.message);
-          } else {
-            this.setState({
-              loading: false,
-            });
-            this.props.setCourses(json.model);
-          }
-        })
+    console.log("p " + pagination);
+    this.state.startPage = pagination;
+    fetch(
+      BASE_URL + "users/all-courses/?page=" + this.state.startPage,
+      request
+    ).then((response) =>
+      response.json().then((json) => {
+        if (!response.ok) {
+          window.alert(json.message);
+        } else {
+          this.setState({
+            loading: false,
+          });
+          this.props.setCourses(json.model);
+        }
+      })
     );
   }
   render() {
@@ -88,6 +86,7 @@ export default class SudentPage extends React.Component {
             <Pagination
               onChange={this.onChange.bind(this)}
               pageSize={1}
+              defaultCurrent={this.state.startPage}
               total={this.state.coursesCount}
             />
           </div>

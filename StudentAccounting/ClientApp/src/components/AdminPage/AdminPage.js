@@ -98,8 +98,6 @@ export default class AdminPage extends React.Component {
         } else {
           this.setState({
             loading: false,
-          });
-          this.setState({
             allUsersCount: json.count,
           });
 
@@ -141,9 +139,7 @@ export default class AdminPage extends React.Component {
   onChange(pagination) {
     this.setState({ loading: true });
     const user = JSON.parse(localStorage.getItem("user"));
-    this.setState({
-      currentPage: pagination.current,
-    });
+    this.state.currentPage = pagination.current;
 
     const request = {
       method: "GET",
@@ -160,9 +156,7 @@ export default class AdminPage extends React.Component {
         if (!response.ok) {
           window.alert(json.message);
         } else {
-          this.setState({
-            loading: false,
-          });
+          this.setState({ loading: false });
           this.props.setUsers(json.model);
         }
       })
@@ -192,7 +186,11 @@ export default class AdminPage extends React.Component {
         <Table
           onChange={this.onChange.bind(this)}
           columns={this.state.columnsTmp}
-          pagination={{ pageSize: 3, total: this.state.allUsersCount }}
+          pagination={{
+            defaultCurrent: this.state.currentPage,
+            pageSize: 3,
+            total: this.state.allUsersCount,
+          }}
           dataSource={this.props.users}
           loading={this.state.loading}
         />

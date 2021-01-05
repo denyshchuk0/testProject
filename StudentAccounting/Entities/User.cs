@@ -17,9 +17,9 @@ namespace StudentAccounting.Entities
         public byte[] PasswordSalt { get; set; }
 
         public int? RoleId { get; set; }
-        public Role Role { get; set; }
+        public virtual Role Role { get; set; }
 
-        public ICollection<Course> Courses { get; set; }
+        public virtual ICollection<Course> Courses { get; set; }
         public User()
         {
             Courses = new List<Course>();

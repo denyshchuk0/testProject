@@ -11,7 +11,7 @@ namespace StudentAccounting.Entities
         public DateTime StartDate { get; set; }
         public byte[] Photo { get; set; }
 
-        public ICollection<User> Users { get; set; }
+        public virtual ICollection<User> Users { get; set; }
         public Course()
         {
             Users = new List<User>();
