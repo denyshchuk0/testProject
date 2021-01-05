@@ -1,7 +1,8 @@
 import React from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import "../style/ConfirmEmailPage.css";
 import { withRouter } from "react-router";
+import { Result, Button } from "antd";
 
 class ConfirmEmailPage extends React.Component {
   handleSubmit() {
@@ -11,22 +12,21 @@ class ConfirmEmailPage extends React.Component {
   render() {
     return (
       <Container>
-        <Row className="justify-content-md-center">
-          <Col>
-            <h1>Check your email</h1>
-          </Col>
-        </Row>
-        <Row className="justify-content-md-center">
-          <Col md="auto">
+        <Result
+          status="success"
+          title="Registration was successful!"
+          subTitle="An email has been sent to you with a confirmation link."
+          extra={[
             <Button
-              className="btnLogin"
-              variant="primary"
+              type="primary"
+              key="console"
               onClick={this.handleSubmit.bind(this)}
             >
-              Login
-            </Button>
-          </Col>
-        </Row>
+              Go Login
+            </Button>,
+          ]}
+        />
+        ,
       </Container>
     );
   }

@@ -2,6 +2,8 @@ import React from "react";
 import { Container, Form, FormControl, Button } from "react-bootstrap";
 import { Table } from "antd";
 import NavBarMain from "../NavBarMain";
+import { BASE_URL } from "../utils";
+
 import "antd/dist/antd.css";
 
 export default class AdminPage extends React.Component {
@@ -10,35 +12,35 @@ export default class AdminPage extends React.Component {
       {
         title: "Id",
         dataIndex: "id",
-        key: "0",
+
         sorter: (a, b) => a.id - b.id,
         sortDirections: ["descend"],
       },
       {
         title: "Name",
         dataIndex: "firstName",
-        key: "1",
+
         sorter: (a, b) => a.firstName.length - b.firstName.length,
         sortDirections: ["descend", "ascend"],
       },
       {
         title: "Surname",
         dataIndex: "lastName",
-        key: "2",
+
         sorter: (a, b) => a.lastName.length - b.lastName.length,
         sortDirections: ["descend", "ascend"],
       },
       {
         title: "Age",
         dataIndex: "age",
-        key: "3",
+
         sorter: (a, b) => a.age - b.age,
         sortDirections: ["descend", "ascend"],
       },
       {
         title: "Email",
         dataIndex: "email",
-        key: "4",
+
         defaultSortOrder: "descend",
         sorter: (a, b) => a.email - b.email,
       },
@@ -46,13 +48,13 @@ export default class AdminPage extends React.Component {
         title: "RegDate",
         dataIndex: "registeredDate",
         defaultSortOrder: "descend",
-        key: "5",
+
         sorter: (a, b) => a.registeredDate - b.registeredDate,
       },
       {
         title: "Action",
         dataIndex: "",
-        key: "6",
+
         render: (record) => (
           <Button onClick={() => this.handleSeeMore(record.id)}>
             See more
@@ -68,6 +70,7 @@ export default class AdminPage extends React.Component {
       columnsTmp: columns,
       allUsersCount: 0,
       currentPage: 1,
+      loading: false,
     };
   }
 
@@ -76,6 +79,7 @@ export default class AdminPage extends React.Component {
   }
 
   componentDidMount() {
+    this.setState({ loading: true });
     const user = JSON.parse(localStorage.getItem("user"));
     const request = {
       method: "GET",
@@ -85,14 +89,20 @@ export default class AdminPage extends React.Component {
     };
 
     fetch(
-      "https://localhost:44335/users/all-users/?page=" + this.state.currentPage,
+      BASE_URL + "users/all-users/?page=" + this.state.currentPage,
       request
     ).then((response) =>
       response.json().then((json) => {
         if (!response.ok) {
           window.alert(json.message);
         } else {
-          this.state.allUsersCount = json.count;
+          this.setState({
+            loading: false,
+          });
+          this.setState({
+            allUsersCount: json.count,
+          });
+
           this.props.setUsers(json.model);
         }
       })
@@ -104,6 +114,7 @@ export default class AdminPage extends React.Component {
   };
 
   handleSubmit() {
+    this.setState({ loading: true });
     const token = localStorage.getItem("token");
     const request = {
       method: "GET",
@@ -111,14 +122,16 @@ export default class AdminPage extends React.Component {
     };
 
     fetch(
-      "https://localhost:44335/users/search?searchParam=" +
-        this.props.searchParam,
+      BASE_URL + "users/search?searchParam=" + this.props.searchParam,
       request
     ).then((response) =>
       response.json().then((json) => {
         if (!response.ok) {
           window.alert(json.message);
         } else {
+          this.setState({
+            loading: false,
+          });
           this.props.setUsers(json);
         }
       })
@@ -126,8 +139,12 @@ export default class AdminPage extends React.Component {
   }
 
   onChange(pagination) {
+    this.setState({ loading: true });
     const user = JSON.parse(localStorage.getItem("user"));
-    this.state.currentPage = pagination.current;
+    this.setState({
+      currentPage: pagination.current,
+    });
+
     const request = {
       method: "GET",
       headers: new Headers({
@@ -136,13 +153,16 @@ export default class AdminPage extends React.Component {
     };
 
     fetch(
-      "https://localhost:44335/users/all-users/?page=" + this.state.currentPage,
+      BASE_URL + "users/all-users/?page=" + this.state.currentPage,
       request
     ).then((response) =>
       response.json().then((json) => {
         if (!response.ok) {
           window.alert(json.message);
         } else {
+          this.setState({
+            loading: false,
+          });
           this.props.setUsers(json.model);
         }
       })
@@ -174,6 +194,7 @@ export default class AdminPage extends React.Component {
           columns={this.state.columnsTmp}
           pagination={{ pageSize: 3, total: this.state.allUsersCount }}
           dataSource={this.props.users}
+          loading={this.state.loading}
         />
         ,
       </Container>

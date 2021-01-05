@@ -1,6 +1,7 @@
 import React from "react";
 import { Form, Button, Col, Container, Row } from "react-bootstrap";
 import "../style/LoginPage.css";
+import { BASE_URL } from "../utils";
 
 export default class LoginPage extends React.Component {
   constructor(props) {
@@ -33,23 +34,22 @@ export default class LoginPage extends React.Component {
       body: JSON.stringify(data),
     };
 
-    fetch("https://localhost:44335/authenticate/authenticate", request).then(
-      (response) =>
-        response.json().then((json) => {
-          if (!response.ok) {
-            window.alert(json.message);
+    fetch(BASE_URL + "authenticate/authenticate", request).then((response) =>
+      response.json().then((json) => {
+        if (!response.ok) {
+          window.alert(json.message);
+        } else {
+          localStorage.setItem("user", JSON.stringify(json));
+          localStorage.setItem("token", json.token);
+          localStorage.setItem("role", json.name);
+          var role = localStorage.getItem("role");
+          if (role === "admin") {
+            this.props.history.push("/admin");
           } else {
-            localStorage.setItem("user", JSON.stringify(json));
-            localStorage.setItem("token", json.token);
-            localStorage.setItem("role", json.name);
-            var role = localStorage.getItem("role");
-            if (role === "admin") {
-              this.props.history.push("/admin");
-            } else {
-              this.props.history.push("/main");
-            }
+            this.props.history.push("/main");
           }
-        })
+        }
+      })
     );
   }
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { Form, Button, Col } from "react-bootstrap";
+import { BASE_URL } from "../utils";
 
 export default class RegisrtyPage extends React.Component {
   constructor(props) {
@@ -38,16 +39,14 @@ export default class RegisrtyPage extends React.Component {
       body: JSON.stringify(data),
     };
 
-    fetch("https://localhost:44335/authenticate/register", request).then(
-      (response) => {
-        if (!response.ok) {
-          window.alert(response.message);
-        } else {
-          this.props.history.push("/confirm-email");
-        }
-        return response;
+    fetch(BASE_URL + "authenticate/register", request).then((response) => {
+      if (!response.ok) {
+        window.alert(response.message);
+      } else {
+        this.props.history.push("/confirm-email");
       }
-    );
+      return response;
+    });
   }
 
   render() {

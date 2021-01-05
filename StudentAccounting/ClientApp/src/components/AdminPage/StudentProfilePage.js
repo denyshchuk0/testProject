@@ -1,9 +1,10 @@
 import React from "react";
 import { Form, Col, Container, Row, Button } from "react-bootstrap";
 import NavBarMain from "../NavBarMain";
-import { Popconfirm } from "antd";
+import { Popconfirm, Spin } from "antd";
 import "../style/StudentProfile.css";
 import { withRouter } from "react-router";
+import { BASE_URL } from "../utils";
 
 class StudentProfilePage extends React.Component {
   constructor(props) {
@@ -12,19 +13,21 @@ class StudentProfilePage extends React.Component {
       id: "",
       firstName: "",
       lastName: "",
-      age: "",
+      age: 0,
       email: "",
+      loading: false,
     };
   }
 
   componentDidMount() {
+    this.setState({ loading: true });
     if (localStorage.getItem("role") === "student") {
       var user = JSON.parse(localStorage.getItem("user"));
       this.setState({
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
-        age: user.age,
+        age: parseInt(user.age, 10),
         email: user.email,
       });
     } else {
@@ -34,24 +37,24 @@ class StudentProfilePage extends React.Component {
         headers: new Headers({ Authorization: `Bearer ${token}` }),
       };
 
-      fetch(
-        `https://localhost:44335/users/${this.props.match.params.id}`,
-        request
-      ).then((response) => {
-        if (!response.ok) {
-          window.alert(response.message);
-        } else {
-          response.json().then((data) =>
-            this.setState({
-              id: data.id,
-              firstName: data.firstName,
-              lastName: data.lastName,
-              age: data.age,
-              email: data.email,
-            })
-          );
+      fetch(BASE_URL + `users/${this.props.match.params.id}`, request).then(
+        (response) => {
+          if (!response.ok) {
+            window.alert(response.message);
+          } else {
+            this.setState({ loading: false });
+            response.json().then((data) =>
+              this.setState({
+                id: data.id,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                age: parseInt(data.age, 10),
+                email: data.email,
+              })
+            );
+          }
         }
-      });
+      );
     }
   }
 
@@ -74,16 +77,15 @@ class StudentProfilePage extends React.Component {
       }),
     };
 
-    fetch(
-      "https://localhost:44335/users/delete-user/" + this.state.id,
-      request
-    ).then((response) => {
-      if (!response.ok) {
-        window.alert(response.message);
-      } else {
-        this.props.history.push("/admin");
+    fetch(BASE_URL + "users/delete-user/" + this.state.id, request).then(
+      (response) => {
+        if (!response.ok) {
+          window.alert(response.message);
+        } else {
+          this.props.history.push("/admin");
+        }
       }
-    });
+    );
   }
 
   handleUpdateUser() {
@@ -91,7 +93,7 @@ class StudentProfilePage extends React.Component {
       id: this.state.id,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
-      age: this.state.age,
+      age: parseInt(this.state.age, 10),
       email: this.state.email,
     };
 
@@ -105,104 +107,112 @@ class StudentProfilePage extends React.Component {
       body: JSON.stringify(data),
     };
 
-    fetch(
-      "https://localhost:44335/users/update-user/" + this.state.id,
-      request
-    ).then((response) => {
-      if (!response.ok) {
-        window.alert(response.message);
-      } else {
-        this.props.history.push("/admin");
+    fetch(BASE_URL + "users/update-user/" + this.state.id, request).then(
+      (response) => {
+        if (!response.ok) {
+          window.alert(response.message);
+        } else {
+          this.props.history.push("/admin");
+        }
+        return response;
       }
-      return response;
-    });
+    );
   }
 
   render() {
     return (
       <Container>
         <NavBarMain />
-        <Row noGutters className="justify-content-md-center">
-          <Col xs={6}>
-            <Form style={{ margin: 10 }}>
-              <Form.Group as={Row} controlId="formName">
-                <Form.Label className="lbForm" column sm="6">
-                  Name
-                </Form.Label>
-                <Col sm="6">
-                  <Form.Control
-                    value={this.state.firstName}
-                    name="firstName"
-                    onChange={this.handleChange.bind(this)}
-                    plaintext
-                  />
-                </Col>
-              </Form.Group>
-              <Form.Group as={Row} controlId="formSurname">
-                <Form.Label className="lbForm" column sm="6">
-                  Surname
-                </Form.Label>
-                <Col sm="6">
-                  <Form.Control
-                    value={this.state.lastName}
-                    name="lastName"
-                    onChange={this.handleChange.bind(this)}
-                    plaintext
-                  />
-                </Col>
-              </Form.Group>
-              <Form.Group as={Row} controlId="formPlaintextEmail">
-                <Form.Label className="lbForm" column sm="6">
-                  Email
-                </Form.Label>
-                <Col sm="6">
-                  <Form.Control
-                    value={this.state.email}
-                    name="email"
-                    onChange={this.handleChange.bind(this)}
-                    plaintext
-                  />
-                </Col>
-              </Form.Group>
-              <Form.Group as={Row} controlId="formAge">
-                <Form.Label className="lbForm" column sm="6">
-                  Age
-                </Form.Label>
-                <Col sm="6">
-                  <Form.Control
-                    value={this.state.age}
-                    name="age"
-                    onChange={this.handleChange.bind(this)}
-                    plaintext
-                  />
-                </Col>
-              </Form.Group>
-              <Container>
-                <Row className="justify-content-md-center">
-                  <Col lg="4">
-                    <Button
-                      className="udBtn"
-                      variant="warning"
-                      onClick={this.handleUpdateUser.bind(this)}
-                    >
-                      Update
-                    </Button>
+
+        {this.state.loading ? (
+          <Container>
+            <Row className="justify-content-md-center">
+              <Spin size="large" />
+            </Row>
+          </Container>
+        ) : (
+          <Row noGutters className="justify-content-md-center">
+            <Col xs={6}>
+              <Form style={{ margin: 10 }}>
+                <Form.Group as={Row} controlId="formName">
+                  <Form.Label className="lbForm" column sm="6">
+                    Name
+                  </Form.Label>
+                  <Col sm="6">
+                    <Form.Control
+                      value={this.state.firstName}
+                      name="firstName"
+                      onChange={this.handleChange.bind(this)}
+                      plaintext
+                    />
                   </Col>
-                  <Col lg="4">
-                    <Popconfirm
-                      title="Sure to delete?"
-                      onConfirm={this.handleDeleteUser.bind(this)}
-                    >
-                      <Button className="udBtn" variant="danger">
-                        Delete user
+                </Form.Group>
+                <Form.Group as={Row} controlId="formSurname">
+                  <Form.Label className="lbForm" column sm="6">
+                    Surname
+                  </Form.Label>
+                  <Col sm="6">
+                    <Form.Control
+                      value={this.state.lastName}
+                      name="lastName"
+                      onChange={this.handleChange.bind(this)}
+                      plaintext
+                    />
+                  </Col>
+                </Form.Group>
+                <Form.Group as={Row} controlId="formPlaintextEmail">
+                  <Form.Label className="lbForm" column sm="6">
+                    Email
+                  </Form.Label>
+                  <Col sm="6">
+                    <Form.Control
+                      value={this.state.email}
+                      name="email"
+                      onChange={this.handleChange.bind(this)}
+                      plaintext
+                    />
+                  </Col>
+                </Form.Group>
+                <Form.Group as={Row} controlId="formAge">
+                  <Form.Label className="lbForm" column sm="6">
+                    Age
+                  </Form.Label>
+                  <Col sm="6">
+                    <Form.Control
+                      value={this.state.age}
+                      name="age"
+                      onChange={this.handleChange.bind(this)}
+                      plaintext
+                    />
+                  </Col>
+                </Form.Group>
+                <Container>
+                  <Row className="justify-content-md-center">
+                    <Col lg="4">
+                      <Button
+                        className="udBtn"
+                        variant="warning"
+                        onClick={this.handleUpdateUser.bind(this)}
+                      >
+                        Update
                       </Button>
-                    </Popconfirm>
-                  </Col>
-                </Row>
-              </Container>
-            </Form>
-          </Col>
-        </Row>
+                    </Col>
+                    <Col lg="4">
+                      <Popconfirm
+                        title="Sure to delete?"
+                        onConfirm={this.handleDeleteUser.bind(this)}
+                      >
+                        <Button className="udBtn" variant="danger">
+                          Delete user
+                        </Button>
+                      </Popconfirm>
+                    </Col>
+                  </Row>
+                </Container>
+              </Form>
+            </Col>
+          </Row>
+        )}
       </Container>
     );
   }

@@ -12,7 +12,6 @@ namespace StudentAccounting.Services
         private readonly INotificationEmailSender notificationEmailSender;
         private readonly IOptions<AppSettings> settings;
 
-
         public CourseService(DataContext context, INotificationEmailSender notificationEmailSender, IOptions<AppSettings> settings)
         {
             this.context = context;
@@ -23,7 +22,7 @@ namespace StudentAccounting.Services
         public void Subscribe(int userId, int coursId)
         {
             var user = context.Users.FirstOrDefault(x => x.Id == userId);
-            var course = context.Course.FirstOrDefault(x => x.Id == coursId);
+            var course = context.Course.FirstOrDefault(x => x.Id == coursId);//
 
             user.Courses.Add(course);
             context.Users.Update(user);

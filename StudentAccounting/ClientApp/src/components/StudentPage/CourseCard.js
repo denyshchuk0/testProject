@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Button } from "react-bootstrap";
 import { withRouter } from "react-router";
+import { BASE_URL } from "../utils";
 
 class CourseCard extends React.Component {
   constructor(props) {
@@ -20,8 +21,7 @@ class CourseCard extends React.Component {
     };
 
     fetch(
-      "https://localhost:44335/users/subscription?coursId=" +
-        this.props.courseObj.id,
+      BASE_URL + "users/subscription?coursId=" + this.props.courseObj.id,
       request
     ).then((response) => {
       if (!response.ok) {

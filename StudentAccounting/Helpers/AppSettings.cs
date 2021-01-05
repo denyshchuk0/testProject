@@ -14,5 +14,6 @@
         public string SmtpPassword { get; set; }
         public string MessageSubject { get; set; }
         public string MessageBody { get; set; }
+        public string BaseUrl { get; set; }
     }
 }

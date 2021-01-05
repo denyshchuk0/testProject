@@ -1,4 +1,5 @@
-﻿using StudentAccounting.Entities;
+﻿using Microsoft.Extensions.Options;
+using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
 using StudentAccounting.Services.Interfase;
@@ -13,22 +14,22 @@ namespace StudentAccounting.Services
     {
         private readonly IEmailSender emailService;
         private readonly DataContext context;
-
+        private readonly IOptions<AppSettings> settings;
 
         public AuthenticateService(DataContext context,
-                                   IEmailSender emailService
-                                  )
+                                   IEmailSender emailService,
+                                   IOptions<AppSettings> settings)
         {
             this.context = context;
             this.emailService = emailService;
-       
- 
+            this.settings = settings;
         }
 
         public User Login(AuthenticateModel model)
         {
             var user = context.Users.FirstOrDefault(x => x.Email.ToUpper() == model.Email.ToUpper());
-           
+            user.Role = context.Roles.FirstOrDefault(x => x.Id == user.RoleId); //f
+
             if (user == null)
             {
                 return null;
@@ -38,7 +39,6 @@ namespace StudentAccounting.Services
             {
                 return null;
             }
-            user.Role = context.Roles.FirstOrDefault(x => x.Id == user.RoleId); //f
             return user;
         }
 
@@ -69,7 +69,7 @@ namespace StudentAccounting.Services
             await emailService.SendEmailAsync(
                 user.Email,
                 "Confirm regist",
-                $"https://localhost:44335/authenticate/verify-email?token={user.VerificationToken}");
+                settings.Value.BaseUrl+$"authenticate/verify-email?token={user.VerificationToken}");
 
             return user;
         }
