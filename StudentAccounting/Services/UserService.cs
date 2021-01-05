@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Services.Interfase;
@@ -11,15 +12,21 @@ namespace StudentAccounting.Services
     public class UserService : IUserService
     {
         private readonly DataContext context;
+        private readonly IOptions<AppSettings> settings;
 
-        public UserService(DataContext context)
+        public UserService(DataContext context, IOptions<AppSettings> settings)
         {
             this.context = context;
+            this.settings = settings;
         }
 
-        public IQueryable<User> GetAllUsers()
+        public IQueryable<User> GetAllUsers(int page)
         {
-            return context.Users;
+            int pageSize = settings.Value.pageUsersSize;
+            IQueryable<User> users = context.Users;
+            settings.Value.allUsersCount = users.Count();
+            var items = users.Skip((page - 1) * pageSize).Take(pageSize);
+            return items;
         }
         
         public async Task<User> GetUserById(int id)

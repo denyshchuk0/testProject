@@ -7,6 +7,7 @@ using StudentAccounting.Helpers;
 using StudentAccounting.Models;
 using StudentAccounting.Services.Interfase;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 
 namespace StudentAccounting.Controllers
@@ -18,6 +19,7 @@ namespace StudentAccounting.Controllers
         private readonly IUserService userService;
         private readonly ICourseService courseService;
         private readonly IMapper mapper;
+        private readonly IOptions<AppSettings> appSettings;
 
         public UsersController(IUserService userService,
                                ICourseService courseService,
@@ -29,6 +31,7 @@ namespace StudentAccounting.Controllers
             this.userService = userService;
             this.courseService = courseService;
             this.mapper = mapper;
+            this.appSettings = appSettings;
         }
 
         [Authorize]
@@ -41,19 +44,22 @@ namespace StudentAccounting.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpGet("all-users")]
-        public IActionResult GetAllUsers()
+        public IActionResult GetAllUsers(int page)
         {
-            var users = userService.GetAllUsers();
+            var users = userService.GetAllUsers(page);
+            var count = appSettings.Value.allUsersCount;
+
             var model = mapper.Map<IList<UserModel>>(users);
-            return Ok(model);
+            return Ok (new { model, count });
         }
 
         [HttpGet("all-courses")]
-        public IActionResult GetAllCourses()
+        public IActionResult GetAllCourses(int page)
         {
-            var сourses = courseService.GetAllCourses();
+            var сourses = courseService.GetAllCourses(page);
+            var count = appSettings.Value.allCoursesCount;
             var model = mapper.Map<IList<CourseModel>>(сourses);
-            return Ok(model);
+            return Ok(new { model, count });
         }
 
         [Authorize(Roles = "admin")]

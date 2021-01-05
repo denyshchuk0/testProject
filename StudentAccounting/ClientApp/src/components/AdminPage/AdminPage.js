@@ -66,6 +66,8 @@ export default class AdminPage extends React.Component {
 
     this.state = {
       columnsTmp: columns,
+      allUsersCount: 0,
+      currentPage: 1,
     };
   }
 
@@ -82,12 +84,16 @@ export default class AdminPage extends React.Component {
       }),
     };
 
-    fetch("https://localhost:44335/users/all-users", request).then((response) =>
+    fetch(
+      "https://localhost:44335/users/all-users/?page=" + this.state.currentPage,
+      request
+    ).then((response) =>
       response.json().then((json) => {
         if (!response.ok) {
           window.alert(json.message);
         } else {
-          this.props.setUsers(json);
+          this.state.allUsersCount = json.count;
+          this.props.setUsers(json.model);
         }
       })
     );
@@ -119,6 +125,30 @@ export default class AdminPage extends React.Component {
     );
   }
 
+  onChange(pagination) {
+    const user = JSON.parse(localStorage.getItem("user"));
+    this.state.currentPage = pagination.current;
+    const request = {
+      method: "GET",
+      headers: new Headers({
+        Authorization: `Bearer ${user.token}`,
+      }),
+    };
+
+    fetch(
+      "https://localhost:44335/users/all-users/?page=" + this.state.currentPage,
+      request
+    ).then((response) =>
+      response.json().then((json) => {
+        if (!response.ok) {
+          window.alert(json.message);
+        } else {
+          this.props.setUsers(json.model);
+        }
+      })
+    );
+  }
+
   render() {
     return (
       <Container>
@@ -139,7 +169,13 @@ export default class AdminPage extends React.Component {
             Search
           </Button>
         </Form>
-        <Table columns={this.state.columnsTmp} dataSource={this.props.users} />,
+        <Table
+          onChange={this.onChange.bind(this)}
+          columns={this.state.columnsTmp}
+          pagination={{ pageSize: 3, total: this.state.allUsersCount }}
+          dataSource={this.props.users}
+        />
+        ,
       </Container>
     );
   }

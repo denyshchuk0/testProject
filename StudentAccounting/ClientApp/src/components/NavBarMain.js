@@ -28,8 +28,9 @@ export default class NavBarMain extends React.Component {
               <Nav.Link
                 as={Link}
                 to={{
-                  pathname: "/student-profile",
-                  state: { user: JSON.parse(localStorage.getItem("user")) },
+                  pathname: `/student-profile/${
+                    JSON.parse(localStorage.getItem("user")).id
+                  }`,
                 }}
               >
                 My page

@@ -16,9 +16,11 @@ const mapStateToProps = (state) => {
     courses: state.studentPage.courses,
   };
 };
+
 const mapDispatchToProps = {
   setCourses,
 };
+
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(StudentPageContainer)
 );

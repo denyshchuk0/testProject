@@ -42,8 +42,8 @@ export default class LoginPage extends React.Component {
             localStorage.setItem("user", JSON.stringify(json));
             localStorage.setItem("token", json.token);
             localStorage.setItem("role", json.name);
-            var user = JSON.parse(localStorage.getItem("user"));
-            if (user.name === "admin") {
+            var role = localStorage.getItem("role");
+            if (role === "admin") {
               this.props.history.push("/admin");
             } else {
               this.props.history.push("/main");

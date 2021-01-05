@@ -3,6 +3,10 @@
     public class AppSettings
     {
         public string Secret { get; set; }
+        public int allUsersCount { get; set; }
+        public int allCoursesCount { get; set; }
+        public int pageCoursesSize { get; set; }
+        public int pageUsersSize { get; set; }
         public string EmailFrom { get; set; }
         public string SmtpHost { get; set; }
         public int SmtpPort { get; set; }

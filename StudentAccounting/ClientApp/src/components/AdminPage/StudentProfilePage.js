@@ -18,29 +18,41 @@ class StudentProfilePage extends React.Component {
   }
 
   componentDidMount() {
-    const token = localStorage.getItem("token");
-    const request = {
-      method: "GET",
-      headers: new Headers({ Authorization: `Bearer ${token}` }),
-    };
-    fetch(
-      `https://localhost:44335/users/${this.props.match.params.id}`,
-      request
-    ).then((response) => {
-      if (!response.ok) {
-        window.alert(response.message);
-      } else {
-        response.json().then((data) =>
-          this.setState({
-            id: data.id,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            age: data.age,
-            email: data.email,
-          })
-        );
-      }
-    });
+    if (localStorage.getItem("role") === "student") {
+      var user = JSON.parse(localStorage.getItem("user"));
+      this.setState({
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        age: user.age,
+        email: user.email,
+      });
+    } else {
+      const token = localStorage.getItem("token");
+      const request = {
+        method: "GET",
+        headers: new Headers({ Authorization: `Bearer ${token}` }),
+      };
+
+      fetch(
+        `https://localhost:44335/users/${this.props.match.params.id}`,
+        request
+      ).then((response) => {
+        if (!response.ok) {
+          window.alert(response.message);
+        } else {
+          response.json().then((data) =>
+            this.setState({
+              id: data.id,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              age: data.age,
+              email: data.email,
+            })
+          );
+        }
+      });
+    }
   }
 
   handleChange = (e) => {
@@ -63,8 +75,7 @@ class StudentProfilePage extends React.Component {
     };
 
     fetch(
-      "https://localhost:44335/users/delete-user/" +
-        this.props.location.state.user.id,
+      "https://localhost:44335/users/delete-user/" + this.state.id,
       request
     ).then((response) => {
       if (!response.ok) {
@@ -83,6 +94,7 @@ class StudentProfilePage extends React.Component {
       age: this.state.age,
       email: this.state.email,
     };
+
     const token = localStorage.getItem("token");
     const request = {
       method: "PUT",
@@ -94,7 +106,7 @@ class StudentProfilePage extends React.Component {
     };
 
     fetch(
-      "https://localhost:44335/users/update-user/" + this.state.user.id,
+      "https://localhost:44335/users/update-user/" + this.state.id,
       request
     ).then((response) => {
       if (!response.ok) {

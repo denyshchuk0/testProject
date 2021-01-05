@@ -5,7 +5,7 @@ namespace StudentAccounting.Services.Interfase
 {
     public interface ICourseService
     {
-        IQueryable<Course> GetAllCourses();
+        IQueryable<Course> GetAllCourses(int page);
         void Subscribe(int userId, int coursId);
     }
 }

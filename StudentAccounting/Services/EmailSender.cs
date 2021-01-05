@@ -1,17 +1,12 @@
-﻿using Microsoft.Extensions.Options;
+﻿using MailKit.Security;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using StudentAccounting.Helpers;
-using System;
-using System.Net;
-using System.Net.Mail;
-using MailKit.Net.Smtp;
-using System.Threading.Tasks;
-using MailKit.Security;
-using System.Diagnostics.Tracing;
 using StudentAccounting.Services.Interfase;
+using System.Threading.Tasks;
 
 namespace StudentAccounting.Services
-{ 
+{
     public class EmailSender : IEmailSender
     {
         private readonly AppSettings appSettings;
@@ -26,7 +21,7 @@ namespace StudentAccounting.Services
             email.Sender = MailboxAddress.Parse(appSettings.EmailFrom);
             email.To.Add(MailboxAddress.Parse(toEmail));
             email.Subject = subject;
-            email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = string.Format("<h5 style='color:blue;'>{0}</h5>",message) }; ;
+            email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = string.Format("<h5 style='color:blue;'>{0}</h5>", message) }; ;
 
             using (var smtp = new MailKit.Net.Smtp.SmtpClient())
             {
@@ -36,26 +31,5 @@ namespace StudentAccounting.Services
                 smtp.Disconnect(true);
             }
         }
-        //public void SendEmailToUser(string emailId, string body)
-        //{
-        //    var fromMail = new MailAddress(appSettings.EmailFrom, appSettings.SmtpUser);
-        //    var fromEmailPassword = appSettings.SmtpPassword;
-        //    var toEmail = new MailAddress(emailId);
-
-        //    var smtp = new SmtpClient();
-        //    smtp.Host = appSettings.SmtpHost;
-        //    smtp.Port = appSettings.SmtpPort;
-        //    smtp.EnableSsl = true;
-        //    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-        //    smtp.UseDefaultCredentials = false;
-        //    smtp.Credentials = new NetworkCredential(fromMail.Address, fromEmailPassword);
-
-        //    var Message = new MailMessage(fromMail, toEmail);
-        //    Message.Subject = appSettings.MessageSubject;
-        //    Message.Body = body;
-
-        //    Message.IsBodyHtml = true;
-        //    smtp.Send(Message);
-        //}
     }
 }

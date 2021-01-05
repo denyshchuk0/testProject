@@ -1,4 +1,5 @@
-﻿using StudentAccounting.Entities;
+﻿using Microsoft.Extensions.Options;
+using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Services.Interfase;
 using System.Linq;
@@ -9,11 +10,14 @@ namespace StudentAccounting.Services
     {
         private readonly DataContext context;
         private readonly INotificationEmailSender notificationEmailSender;
+        private readonly IOptions<AppSettings> settings;
 
-        public CourseService(DataContext context, INotificationEmailSender notificationEmailSender)
+
+        public CourseService(DataContext context, INotificationEmailSender notificationEmailSender, IOptions<AppSettings> settings)
         {
             this.context = context;
             this.notificationEmailSender = notificationEmailSender;
+            this.settings = settings;
         }
 
         public void Subscribe(int userId, int coursId)
@@ -27,10 +31,13 @@ namespace StudentAccounting.Services
 
             notificationEmailSender.ScheduleJobs(user.Email, course.Name, course.StartDate);
         }
-        public IQueryable<Course> GetAllCourses()
+        public IQueryable<Course> GetAllCourses(int page)
         {
-            return context.Course;
+            int pageSize = settings.Value.pageCoursesSize;
+            IQueryable<Course> courses = context.Course;
+            settings.Value.allCoursesCount = courses.Count();
+            var items = courses.Skip((page - 1) * pageSize).Take(pageSize);
+            return items;
         }
-
     }
 }

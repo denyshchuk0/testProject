@@ -22,6 +22,7 @@ export default class RegisrtyPage extends React.Component {
       return newState;
     });
   };
+
   handleSubmit() {
     const data = {
       firstName: this.state.firstName,
