@@ -50,7 +50,6 @@ export default class SudentPage extends React.Component {
       headers: new Headers({ Authorization: `Bearer ${token}` }),
     };
 
-    console.log("p " + pagination);
     this.state.startPage = pagination;
     fetch(
       BASE_URL + "users/all-courses/?page=" + this.state.startPage,
@@ -68,6 +67,7 @@ export default class SudentPage extends React.Component {
       })
     );
   }
+
   render() {
     const courses = this.props.courses;
     return (

@@ -24,9 +24,7 @@ namespace StudentAccounting.Controllers
         public UsersController(IUserService userService,
                                ICourseService courseService,
                                IMapper mapper,
-                               IOptions<AppSettings> appSettings,
-                               IOptions<RegisterModelValidator> registerValidations,
-                               IOptions<AuthenticateModelValidator> authenticateValidator)
+                               IOptions<AppSettings> appSettings)
         {
             this.userService = userService;
             this.courseService = courseService;
@@ -35,8 +33,8 @@ namespace StudentAccounting.Controllers
         }
 
         [Authorize]
-        [HttpGet("subscription")]
-        public IActionResult Subscription(int coursId)
+        [HttpGet("subscribe")]
+        public IActionResult Subscribe(int coursId)
         {
             courseService.Subscribe(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), coursId);
             return Ok();
@@ -73,11 +71,17 @@ namespace StudentAccounting.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpGet("search")]
-        public IActionResult Search(string searchParam)
+        public IActionResult Search(string searchParam, int page)
         {
-            var user = userService.SearchUsers(searchParam);
-            var modelList = mapper.Map< IList <UserModel> >(user);
-            return Ok(modelList);
+            var users = userService.SearchUsers(searchParam, page);
+            var count = appSettings.Value.allUsersCount;
+            if (!string.IsNullOrEmpty(searchParam))
+            {
+                count = users.Count();
+            }
+            
+            var model = mapper.Map<IList<UserModel>>(users);
+            return Ok(new{ model, count });
         }
 
         [Authorize(Roles = "admin")]

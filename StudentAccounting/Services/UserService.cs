@@ -56,7 +56,6 @@ namespace StudentAccounting.Services
 
             if (!string.IsNullOrWhiteSpace(userParam.Email))
             {
-
                 user.Email = userParam.Email;
                 user.Age = userParam.Age;
 
@@ -78,22 +77,27 @@ namespace StudentAccounting.Services
             return context.Users.OrderBy(x => x.FirstName);
         }
 
-
-        public IQueryable<User> SearchUsers(string serachParam)
+        public IQueryable<User> SearchUsers(string serachParam, int page)
         {
-        
-            if (!string.IsNullOrEmpty(serachParam)) {
-
-                var students = context.Users.Where(s => s.FirstName.ToLower().Equals(serachParam.ToLower())
+            if (!string.IsNullOrEmpty(serachParam))
+            {
+                IQueryable<User> students = context.Users.Where(s => s.FirstName.ToLower().Equals(serachParam.ToLower())
                 || s.LastName.ToLower().Equals(serachParam.ToLower())
-                || (s.FirstName + ' ' + s.LastName).ToLower().Equals(serachParam.ToLower())
+                || (s.FirstName + ' ' + s.LastName).ToLower().Equals(serachParam.ToLower())//
                 || (s.LastName + ' ' + s.FirstName).ToLower().Equals(serachParam.ToLower())
                 || s.FirstName.ToLower().StartsWith(serachParam.ToLower()));
 
-            return students; }
-            else {
-                return null;
-            }   
+                int pageSize = settings.Value.pageUsersSize;
+                var items = students.Skip((page - 1) * pageSize).Take(pageSize);
+                return items;
+            }
+            else if (string.IsNullOrEmpty(serachParam))
+            {
+                var items = GetAllUsers(page);
+
+                return items;
+            }
+            else { return null; }  
         }
     }
 }

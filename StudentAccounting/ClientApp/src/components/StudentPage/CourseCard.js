@@ -21,7 +21,7 @@ class CourseCard extends React.Component {
     };
 
     fetch(
-      BASE_URL + "users/subscription?coursId=" + this.props.courseObj.id,
+      BASE_URL + "users/subscribe?coursId=" + this.props.courseObj.id,
       request
     ).then((response) => {
       if (!response.ok) {

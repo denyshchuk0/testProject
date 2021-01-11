@@ -120,7 +120,11 @@ export default class AdminPage extends React.Component {
     };
 
     fetch(
-      BASE_URL + "users/search?searchParam=" + this.props.searchParam,
+      BASE_URL +
+        "users/search?searchParam=" +
+        this.props.searchParam +
+        "&page=" +
+        this.state.currentPage,
       request
     ).then((response) =>
       response.json().then((json) => {
@@ -129,8 +133,9 @@ export default class AdminPage extends React.Component {
         } else {
           this.setState({
             loading: false,
+            allUsersCount: json.count,
           });
-          this.props.setUsers(json);
+          this.props.setUsers(json.model);
         }
       })
     );

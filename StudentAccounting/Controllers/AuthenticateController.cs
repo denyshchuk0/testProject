@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using NLog;
 using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
@@ -23,6 +24,8 @@ namespace StudentAccounting.Controllers
         private readonly AppSettings appSettings;
         private readonly RegisterModelValidator registerValidations;
         private readonly AuthenticateModelValidator authenticateValidator;
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
 
         public AuthenticateController(IAuthenticateService authenticateService,
                                       IMapper mapper,
@@ -45,10 +48,12 @@ namespace StudentAccounting.Controllers
             var user = authenticateService.Login(model);
             if (user == null)
             {
+                logger.Error("Error. User not found!");
                 return NotFound(new { message = "User not found!" });
             }
             if (!user.isVerificated)
             {
+                logger.Error("Error. Email is not confirmed");
                 return BadRequest(new { message = "Email is not confirmed" });
             }
 

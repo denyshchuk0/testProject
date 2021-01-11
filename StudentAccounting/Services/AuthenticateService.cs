@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using NLog;
 using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
@@ -16,6 +17,8 @@ namespace StudentAccounting.Services
         private readonly IEmailSender emailService;
         private readonly DataContext context;
         private readonly IOptions<AppSettings> settings;
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
 
         public AuthenticateService(DataContext context,
                                    IEmailSender emailService,
@@ -40,14 +43,16 @@ namespace StudentAccounting.Services
             {
                 return null;
             }
+
+            logger.Info("User has login!");
             return user;
         }
-
        
         public async Task<User> Register(User user, string password)
         {
             if (context.Users.Any(x => x.Email.ToUpper() == user.Email.ToUpper()))
             {
+                logger.Error("Username \"" + user.Email + "\" is already taken");
                 throw new Exception("Username \"" + user.Email + "\" is already taken");
             }
 
@@ -66,6 +71,8 @@ namespace StudentAccounting.Services
             }
 
             context.Users.Add(user);
+            logger.Info("User has registered!");
+
             context.SaveChanges();
             await emailService.SendEmailAsync(
                 user.Email,
@@ -80,6 +87,7 @@ namespace StudentAccounting.Services
 
             if (account == null)
             {
+                logger.Error("Verification failed!");
                 throw new Exception("Verification failed");
             }
 
