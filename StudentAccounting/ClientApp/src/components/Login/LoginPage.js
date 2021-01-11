@@ -47,6 +47,7 @@ export default class LoginPage extends React.Component {
             this.props.history.push("/admin");
           } else {
             this.props.history.push("/main");
+            localStorage.setItem("courses", json.courses);
           }
         }
       })

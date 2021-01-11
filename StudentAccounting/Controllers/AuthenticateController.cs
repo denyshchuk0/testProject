@@ -9,7 +9,9 @@ using StudentAccounting.Helpers;
 using StudentAccounting.Models;
 using StudentAccounting.Services.Interfase;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 namespace StudentAccounting.Controllers
@@ -46,6 +48,7 @@ namespace StudentAccounting.Controllers
         {
             authenticateValidator.Validate(model);
             var user = authenticateService.Login(model);
+
             if (user == null)
             {
                 logger.Error("Error. User not found!");
@@ -73,7 +76,7 @@ namespace StudentAccounting.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
-
+            var courses = mapper.Map<ICollection<CourseModel>>(user.Courses);
             return Ok(new
             {
                 user.Id,
@@ -82,7 +85,7 @@ namespace StudentAccounting.Controllers
                 user.LastName,
                 user.Age,
                 user.RegisteredDate,
-                user.Courses,
+                courses,
                 user.Role.Name,
                 Token = tokenString
             });

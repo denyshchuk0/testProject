@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using MimeKit.Encodings;
 using NLog;
 using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
@@ -19,7 +20,6 @@ namespace StudentAccounting.Services
         private readonly IOptions<AppSettings> settings;
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
-
         public AuthenticateService(DataContext context,
                                    IEmailSender emailService,
                                    IOptions<AppSettings> settings)
@@ -31,8 +31,7 @@ namespace StudentAccounting.Services
 
         public User Login(AuthenticateModel model)
         {
-            var user = context.Users.FirstOrDefault(x => x.Email.ToUpper() == model.Email.ToUpper());
-            user.Role = context.Roles.FirstOrDefault(x => x.Id == user.RoleId);
+            var user = context.Users.Include(x=>x.Role).Include(y => y.Courses).FirstOrDefault(z => z.Email.ToUpper() == model.Email.ToUpper());
 
             if (user == null)
             {
@@ -44,7 +43,6 @@ namespace StudentAccounting.Services
                 return null;
             }
 
-            logger.Info("User has login!");
             return user;
         }
        

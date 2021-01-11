@@ -81,10 +81,10 @@ namespace StudentAccounting.Services
         {
             if (!string.IsNullOrEmpty(serachParam))
             {
-                IQueryable<User> students = context.Users.Where(s => s.FirstName.ToLower().Equals(serachParam.ToLower())
-                || s.LastName.ToLower().Equals(serachParam.ToLower())
-                || (s.FirstName + ' ' + s.LastName).ToLower().Equals(serachParam.ToLower())//
-                || (s.LastName + ' ' + s.FirstName).ToLower().Equals(serachParam.ToLower())
+                IQueryable<User> students = context.Users.Where(s => s.FirstName.ToLower().Contains(serachParam.ToLower())
+                || s.LastName.ToLower().Contains(serachParam.ToLower())
+                || (s.FirstName + ' ' + s.LastName).ToLower().Contains(serachParam.ToLower())
+                || (s.LastName + ' ' + s.FirstName).ToLower().Contains(serachParam.ToLower())
                 || s.FirstName.ToLower().StartsWith(serachParam.ToLower()));
 
                 int pageSize = settings.Value.pageUsersSize;
