@@ -1,6 +1,7 @@
 import React from "react";
 import { Form, Button, Col } from "react-bootstrap";
 import { BASE_URL } from "../utils";
+import { message } from "antd";
 
 export default class RegisrtyPage extends React.Component {
   constructor(props) {
@@ -41,7 +42,7 @@ export default class RegisrtyPage extends React.Component {
 
     fetch(BASE_URL + "authenticate/register", request).then((response) => {
       if (!response.ok) {
-        window.alert(response.message);
+        message.info(response.message);
       } else {
         this.props.history.push("/confirm-email");
       }

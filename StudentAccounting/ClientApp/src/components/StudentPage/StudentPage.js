@@ -3,7 +3,7 @@ import CourseCard from "./CourseCard";
 import { Container, Row } from "react-bootstrap";
 import { Pagination } from "antd";
 import { BASE_URL } from "../utils";
-import { Spin } from "antd";
+import { Spin, message } from "antd";
 
 export default class SudentPage extends React.Component {
   constructor(props) {
@@ -30,10 +30,9 @@ export default class SudentPage extends React.Component {
     ).then((response) =>
       response.json().then((json) => {
         if (!response.ok) {
-          window.alert(json.message);
+          message.info(json.message);
         } else {
           this.setState({ loading: false, coursesCount: json.count });
-
           this.props.setCourses(json.model);
         }
       })
@@ -57,7 +56,7 @@ export default class SudentPage extends React.Component {
     ).then((response) =>
       response.json().then((json) => {
         if (!response.ok) {
-          window.alert(json.message);
+          message.info(json.message);
         } else {
           this.setState({
             loading: false,

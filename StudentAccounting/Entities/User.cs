@@ -26,6 +26,5 @@ namespace StudentAccounting.Entities
         {
             Courses = new List<Course>();
         }
-
     }
 }

@@ -2,6 +2,7 @@ import React from "react";
 import { Form, Button, Col, Container, Row } from "react-bootstrap";
 import "../style/LoginPage.css";
 import { BASE_URL } from "../utils";
+import { message } from "antd";
 
 export default class LoginPage extends React.Component {
   constructor(props) {
@@ -37,7 +38,7 @@ export default class LoginPage extends React.Component {
     fetch(BASE_URL + "authenticate/authenticate", request).then((response) =>
       response.json().then((json) => {
         if (!response.ok) {
-          window.alert(json.message);
+          message.info(json.message);
         } else {
           localStorage.setItem("user", JSON.stringify(json));
           localStorage.setItem("token", json.token);
@@ -47,7 +48,7 @@ export default class LoginPage extends React.Component {
             this.props.history.push("/admin");
           } else {
             this.props.history.push("/main");
-            localStorage.setItem("courses", json.courses);
+            localStorage.setItem("courses", JSON.stringify(json.courses));
           }
         }
       })

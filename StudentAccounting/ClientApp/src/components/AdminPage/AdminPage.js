@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Form, FormControl, Button } from "react-bootstrap";
-import { Table } from "antd";
+import { Table, message } from "antd";
 import NavBarMain from "../NavBarMain";
 import { BASE_URL } from "../utils";
 
@@ -94,13 +94,12 @@ export default class AdminPage extends React.Component {
     ).then((response) =>
       response.json().then((json) => {
         if (!response.ok) {
-          window.alert(json.message);
+          message.info(json.message);
         } else {
           this.setState({
             loading: false,
             allUsersCount: json.count,
           });
-
           this.props.setUsers(json.model);
         }
       })
@@ -129,7 +128,7 @@ export default class AdminPage extends React.Component {
     ).then((response) =>
       response.json().then((json) => {
         if (!response.ok) {
-          window.alert(json.message);
+          message.info(json.message);
         } else {
           this.setState({
             loading: false,
@@ -159,7 +158,7 @@ export default class AdminPage extends React.Component {
     ).then((response) =>
       response.json().then((json) => {
         if (!response.ok) {
-          window.alert(json.message);
+          message.info(json.message);
         } else {
           this.setState({ loading: false });
           this.props.setUsers(json.model);

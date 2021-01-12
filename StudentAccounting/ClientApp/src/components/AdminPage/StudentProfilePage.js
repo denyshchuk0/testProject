@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Col, Container, Row, Button } from "react-bootstrap";
 import NavBarMain from "../NavBarMain";
-import { Popconfirm, Spin } from "antd";
+import { Popconfirm, Spin, message } from "antd";
 import "../style/StudentProfile.css";
 import { withRouter } from "react-router";
 import { BASE_URL } from "../utils";
@@ -30,6 +30,7 @@ class StudentProfilePage extends React.Component {
         age: parseInt(user.age, 10),
         email: user.email,
       });
+      this.setState({ loading: false });
     } else {
       const token = localStorage.getItem("token");
       const request = {
@@ -40,7 +41,7 @@ class StudentProfilePage extends React.Component {
       fetch(BASE_URL + `users/${this.props.match.params.id}`, request).then(
         (response) => {
           if (!response.ok) {
-            window.alert(response.message);
+            message.info(response.message);
           } else {
             this.setState({ loading: false });
             response.json().then((data) =>
@@ -80,7 +81,7 @@ class StudentProfilePage extends React.Component {
     fetch(BASE_URL + "users/delete-user/" + this.state.id, request).then(
       (response) => {
         if (!response.ok) {
-          window.alert(response.message);
+          message.info(response.message);
         } else {
           this.props.history.push("/admin");
         }
@@ -110,7 +111,7 @@ class StudentProfilePage extends React.Component {
     fetch(BASE_URL + "users/update-user/" + this.state.id, request).then(
       (response) => {
         if (!response.ok) {
-          window.alert(response.message);
+          message.info(response.message);
         } else {
           this.props.history.push("/admin");
         }
