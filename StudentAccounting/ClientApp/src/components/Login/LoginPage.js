@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Button, Col, Container, Row } from "react-bootstrap";
 import "../style/LoginPage.css";
 import { BASE_URL } from "../utils";
-import { message } from "antd";
+import { message, Typography } from "antd";
 
 export default class LoginPage extends React.Component {
   constructor(props) {
@@ -92,6 +92,14 @@ export default class LoginPage extends React.Component {
                     onChange={this.handleChange.bind(this)}
                   />
                 </Form.Group>
+                <div>
+                  <Typography.Link
+                    href={BASE_URL + "authenticate/facebook-login"}
+                    target="_blank"
+                  >
+                    Facebook
+                  </Typography.Link>
+                </div>
                 <Button
                   className="btnLogin"
                   variant="primary"

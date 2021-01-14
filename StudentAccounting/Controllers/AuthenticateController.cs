@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -14,10 +17,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
+
 namespace StudentAccounting.Controllers
 {
     [Authorize]
-    [Route("[controller]")]
+    [Route("authenticate")]
     [ApiController]
     public class AuthenticateController : ControllerBase
     {
@@ -99,6 +104,28 @@ namespace StudentAccounting.Controllers
 
             authenticateService.Register(user, model.Password);
             return Ok();
+        }
+
+        [AllowAnonymous]
+        [Route("facebook-login")]
+        public IActionResult FacebookLogin()
+        {
+            var properties = new AuthenticationProperties { RedirectUri = Url.Action("FacebookResponse") };
+            return Challenge(properties, FacebookDefaults.AuthenticationScheme);
+        }
+
+        [AllowAnonymous]
+        [Route("facebook-response")]
+        public async Task<IActionResult> FacebookResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var claims = result.Principal.Identities
+                .FirstOrDefault().Claims.Select(claim => new
+                {
+                    claim.Value
+                });
+            return Ok(claims);
         }
 
         [AllowAnonymous]

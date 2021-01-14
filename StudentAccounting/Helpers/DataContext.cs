@@ -7,9 +7,11 @@ namespace StudentAccounting.Helpers
     public class DataContext : DbContext
     {
         protected readonly IConfiguration Configuration;
+        
         public DbSet<User> Users { get; set; }
         public DbSet<Course> Course { get; set; }
         public DbSet<Role> Roles { get; set; }
+      
 
         public DataContext(IConfiguration configuration)
         {

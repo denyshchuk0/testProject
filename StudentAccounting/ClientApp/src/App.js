@@ -65,6 +65,7 @@ export default class App extends Component {
           <Switch>
             <Route exact path="/" component={LoginPage} />
             <Route path="/register" component={RegisterPage} />
+            <Route path="/signin-facebook" component={ConfirmEmailPage} />
             <Route path="/confirm-email" component={ConfirmEmailPage} />
             <this.RoleRoute path="/admin">
               <AdminContainer />

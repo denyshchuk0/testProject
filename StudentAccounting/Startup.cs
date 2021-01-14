@@ -57,7 +57,7 @@ namespace StudentAccounting
             var key = Encoding.ASCII.GetBytes(appSettins.Secret);
             services.AddAuthentication(x =>
             {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
               .AddJwtBearer(x =>
@@ -74,12 +74,14 @@ namespace StudentAccounting
                       ValidateAudience = false
                   };
               })
-              .AddFacebook(facebookOptions =>
-              {  
+              .AddCookie(options=> {
+                  options.LoginPath = "/authenticate/facebook-login";
+              }).AddFacebook(facebookOptions =>
+              {
                   facebookOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                  facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
-                  facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-              }).AddCookie();
+                  facebookOptions.AppId = "1024763727929763";
+                  facebookOptions.AppSecret = "672fa1c1aff7d08d4377b61132303764";
+              });
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthenticateService, AuthenticateService>();
@@ -97,7 +99,6 @@ namespace StudentAccounting
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext dx)
         {
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
