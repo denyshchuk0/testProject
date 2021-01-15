@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Button, Col, Container, Row } from "react-bootstrap";
 import "../style/LoginPage.css";
 import { BASE_URL } from "../utils";
-import { message, Typography } from "antd";
+import { message, Spin } from "antd";
 
 export default class LoginPage extends React.Component {
   constructor(props) {
@@ -10,6 +10,7 @@ export default class LoginPage extends React.Component {
     this.state = {
       email: "",
       password: "",
+      loading: false,
     };
   }
 
@@ -55,70 +56,123 @@ export default class LoginPage extends React.Component {
     );
   }
 
+  async handleFacebook() {
+    this.setState({
+      loading: true,
+    });
+    const { authResponse } = await new Promise(window.FB.login);
+    if (!authResponse) return;
+    console.log(authResponse);
+    const data = {
+      token: authResponse.accessToken,
+    };
+    const request = {
+      method: "POST",
+      headers: new Headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify(data),
+    };
+    console.log(request);
+    fetch(BASE_URL + "authenticate/facebook-login", request).then((response) =>
+      response.json().then((json) => {
+        if (!response.ok) {
+          message.info(json.message);
+        } else {
+          localStorage.setItem("user", JSON.stringify(json));
+          localStorage.setItem("token", json.token);
+          localStorage.setItem("role", json.name);
+          var role = localStorage.getItem("role");
+          if (role === "admin") {
+            this.props.history.push("/admin");
+          } else {
+            this.props.history.push("/main");
+            localStorage.setItem("courses", JSON.stringify(json.courses));
+          }
+          this.setState({
+            loading: false,
+          });
+        }
+      })
+    );
+  }
+
   handleRegistry() {
     this.props.history.push("/register");
   }
 
   render() {
     return (
-      <Container>
-        <Form>
-          <Form.Row className="justify-content-md-center">
-            <Row>
-              <Col>
-                <Form.Group controlId="formBasicEmail">
-                  <h1>Welcome</h1>
-                  <br />
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control
-                    type="email"
-                    placeholder="Enter email"
-                    value={this.state.email}
-                    name="email"
-                    onChange={this.handleChange.bind(this)}
-                  />
-                  <Form.Text className="text-muted">
-                    We'll never share your email with anyone else.
-                  </Form.Text>
-                </Form.Group>
-
-                <Form.Group controlId="formBasicPassword">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder="Password"
-                    name="password"
-                    value={this.state.password}
-                    onChange={this.handleChange.bind(this)}
-                  />
-                </Form.Group>
-                <div>
-                  <Typography.Link
-                    href={BASE_URL + "authenticate/facebook-login"}
-                    target="_blank"
-                  >
-                    Facebook
-                  </Typography.Link>
-                </div>
-                <Button
-                  className="btnLogin"
-                  variant="primary"
-                  onClick={this.handleSubmit.bind(this)}
-                >
-                  Login
-                </Button>
-                <Button
-                  className="btnRegistry"
-                  variant="primary"
-                  onClick={this.handleRegistry.bind(this)}
-                >
-                  Register
-                </Button>
-              </Col>
+      <React.Fragment>
+        {this.state.loading ? (
+          <Container>
+            <Row className="justify-content-md-center">
+              <Spin size="large" />
             </Row>
-          </Form.Row>
-        </Form>
-      </Container>
+          </Container>
+        ) : (
+          <Container>
+            <Form>
+              <Form.Row className="justify-content-md-center">
+                <Row>
+                  <Col>
+                    <Form.Group controlId="formBasicEmail">
+                      <h1>Welcome</h1>
+                      <br />
+                      <Form.Label>Email address</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Enter email"
+                        value={this.state.email}
+                        name="email"
+                        onChange={this.handleChange.bind(this)}
+                      />
+                      <Form.Text className="text-muted">
+                        We'll never share your email with anyone else.
+                      </Form.Text>
+                    </Form.Group>
+
+                    <Form.Group controlId="formBasicPassword">
+                      <Form.Label>Password</Form.Label>
+                      <Form.Control
+                        type="password"
+                        placeholder="Password"
+                        name="password"
+                        value={this.state.password}
+                        onChange={this.handleChange.bind(this)}
+                      />
+                    </Form.Group>
+
+                    <Button
+                      className="btnLogin"
+                      variant="primary"
+                      onClick={this.handleSubmit.bind(this)}
+                    >
+                      Login
+                    </Button>
+                    <Button
+                      className="btnFacebook"
+                      variant="primary"
+                      onClick={this.handleFacebook.bind(this)}
+                    >
+                      Facebook
+                    </Button>
+                  </Col>
+                </Row>
+              </Form.Row>
+              <Form.Row className="justify-content-md-center">
+                <Row>
+                  <Button
+                    className="btnRegistry"
+                    variant="primary"
+                    onClick={this.handleRegistry.bind(this)}
+                  >
+                    Register
+                  </Button>
+                </Row>
+              </Form.Row>
+            </Form>
+          </Container>
+        )}
+      </React.Fragment>
     );
   }
 }

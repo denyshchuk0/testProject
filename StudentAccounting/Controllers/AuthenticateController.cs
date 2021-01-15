@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using NLog;
 using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
@@ -15,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -106,26 +110,62 @@ namespace StudentAccounting.Controllers
             return Ok();
         }
 
+        [HttpPost]
         [AllowAnonymous]
         [Route("facebook-login")]
-        public IActionResult FacebookLogin()
+        public async Task<IActionResult> FacebookLogin([FromBody] FacebookToken facebookToken)
         {
-            var properties = new AuthenticationProperties { RedirectUri = Url.Action("FacebookResponse") };
-            return Challenge(properties, FacebookDefaults.AuthenticationScheme);
-        }
+            var httpClient = new HttpClient { BaseAddress = new Uri("https://graph.facebook.com/v2.9/") };
+            var response = await httpClient.GetAsync($"me?access_token={facebookToken.Token}&fields=id,email,first_name,last_name");
 
-        [AllowAnonymous]
-        [Route("facebook-response")]
-        public async Task<IActionResult> FacebookResponse()
-        {
-            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (!response.IsSuccessStatusCode)
+            {
+                return BadRequest();
+            };
 
-            var claims = result.Principal.Identities
-                .FirstOrDefault().Claims.Select(claim => new
+            var result = await response.Content.ReadAsStringAsync();
+            var facebookAccount = JsonConvert.DeserializeObject<FacebookAccount>(result);
+
+            var user = authenticateService.FacebookLogin(facebookAccount);
+            if (user == null)
+            {
+                var model = mapper.Map<RegisterModel>(facebookAccount);
+                var userReg = mapper.Map<User>(model);
+                authenticateService.RegisterFacebook(userReg);
+                user = authenticateService.FacebookLogin(facebookAccount);
+            }
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
                 {
-                    claim.Value
-                });
-            return Ok(claims);
+                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                        new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
+                        new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role?.Name)
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+            var courses = mapper.Map<ICollection<CourseModel>>(user.Courses);
+
+            return Ok(new
+            {
+                user.Id,
+                user.Email,
+                user.FirstName,
+                user.LastName,
+                user.Age,
+                user.RegisteredDate,
+                courses,
+                user.Role.Name,
+                Token = tokenString
+            });
         }
 
         [AllowAnonymous]

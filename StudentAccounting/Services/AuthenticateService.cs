@@ -45,7 +45,19 @@ namespace StudentAccounting.Services
 
             return user;
         }
-       
+
+        public User FacebookLogin(FacebookAccount model)
+        {
+            var user = context.Users.Include(x => x.Role).Include(y => y.Courses).FirstOrDefault(z => z.Email.ToUpper() == model.Email.ToUpper());
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            return user;
+        }
+
         public async Task<User> Register(User user, string password)
         {
             if (context.Users.Any(x => x.Email.ToUpper() == user.Email.ToUpper()))
@@ -76,6 +88,29 @@ namespace StudentAccounting.Services
                 user.Email,
                 "Confirm regist",
                 settings.Value.BaseUrl+$"authenticate/verify-email?token={user.VerificationToken}");
+
+            return user;
+        }
+
+        public User RegisterFacebook(User user)
+        {
+            if (context.Users.Any(x => x.Email.ToUpper() == user.Email.ToUpper()))
+            {
+                logger.Error("Username \"" + user.Email + "\" is already taken");
+                throw new Exception("Username \"" + user.Email + "\" is already taken");
+            }
+            
+            user.RegisteredDate = DateTime.UtcNow;
+
+            Role userRole = context.Roles.FirstOrDefault(r => r.Name == "student");
+            if (userRole != null)
+            {
+                user.Role = userRole;
+            }
+
+            user.isVerificated = true;
+            context.Users.Add(user);
+            context.SaveChanges();
 
             return user;
         }

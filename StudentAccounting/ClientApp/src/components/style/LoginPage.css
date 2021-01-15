@@ -3,6 +3,12 @@ h1 {
 }
 .btnRegistry {
   background-color: darkcyan;
+  margin-top: 5px;
+  width: 225px;
+  float: right;
+}
+
+.btnFacebook {
   width: 110px;
   float: right;
 }
