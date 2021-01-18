@@ -11,6 +11,7 @@ namespace StudentAccounting.Helpers
         public DbSet<User> Users { get; set; }
         public DbSet<Course> Course { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
       
 
         public DataContext(IConfiguration configuration)

@@ -6,6 +6,7 @@ using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
 using StudentAccounting.Services.Interfase;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -34,9 +35,9 @@ namespace StudentAccounting.Controllers
 
         [Authorize]
         [HttpGet("subscribe")]
-        public IActionResult Subscribe(int coursId)
+        public IActionResult Subscribe(int coursId, string startDate)
         {
-            courseService.Subscribe(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), coursId);
+            courseService.Subscribe(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), coursId, DateTime.Parse(startDate));
             return Ok();
         }
 

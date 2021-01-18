@@ -62,7 +62,6 @@ export default class LoginPage extends React.Component {
     });
     const { authResponse } = await new Promise(window.FB.login);
     if (!authResponse) return;
-    console.log(authResponse);
     const data = {
       token: authResponse.accessToken,
     };
@@ -71,7 +70,6 @@ export default class LoginPage extends React.Component {
       headers: new Headers({ "Content-Type": "application/json" }),
       body: JSON.stringify(data),
     };
-    console.log(request);
     fetch(BASE_URL + "authenticate/facebook-login", request).then((response) =>
       response.json().then((json) => {
         if (!response.ok) {

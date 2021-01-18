@@ -17,6 +17,7 @@ class CourseCard extends React.Component {
       userCourses: courses,
       color: "primary",
       disabled: false,
+      startDate: "",
     };
   }
 
@@ -32,8 +33,9 @@ class CourseCard extends React.Component {
   }
 
   onChange(date, dateString) {
-    console.log(date, dateString);
+    this.state.startDate = dateString;
   }
+
   disabledDate(current) {
     return current && current < moment().endOf("day");
   }
@@ -44,9 +46,12 @@ class CourseCard extends React.Component {
       method: "GET",
       headers: new Headers({ Authorization: `Bearer ${token}` }),
     };
-
     fetch(
-      BASE_URL + "users/subscribe?coursId=" + this.props.courseObj.id,
+      BASE_URL +
+        "users/subscribe?coursId=" +
+        this.props.courseObj.id +
+        "&startDate=" +
+        this.state.startDate,
       request
     ).then((response) => {
       if (!response.ok) {
@@ -56,6 +61,8 @@ class CourseCard extends React.Component {
         this.state.userCourses.push(this.props.courseObj);
         localStorage.setItem("courses", JSON.stringify(this.state.userCourses));
         message.info("You have signed up for the course");
+      } else {
+        this.state.disabled = true;
       }
     });
   }
@@ -77,8 +84,9 @@ class CourseCard extends React.Component {
           </Button>
           <DatePicker
             style={{ margin: 5 }}
-            disabled
             disabledDate={this.disabledDate.bind(this)}
+            onChange={this.onChange.bind(this)}
+            disabled={this.state.disabled}
           />
         </Card.Body>
       </Card>
