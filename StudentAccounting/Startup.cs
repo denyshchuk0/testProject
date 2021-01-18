@@ -36,7 +36,6 @@ namespace StudentAccounting
         {
             services.AddDbContext<DataContext>();
             
-
             services.AddHttpContextAccessor();
             services.AddCors();
             services.AddControllers();
@@ -78,10 +77,11 @@ namespace StudentAccounting
               }).AddFacebook(facebookOptions =>
               {
                   facebookOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                  facebookOptions.AppId = "1024763727929763";
-                  facebookOptions.AppSecret = "672fa1c1aff7d08d4377b61132303764";
+                  facebookOptions.AppId = Configuration["Facebook:AppId"];
+                  facebookOptions.AppSecret = Configuration["Facebook:AppSecret"];
               });
 
+            services.AddHttpClient();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthenticateService, AuthenticateService>();
             services.AddScoped<ICourseService, CourseService>();

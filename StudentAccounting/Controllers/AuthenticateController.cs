@@ -1,10 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -17,7 +12,6 @@ using StudentAccounting.Services.Interfase;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
@@ -36,19 +30,22 @@ namespace StudentAccounting.Controllers
         private readonly RegisterModelValidator registerValidations;
         private readonly AuthenticateModelValidator authenticateValidator;
         private static Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly IHttpClientFactory httpClientFactory;
 
 
         public AuthenticateController(IAuthenticateService authenticateService,
                                       IMapper mapper,
                                       IOptions<AppSettings> appSettings,
                                       IOptions<RegisterModelValidator> registerValidations,
-                                      IOptions<AuthenticateModelValidator> authenticateValidator)
+                                      IOptions<AuthenticateModelValidator> authenticateValidator,
+                                      IHttpClientFactory httpClientFactory)
         {
             this.authenticateService = authenticateService;
             this.appSettings = appSettings.Value;
             this.registerValidations = registerValidations.Value;
             this.authenticateValidator = authenticateValidator.Value;
             this.mapper = mapper;
+            this.httpClientFactory = httpClientFactory;
         }
 
         [AllowAnonymous]
@@ -115,7 +112,8 @@ namespace StudentAccounting.Controllers
         [Route("facebook-login")]
         public async Task<IActionResult> FacebookLogin([FromBody] FacebookToken facebookToken)
         {
-            var httpClient = new HttpClient { BaseAddress = new Uri("https://graph.facebook.com/v2.9/") };
+            var httpClient = httpClientFactory.CreateClient();
+            httpClient.BaseAddress = new Uri("https://graph.facebook.com/v2.9/");
             var response = await httpClient.GetAsync($"me?access_token={facebookToken.Token}&fields=id,email,first_name,last_name");
 
             if (!response.IsSuccessStatusCode)
@@ -130,8 +128,8 @@ namespace StudentAccounting.Controllers
             if (user == null)
             {
                 var model = mapper.Map<RegisterModel>(facebookAccount);
-                var userReg = mapper.Map<User>(model);
-                authenticateService.RegisterFacebook(userReg);
+                var userRegister = mapper.Map<User>(model);
+                authenticateService.RegisterFacebook(userRegister);
                 user = authenticateService.FacebookLogin(facebookAccount);
             }
 
