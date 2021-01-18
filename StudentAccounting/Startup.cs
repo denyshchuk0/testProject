@@ -90,9 +90,7 @@ namespace StudentAccounting
 
             services.AddHangfire(config =>
                config.UseSqlServerStorage(Configuration.GetConnectionString("Connection")));
-
             services.AddHangfireServer();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
