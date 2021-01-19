@@ -29,6 +29,7 @@ export default class SudentPage extends React.Component {
       request
     ).then((response) =>
       response.json().then((json) => {
+        console.log(json.count);
         if (!response.ok) {
           message.info(json.message);
         } else {

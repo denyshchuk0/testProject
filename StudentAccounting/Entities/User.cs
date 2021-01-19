@@ -21,12 +21,10 @@ namespace StudentAccounting.Entities
 
         public virtual Role Role { get; set; }
 
-        public virtual ICollection<Course> Courses { get; set; }
-        public virtual ICollection<Subscription> Subscriptions { get; set; }
+        public virtual ICollection<UsersCourses> Courses { get; set; }
         public User()
         {
-            Courses = new List<Course>();
-            Subscriptions = new List<Subscription>();
+            Courses = new List<UsersCourses>();
         }
     }
 }

@@ -11,6 +11,7 @@ export const studentPageReducer = (state = defaultState, action) => {
         ...state,
         courses: action.payload,
       };
+
     default:
       return state;
   }

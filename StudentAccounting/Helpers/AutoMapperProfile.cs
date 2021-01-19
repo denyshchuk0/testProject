@@ -14,6 +14,8 @@ namespace StudentAccounting.Helpers
             CreateMap<FacebookAccount, AuthenticateModel>();
             CreateMap<FacebookAccount, RegisterModel>();
             CreateMap<Course, CourseModel>();   
+            CreateMap<UsersCourses, UsersCoursesModel>().ForMember(x => x.Id , s => s.MapFrom(x => x.CourseId))
+;
         }
     }
 }

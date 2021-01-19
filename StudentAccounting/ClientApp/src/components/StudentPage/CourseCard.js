@@ -18,6 +18,7 @@ class CourseCard extends React.Component {
       color: "primary",
       disabled: false,
       startDate: "",
+      defaultDate: "",
     };
   }
 
@@ -25,8 +26,14 @@ class CourseCard extends React.Component {
     const courses = this.state.userCourses;
     {
       courses.map((course) => {
+        console.log(course);
         if (course.id === this.props.courseObj.id) {
-          this.setState({ color: "success", disabled: true, subscribe: true });
+          this.setState({
+            color: "success",
+            disabled: true,
+            subscribe: true,
+            defaultDate: course.startDate,
+          });
         }
       });
     }
@@ -57,12 +64,15 @@ class CourseCard extends React.Component {
       if (!response.ok) {
         message.info(response.message);
       } else if (!this.state.subscribe) {
-        this.setState({ color: "success", subscribe: true });
+        this.setState({
+          color: "success",
+          subscribe: true,
+          disabled: true,
+          defaultDate: this.state.startDate,
+        });
         this.state.userCourses.push(this.props.courseObj);
         localStorage.setItem("courses", JSON.stringify(this.state.userCourses));
         message.info("You have signed up for the course");
-      } else {
-        this.state.disabled = true;
       }
     });
   }
@@ -85,6 +95,7 @@ class CourseCard extends React.Component {
           <DatePicker
             style={{ margin: 5 }}
             disabledDate={this.disabledDate.bind(this)}
+            defaultValue={this.state.defaultDate}
             onChange={this.onChange.bind(this)}
             disabled={this.state.disabled}
           />

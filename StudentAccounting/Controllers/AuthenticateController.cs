@@ -82,7 +82,7 @@ namespace StudentAccounting.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
-            var courses = mapper.Map<ICollection<CourseModel>>(user.Courses);
+            var courses = mapper.Map<ICollection<UsersCoursesModel>>(user.Courses);
             return Ok(new
             {
                 user.Id,
@@ -91,8 +91,8 @@ namespace StudentAccounting.Controllers
                 user.LastName,
                 user.Age,
                 user.RegisteredDate,
-                courses,
                 user.Role.Name,
+                courses,
                 Token = tokenString
             });
         }
@@ -150,7 +150,7 @@ namespace StudentAccounting.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
-            var courses = mapper.Map<ICollection<CourseModel>>(user.Courses);
+            var courses = mapper.Map<ICollection<UsersCoursesModel>>(user.Courses);
 
             return Ok(new
             {
@@ -160,8 +160,8 @@ namespace StudentAccounting.Controllers
                 user.LastName,
                 user.Age,
                 user.RegisteredDate,
-                courses,
                 user.Role.Name,
+                courses,
                 Token = tokenString
             });
         }

@@ -25,11 +25,9 @@ namespace StudentAccounting.Services
         {
             var user = context.Users.FirstOrDefault(x => x.Id == userId);
             var course = context.Course.FirstOrDefault(x => x.Id == coursId);
-            var subcription = new Subscription { User = user, Course = course, StartDate = startDate };
+            var subcription = new UsersCourses { User = user, Course = course, StartDate = startDate };
 
-            user.Courses.Add(course);
-            context.Users.Update(user);
-            context.Subscriptions.Update(subcription);
+            context.UsersCourses.Update(subcription);
             context.SaveChanges();
 
             notificationEmailSender.ScheduleJobs(user.Email, course.Name, subcription.StartDate);

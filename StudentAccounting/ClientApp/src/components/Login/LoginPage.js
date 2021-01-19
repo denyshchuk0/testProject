@@ -70,8 +70,10 @@ export default class LoginPage extends React.Component {
       headers: new Headers({ "Content-Type": "application/json" }),
       body: JSON.stringify(data),
     };
+
     fetch(BASE_URL + "authenticate/facebook-login", request).then((response) =>
       response.json().then((json) => {
+        console.log(json);
         if (!response.ok) {
           message.info(json.message);
         } else {
