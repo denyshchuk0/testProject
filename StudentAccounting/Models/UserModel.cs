@@ -1,4 +1,6 @@
-﻿using System;
+﻿using StudentAccounting.Entities;
+using System;
+using System.Collections.Generic;
 
 namespace StudentAccounting.Models
 {
@@ -12,5 +14,6 @@ namespace StudentAccounting.Models
         public DateTime RegisteredDate { get; set; }
         public bool isVerificated { get; set; }
         public string VerificationToken { get; set; }
+        public List<UsersCoursesModel> Courses { get; set; }
     }
 }

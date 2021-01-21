@@ -43,9 +43,11 @@ namespace StudentAccounting.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpGet("all-users")]
-        public IActionResult GetAllUsers(int page)
+        public IActionResult GetAllUsers(int page, SortState sortOrder)
         {
-            var users = userService.GetAllUsers(page);
+            sortOrder = SortState.RegisteredDateDesc;
+            var users = userService.GetAllUsers(page, sortOrder);
+
             var count = appSettings.Value.allUsersCount;
 
             var model = mapper.Map<IList<UserModel>>(users);
@@ -82,6 +84,7 @@ namespace StudentAccounting.Controllers
             }
             
             var model = mapper.Map<IList<UserModel>>(users);
+
             return Ok(new{ model, count });
         }
 

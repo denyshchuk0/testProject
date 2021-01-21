@@ -8,7 +8,7 @@ namespace StudentAccounting.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, UserModel>();
+            CreateMap<User, UserModel>().ForMember(x => x.Courses, s => s.MapFrom(x => x.Courses));
             CreateMap<RegisterModel, User>();
             CreateMap<UpdateModel, User>();
             CreateMap<FacebookAccount, AuthenticateModel>();

@@ -12,5 +12,8 @@ namespace StudentAccounting.Models
 
         public int UserId { get; set; }
         public DateTime StartDate { get; set; }
+
+        public virtual CourseModel Course { get; set; }
+
     }
 }

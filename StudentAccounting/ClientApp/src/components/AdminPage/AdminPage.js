@@ -19,8 +19,9 @@ export default class AdminPage extends React.Component {
       {
         title: "Name",
         dataIndex: "firstName",
-
-        sorter: (a, b) => a.firstName.length - b.firstName.length,
+        sorter: (a) => {
+          console.log("ff");
+        },
         sortDirections: ["descend", "ascend"],
       },
       {
@@ -45,7 +46,7 @@ export default class AdminPage extends React.Component {
         sorter: (a, b) => a.email - b.email,
       },
       {
-        title: "RegDate",
+        title: "Registered Date",
         dataIndex: "registeredDate",
         defaultSortOrder: "descend",
 
@@ -71,6 +72,7 @@ export default class AdminPage extends React.Component {
       allUsersCount: 0,
       currentPage: 1,
       loading: false,
+      sortOrder: "",
     };
   }
 
@@ -87,12 +89,13 @@ export default class AdminPage extends React.Component {
         Authorization: `Bearer ${user.token}`,
       }),
     };
-
+    console.log("ddd");
     fetch(
       BASE_URL + "users/all-users/?page=" + this.state.currentPage,
       request
     ).then((response) =>
       response.json().then((json) => {
+        console.log("ff");
         if (!response.ok) {
           message.info(json.message);
         } else {
@@ -101,6 +104,7 @@ export default class AdminPage extends React.Component {
             allUsersCount: json.count,
           });
           this.props.setUsers(json.model);
+          console.log(json.model);
         }
       })
     );
@@ -161,6 +165,7 @@ export default class AdminPage extends React.Component {
           message.info(json.message);
         } else {
           this.setState({ loading: false });
+          console.log(json.model);
           this.props.setUsers(json.model);
         }
       })
@@ -168,6 +173,21 @@ export default class AdminPage extends React.Component {
   }
 
   render() {
+    const expandedRowRender = () => {
+      const columns = [
+        { title: "Start Date", dataIndex: "startDate" },
+        { title: "Name", dataIndex: "id" },
+      ];
+
+      const data = [];
+      this.props.users.forEach((user) => {
+        data.push(user.courses);
+      });
+
+      console.log(data);
+      return <Table columns={columns} dataSource={data} pagination={false} />;
+    };
+
     return (
       <Container>
         <NavBarMain />
@@ -188,12 +208,29 @@ export default class AdminPage extends React.Component {
           </Button>
         </Form>
         <Table
+          onHeaderRow={(column) => {
+            return {
+              onClick: () => {
+                console.log(column);
+              },
+            };
+          }}
           onChange={this.onChange.bind(this)}
           columns={this.state.columnsTmp}
           pagination={{
             defaultCurrent: this.state.currentPage,
             pageSize: 3,
             total: this.state.allUsersCount,
+          }}
+          expandable={{
+            expandedRowRender: (record) =>
+              record.courses.map((element) => (
+                <p style={{ margin: 0 }}>
+                  couse id: {element.id}// start date:
+                  {element.startDate}
+                </p>
+              )),
+            rowExpandable: (record) => record.courses.length !== 0,
           }}
           dataSource={this.props.users}
           loading={this.state.loading}
