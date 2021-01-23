@@ -92,69 +92,38 @@ class StudentProfilePage extends React.Component {
   }
 
   handleUpdateUser() {
-    // const data = {
-    //   id: this.state.id,
-    //   firstName: this.state.firstName,
-    //   lastName: this.state.lastName,
-    //   age: parseInt(this.state.age, 10),
-    //   email: this.state.email,
-    // };
-
-    // const token = localStorage.getItem("token");
-    // const request = {
-    //   method: "PUT",
-    //   headers: new Headers({
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   }),
-    //   body: JSON.stringify(data),
-    // };
-
-    // fetch(BASE_URL + "users/update-user/" + this.state.id, request).then(
-    //   (response) => {
-    //     if (!response.ok) {
-    //       message.info(response.message);
-    //     } else {
-    //       this.props.history.push("/admin");
-    //     }
-    //     return response;
-    //   }
-    // );
-    console.log(this.state.plaintext);
     this.setState({ plaintext: false, update: false });
-    console.log(this.state.plaintext);
   }
-  handleCanselUpdateUser() {
-    // const data = {
-    //   id: this.state.id,
-    //   firstName: this.state.firstName,
-    //   lastName: this.state.lastName,
-    //   age: parseInt(this.state.age, 10),
-    //   email: this.state.email,
-    // };
+  handleCancelUpdateUser() {}
+  getUserForId() {
+    const token = localStorage.getItem("token");
+    const request = {
+      method: "GET",
+      headers: new Headers({ Authorization: `Bearer ${token}` }),
+    };
 
-    // const token = localStorage.getItem("token");
-    // const request = {
-    //   method: "PUT",
-    //   headers: new Headers({
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   }),
-    //   body: JSON.stringify(data),
-    // };
-
-    // fetch(BASE_URL + "users/update-user/" + this.state.id, request).then(
-    //   (response) => {
-    //     if (!response.ok) {
-    //       message.info(response.message);
-    //     } else {
-    //       this.props.history.push("/admin");
-    //     }
-    //     return response;
-    //   }
-    // );
-    this.setState({ plaintext: true, update: true });
+    fetch(BASE_URL + `users/${this.props.match.params.id}`, request).then(
+      (response) => {
+        if (!response.ok) {
+          message.info(response.message);
+        } else {
+          this.setState({ loading: false });
+          response.json().then((data) =>
+            this.setState({
+              id: data.id,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              age: parseInt(data.age, 10),
+              email: data.email,
+              plaintext: true,
+              update: true,
+            })
+          );
+        }
+      }
+    );
   }
+
   handleSaveUpdateUser() {
     const data = {
       id: this.state.id,
@@ -180,8 +149,6 @@ class StudentProfilePage extends React.Component {
           message.info(response.message);
         } else {
           this.setState({ plaintext: true, update: true });
-
-          //this.props.history.push("/admin");
         }
         return response;
       }
@@ -212,7 +179,7 @@ class StudentProfilePage extends React.Component {
                       value={this.state.firstName}
                       name="firstName"
                       onChange={this.handleChange.bind(this)}
-                      plaintext={this.state.plaintext}
+                      readOnly={this.state.plaintext}
                     />
                   </Col>
                 </Form.Group>
@@ -225,7 +192,7 @@ class StudentProfilePage extends React.Component {
                       value={this.state.lastName}
                       name="lastName"
                       onChange={this.handleChange.bind(this)}
-                      plaintext={this.state.plaintext}
+                      readOnly={this.state.plaintext}
                     />
                   </Col>
                 </Form.Group>
@@ -237,7 +204,7 @@ class StudentProfilePage extends React.Component {
                     <Form.Control
                       value={this.state.email}
                       name="email"
-                      plaintext
+                      readOnly
                     />
                   </Col>
                 </Form.Group>
@@ -250,7 +217,7 @@ class StudentProfilePage extends React.Component {
                       value={this.state.age}
                       name="age"
                       onChange={this.handleChange.bind(this)}
-                      plaintext={this.state.plaintext}
+                      readOnly={this.state.plaintext}
                     />
                   </Col>
                 </Form.Group>
@@ -270,7 +237,6 @@ class StudentProfilePage extends React.Component {
                           <Popconfirm
                             title="Sure to update?"
                             onConfirm={this.handleSaveUpdateUser.bind(this)}
-                            onCancel={this.handleCanselUpdateUser.bind(this)}
                           >
                             <Button
                               className="udBtn"
@@ -284,14 +250,26 @@ class StudentProfilePage extends React.Component {
                       </React.Fragment>
                     </Col>
                     <Col lg="4">
-                      <Popconfirm
-                        title="Sure to delete?"
-                        onConfirm={this.handleDeleteUser.bind(this)}
-                      >
-                        <Button className="udBtn" variant="danger">
-                          Delete user
-                        </Button>
-                      </Popconfirm>
+                      <React.Fragment>
+                        {this.state.update ? (
+                          <Popconfirm
+                            title="Sure to delete?"
+                            onConfirm={this.handleDeleteUser.bind(this)}
+                          >
+                            <Button className="udBtn" variant="danger">
+                              Delete
+                            </Button>
+                          </Popconfirm>
+                        ) : (
+                          <Button
+                            className="udBtn"
+                            variant="danger"
+                            onClick={this.handleCancelUpdateUser.bind(this)}
+                          >
+                            Cancel
+                          </Button>
+                        )}
+                      </React.Fragment>
                     </Col>
                   </Row>
                 </Container>
