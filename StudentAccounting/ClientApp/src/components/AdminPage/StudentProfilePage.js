@@ -16,6 +16,8 @@ class StudentProfilePage extends React.Component {
       age: 0,
       email: "",
       loading: false,
+      plaintext: true,
+      update: true,
     };
   }
 
@@ -90,6 +92,70 @@ class StudentProfilePage extends React.Component {
   }
 
   handleUpdateUser() {
+    // const data = {
+    //   id: this.state.id,
+    //   firstName: this.state.firstName,
+    //   lastName: this.state.lastName,
+    //   age: parseInt(this.state.age, 10),
+    //   email: this.state.email,
+    // };
+
+    // const token = localStorage.getItem("token");
+    // const request = {
+    //   method: "PUT",
+    //   headers: new Headers({
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   }),
+    //   body: JSON.stringify(data),
+    // };
+
+    // fetch(BASE_URL + "users/update-user/" + this.state.id, request).then(
+    //   (response) => {
+    //     if (!response.ok) {
+    //       message.info(response.message);
+    //     } else {
+    //       this.props.history.push("/admin");
+    //     }
+    //     return response;
+    //   }
+    // );
+    console.log(this.state.plaintext);
+    this.setState({ plaintext: false, update: false });
+    console.log(this.state.plaintext);
+  }
+  handleCanselUpdateUser() {
+    // const data = {
+    //   id: this.state.id,
+    //   firstName: this.state.firstName,
+    //   lastName: this.state.lastName,
+    //   age: parseInt(this.state.age, 10),
+    //   email: this.state.email,
+    // };
+
+    // const token = localStorage.getItem("token");
+    // const request = {
+    //   method: "PUT",
+    //   headers: new Headers({
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   }),
+    //   body: JSON.stringify(data),
+    // };
+
+    // fetch(BASE_URL + "users/update-user/" + this.state.id, request).then(
+    //   (response) => {
+    //     if (!response.ok) {
+    //       message.info(response.message);
+    //     } else {
+    //       this.props.history.push("/admin");
+    //     }
+    //     return response;
+    //   }
+    // );
+    this.setState({ plaintext: true, update: true });
+  }
+  handleSaveUpdateUser() {
     const data = {
       id: this.state.id,
       firstName: this.state.firstName,
@@ -113,7 +179,9 @@ class StudentProfilePage extends React.Component {
         if (!response.ok) {
           message.info(response.message);
         } else {
-          this.props.history.push("/admin");
+          this.setState({ plaintext: true, update: true });
+
+          //this.props.history.push("/admin");
         }
         return response;
       }
@@ -144,7 +212,7 @@ class StudentProfilePage extends React.Component {
                       value={this.state.firstName}
                       name="firstName"
                       onChange={this.handleChange.bind(this)}
-                      plaintext
+                      plaintext={this.state.plaintext}
                     />
                   </Col>
                 </Form.Group>
@@ -157,7 +225,7 @@ class StudentProfilePage extends React.Component {
                       value={this.state.lastName}
                       name="lastName"
                       onChange={this.handleChange.bind(this)}
-                      plaintext
+                      plaintext={this.state.plaintext}
                     />
                   </Col>
                 </Form.Group>
@@ -169,7 +237,6 @@ class StudentProfilePage extends React.Component {
                     <Form.Control
                       value={this.state.email}
                       name="email"
-                      onChange={this.handleChange.bind(this)}
                       plaintext
                     />
                   </Col>
@@ -183,20 +250,38 @@ class StudentProfilePage extends React.Component {
                       value={this.state.age}
                       name="age"
                       onChange={this.handleChange.bind(this)}
-                      plaintext
+                      plaintext={this.state.plaintext}
                     />
                   </Col>
                 </Form.Group>
                 <Container>
                   <Row className="justify-content-md-center">
                     <Col lg="4">
-                      <Button
-                        className="udBtn"
-                        variant="warning"
-                        onClick={this.handleUpdateUser.bind(this)}
-                      >
-                        Update
-                      </Button>
+                      <React.Fragment>
+                        {this.state.update ? (
+                          <Button
+                            className="udBtn"
+                            variant="warning"
+                            onClick={this.handleUpdateUser.bind(this)}
+                          >
+                            Update
+                          </Button>
+                        ) : (
+                          <Popconfirm
+                            title="Sure to update?"
+                            onConfirm={this.handleSaveUpdateUser.bind(this)}
+                            onCancel={this.handleCanselUpdateUser.bind(this)}
+                          >
+                            <Button
+                              className="udBtn"
+                              variant="warning"
+                              onClick={this.handleUpdateUser.bind(this)}
+                            >
+                              Save
+                            </Button>
+                          </Popconfirm>
+                        )}
+                      </React.Fragment>
                     </Col>
                     <Col lg="4">
                       <Popconfirm

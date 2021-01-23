@@ -1,6 +1,7 @@
 import React from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { GetRole } from "./utils";
 
 export default class NavBarMain extends React.Component {
   constructor(props) {
@@ -12,6 +13,7 @@ export default class NavBarMain extends React.Component {
       lastName: user.lastName,
       age: user.age,
       email: user.email,
+      userRole: GetRole(),
     };
   }
 
@@ -23,7 +25,13 @@ export default class NavBarMain extends React.Component {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link href="/main">Courses</Nav.Link>
+              <React.Fragment>
+                {this.state.userRole === "student" ? (
+                  <Nav.Link href="/main">Courses</Nav.Link>
+                ) : (
+                  <Nav.Link href="/admin">Students</Nav.Link>
+                )}
+              </React.Fragment>
 
               <Nav.Link
                 as={Link}

@@ -173,21 +173,6 @@ export default class AdminPage extends React.Component {
   }
 
   render() {
-    const expandedRowRender = () => {
-      const columns = [
-        { title: "Start Date", dataIndex: "startDate" },
-        { title: "Name", dataIndex: "id" },
-      ];
-
-      const data = [];
-      this.props.users.forEach((user) => {
-        data.push(user.courses);
-      });
-
-      console.log(data);
-      return <Table columns={columns} dataSource={data} pagination={false} />;
-    };
-
     return (
       <Container>
         <NavBarMain />
@@ -222,16 +207,30 @@ export default class AdminPage extends React.Component {
             pageSize: 3,
             total: this.state.allUsersCount,
           }}
+          defaultExpandAllRows={false}
           expandable={{
-            expandedRowRender: (record) =>
-              record.courses.map((element) => (
-                <p style={{ margin: 0 }}>
-                  couse id: {element.id}// start date:
-                  {element.startDate}
-                </p>
-              )),
+            expandedRowRender: (record) => (
+              <div>
+                <Table
+                  columns={[
+                    {
+                      title: "Id Cours",
+                      dataIndex: "id",
+                    },
+                    {
+                      title: "Start Date",
+                      dataIndex: "startDate",
+                    },
+                  ]}
+                  dataSource={record.courses}
+                  size="small"
+                  pagination={false}
+                />
+              </div>
+            ),
             rowExpandable: (record) => record.courses.length !== 0,
           }}
+          expandRowByClick
           dataSource={this.props.users}
           loading={this.state.loading}
         />
