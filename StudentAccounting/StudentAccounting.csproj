@@ -50,6 +50,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RazorClassLibrary\RazorClassLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Microsoft.EntityFrameworkCore.Analyzers">
       <HintPath>C:\Users\denys\.nuget\packages\microsoft.entityframeworkcore.analyzers\3.1.0\analyzers\dotnet\cs\Microsoft.EntityFrameworkCore.Analyzers.dll</HintPath>
     </Reference>

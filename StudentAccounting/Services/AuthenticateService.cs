@@ -86,7 +86,7 @@ namespace StudentAccounting.Services
             context.SaveChanges();
             await emailService.SendEmailAsync(
                 user.Email,
-                "Confirm regist",
+                "Confirm registration",
                 settings.Value.BaseUrl+$"authenticate/verify-email?token={user.VerificationToken}");
 
             return user;

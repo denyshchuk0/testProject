@@ -19,6 +19,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Hangfire;
+using RazorClassLibrary.Services;
 
 namespace StudentAccounting
 {
@@ -39,6 +40,7 @@ namespace StudentAccounting
             services.AddHttpContextAccessor();
             services.AddCors();
             services.AddControllers();
+            services.AddRazorPages();
             services.AddMvc().AddFluentValidation();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddTransient<IValidator<RegisterModel>, RegisterModelValidator>();
@@ -87,6 +89,7 @@ namespace StudentAccounting
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddTransient<INotificationEmailSender, NotificationEmailSender>();
+            services.AddScoped<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
 
             services.AddHangfire(config =>
                config.UseSqlServerStorage(Configuration.GetConnectionString("Connection")));
