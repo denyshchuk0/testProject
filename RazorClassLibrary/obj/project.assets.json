@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\TestProject\\RazorClassLibrary\\RazorClassLib.csproj",
+      "projectUniqueName": "D:\\New folder\\testProject\\RazorClassLibrary\\RazorClassLib.csproj",
       "projectName": "RazorClassLib",
-      "projectPath": "D:\\TestProject\\RazorClassLibrary\\RazorClassLib.csproj",
+      "projectPath": "D:\\New folder\\testProject\\RazorClassLibrary\\RazorClassLib.csproj",
       "packagesPath": "C:\\Users\\denys\\.nuget\\packages\\",
-      "outputPath": "D:\\TestProject\\RazorClassLibrary\\obj\\",
+      "outputPath": "D:\\New folder\\testProject\\RazorClassLibrary\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\denys\\AppData\\Roaming\\NuGet\\NuGet.Config",

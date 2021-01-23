@@ -24,3 +24,29 @@ D:\TestProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\staticwebassets\RazorCl
 D:\TestProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.dll
 D:\TestProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.pdb
 D:\TestProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.csproj.CopyComplete
+D:\New folder\testProject\RazorClassLibrary\bin\Debug\netcoreapp3.1\RazorClassLib.deps.json
+D:\New folder\testProject\RazorClassLibrary\bin\Debug\netcoreapp3.1\RazorClassLib.dll
+D:\New folder\testProject\RazorClassLibrary\bin\Debug\netcoreapp3.1\RazorClassLib.pdb
+D:\New folder\testProject\RazorClassLibrary\bin\Debug\netcoreapp3.1\RazorClassLib.Views.dll
+D:\New folder\testProject\RazorClassLibrary\bin\Debug\netcoreapp3.1\RazorClassLib.Views.pdb
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.csprojAssemblyReference.cache
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.csproj.CoreCompileInputs.cache
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.RazorAssemblyInfo.cache
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.RazorAssemblyInfo.cs
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.AssemblyInfoInputs.cache
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.AssemblyInfo.cs
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.TagHelpers.input.cache
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.TagHelpers.output.cache
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.RazorCoreGenerate.cache
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\Razor\Views\Emails\ConfirmAccount\ConfirmAccount.cshtml.g.cs
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\Razor\Views\Emails\ViewStart.cshtml.g.cs
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\Razor\Views\Shared\EmailButton.cshtml.g.cs
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\Razor\Views\Shared\EmailLayout.cshtml.g.cs
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.RazorTargetAssemblyInfo.cache
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.RazorTargetAssemblyInfo.cs
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.Views.pdb
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\staticwebassets\RazorClassLib.StaticWebAssets.Manifest.cache
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\staticwebassets\RazorClassLib.StaticWebAssets.xml
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.dll
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.pdb
+D:\New folder\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.csproj.CopyComplete
