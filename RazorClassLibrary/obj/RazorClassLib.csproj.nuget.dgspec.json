@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\New folder\\testProject\\RazorClassLibrary\\RazorClassLib.csproj": {}
+    "C:\\Users\\denys\\OneDrive\\Рабочий стол\\my\\testProject\\RazorClassLibrary\\RazorClassLib.csproj": {}
   },
   "projects": {
-    "D:\\New folder\\testProject\\RazorClassLibrary\\RazorClassLib.csproj": {
+    "C:\\Users\\denys\\OneDrive\\Рабочий стол\\my\\testProject\\RazorClassLibrary\\RazorClassLib.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\New folder\\testProject\\RazorClassLibrary\\RazorClassLib.csproj",
+        "projectUniqueName": "C:\\Users\\denys\\OneDrive\\Рабочий стол\\my\\testProject\\RazorClassLibrary\\RazorClassLib.csproj",
         "projectName": "RazorClassLib",
-        "projectPath": "D:\\New folder\\testProject\\RazorClassLibrary\\RazorClassLib.csproj",
+        "projectPath": "C:\\Users\\denys\\OneDrive\\Рабочий стол\\my\\testProject\\RazorClassLibrary\\RazorClassLib.csproj",
         "packagesPath": "C:\\Users\\denys\\.nuget\\packages\\",
-        "outputPath": "D:\\New folder\\testProject\\RazorClassLibrary\\obj\\",
+        "outputPath": "C:\\Users\\denys\\OneDrive\\Рабочий стол\\my\\testProject\\RazorClassLibrary\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\denys\\AppData\\Roaming\\NuGet\\NuGet.Config",

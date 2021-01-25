@@ -5,6 +5,7 @@ using StudentAccounting.Helpers;
 using StudentAccounting.Services.Interfase;
 using System.Threading.Tasks;
 using RazorClassLibrary.Views.Emails.ConfirmAccount;
+using RazorClassLibrary.Views.Emails.NontificationEmails;
 using System;
 using RazorClassLibrary.Services;
 
@@ -21,11 +22,27 @@ namespace StudentAccounting.Services
             this.appSettings = appSettings.Value;
         }
 
-        public async Task SendEmailAsync(string toEmail, string subject, string message)
+        public async Task SendConfirmEmail(string email, string baseUrl)
         {
-            var confirmAccountModel = new ConfirmAccountEmailViewModel($"{message}");
+            var confirmAccountModel = new ConfirmAccountEmailViewModel($"{baseUrl}");
 
             string body = await razorViewToStringRenderer.RenderViewToStringAsync("~/Views/Emails/ConfirmAccount/ConfirmAccount.cshtml", confirmAccountModel);
+
+            SendEmailAsync(email, "Confirm your Account", body);
+        }
+
+        public async Task SendNotificationEmail(string email,string subject, string message)
+        {
+            var scheduleEmailModel = new ScheduleEmailViewModel(message);
+
+            string body = await razorViewToStringRenderer.RenderViewToStringAsync("~/Views/Emails/NontificationEmails/ScheduleEmail.cshtml", scheduleEmailModel);
+
+            SendEmailAsync(email, subject, body);
+        }
+
+
+        public async void SendEmailAsync(string toEmail, string subject, string body)
+        {
 
             var email = new MimeMessage();
             email.Sender = MailboxAddress.Parse(appSettings.EmailFrom);

@@ -22,7 +22,7 @@ namespace StudentAccounting.Services
             if (DateTime.UtcNow < monthNotify)
             {
                 BackgroundJob.Schedule(() =>
-                emailSender.SendEmailAsync(
+                emailSender.SendNotificationEmail(
                     email,
                     "Start of course in a month",
                     $"Your {courseName} course will start at {startDate}"),
@@ -31,7 +31,7 @@ namespace StudentAccounting.Services
             if (DateTime.Now < weekNotify)
             {
                 BackgroundJob.Schedule(() =>
-                emailSender.SendEmailAsync(
+                emailSender.SendNotificationEmail(
                     email,
                     "Start of course in a week",
                     $"Your {courseName} course will start at {startDate}"),
@@ -40,7 +40,7 @@ namespace StudentAccounting.Services
             if (DateTime.Now < dayNotify)
             {
                 BackgroundJob.Schedule(() =>
-                emailSender.SendEmailAsync(
+                emailSender.SendNotificationEmail(
                     email,
                     "Start of course in a day",
                     $"Your {courseName} course will start at {startDate}"),
@@ -48,7 +48,7 @@ namespace StudentAccounting.Services
             }
 
             BackgroundJob.Schedule(() =>
-                emailSender.SendEmailAsync(
+                emailSender.SendNotificationEmail(
                     email,
                     "Subscribed Course notification",
                     $"Your {courseName} course will start at {startDate}"),
