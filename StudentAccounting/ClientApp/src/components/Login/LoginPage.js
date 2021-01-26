@@ -7,10 +7,13 @@ import { message, Spin } from "antd";
 export default class LoginPage extends React.Component {
   constructor(props) {
     super(props);
+    this.formRef = React.createRef();
+
     this.state = {
       email: "",
       password: "",
       loading: false,
+      validated: false,
     };
   }
 
@@ -24,7 +27,16 @@ export default class LoginPage extends React.Component {
     });
   };
 
-  handleSubmit() {
+  handleSubmit = (event) => {
+    const form = this.refs["form"];
+
+    if (form.checkValidity() === false) {
+      console.log("val");
+      event.preventDefault();
+      event.stopPropagation();
+      this.setState({ validated: true });
+      return;
+    }
     const data = {
       email: this.state.email,
       password: this.state.password,
@@ -54,7 +66,7 @@ export default class LoginPage extends React.Component {
         }
       })
     );
-  }
+  };
 
   async handleFacebook() {
     this.setState({
@@ -110,7 +122,7 @@ export default class LoginPage extends React.Component {
           </Container>
         ) : (
           <Container>
-            <Form>
+            <Form noValidate validated={this.state.validated} ref="form">
               <Form.Row className="justify-content-md-center">
                 <Row>
                   <Col>
@@ -119,12 +131,14 @@ export default class LoginPage extends React.Component {
                       <br />
                       <Form.Label>Email address</Form.Label>
                       <Form.Control
+                        required
                         type="email"
                         placeholder="Enter email"
                         value={this.state.email}
                         name="email"
                         onChange={this.handleChange.bind(this)}
                       />
+
                       <Form.Text className="text-muted">
                         We'll never share your email with anyone else.
                       </Form.Text>
@@ -133,6 +147,7 @@ export default class LoginPage extends React.Component {
                     <Form.Group controlId="formBasicPassword">
                       <Form.Label>Password</Form.Label>
                       <Form.Control
+                        required
                         type="password"
                         placeholder="Password"
                         name="password"
@@ -142,6 +157,7 @@ export default class LoginPage extends React.Component {
                     </Form.Group>
 
                     <Button
+                      // type="submit"
                       className="btnLogin"
                       variant="primary"
                       onClick={this.handleSubmit.bind(this)}

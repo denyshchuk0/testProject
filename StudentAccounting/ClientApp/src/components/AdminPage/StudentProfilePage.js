@@ -18,6 +18,7 @@ class StudentProfilePage extends React.Component {
       loading: false,
       plaintext: true,
       update: true,
+      validated: false,
     };
   }
 
@@ -124,7 +125,15 @@ class StudentProfilePage extends React.Component {
     );
   }
 
-  handleSaveUpdateUser() {
+  handleSaveUpdateUser = (event) => {
+    const form = this.refs["form"];
+
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.setState({ validated: true });
+      return;
+    }
     const data = {
       id: this.state.id,
       firstName: this.state.firstName,
@@ -153,7 +162,7 @@ class StudentProfilePage extends React.Component {
         return response;
       }
     );
-  }
+  };
 
   render() {
     return (
@@ -169,13 +178,20 @@ class StudentProfilePage extends React.Component {
         ) : (
           <Row noGutters className="justify-content-md-center">
             <Col xs={6}>
-              <Form style={{ margin: 10 }}>
+              <Form
+                style={{ margin: 10 }}
+                noValidate
+                validated={this.state.validated}
+                ref="form"
+              >
                 <Form.Group as={Row} controlId="formName">
                   <Form.Label className="lbForm" column sm="6">
                     Name
                   </Form.Label>
                   <Col sm="6">
                     <Form.Control
+                      required
+                      type="text"
                       value={this.state.firstName}
                       name="firstName"
                       onChange={this.handleChange.bind(this)}
@@ -189,6 +205,8 @@ class StudentProfilePage extends React.Component {
                   </Form.Label>
                   <Col sm="6">
                     <Form.Control
+                      required
+                      type="text"
                       value={this.state.lastName}
                       name="lastName"
                       onChange={this.handleChange.bind(this)}
@@ -202,6 +220,8 @@ class StudentProfilePage extends React.Component {
                   </Form.Label>
                   <Col sm="6">
                     <Form.Control
+                      required
+                      type="email"
                       value={this.state.email}
                       name="email"
                       readOnly
@@ -214,6 +234,7 @@ class StudentProfilePage extends React.Component {
                   </Form.Label>
                   <Col sm="6">
                     <Form.Control
+                      type="number"
                       value={this.state.age}
                       name="age"
                       onChange={this.handleChange.bind(this)}
@@ -226,26 +247,22 @@ class StudentProfilePage extends React.Component {
                     <Col lg="4">
                       <React.Fragment>
                         {this.state.update ? (
+                          <Popconfirm
+                            title="Sure to update?"
+                            onConfirm={this.handleUpdateUser.bind(this)}
+                          >
+                            <Button className="udBtn" variant="warning">
+                              Update
+                            </Button>
+                          </Popconfirm>
+                        ) : (
                           <Button
                             className="udBtn"
                             variant="warning"
-                            onClick={this.handleUpdateUser.bind(this)}
+                            onClick={this.handleSaveUpdateUser.bind(this)}
                           >
-                            Update
+                            Save
                           </Button>
-                        ) : (
-                          <Popconfirm
-                            title="Sure to update?"
-                            onConfirm={this.handleSaveUpdateUser.bind(this)}
-                          >
-                            <Button
-                              className="udBtn"
-                              variant="warning"
-                              onClick={this.handleUpdateUser.bind(this)}
-                            >
-                              Save
-                            </Button>
-                          </Popconfirm>
                         )}
                       </React.Fragment>
                     </Col>
