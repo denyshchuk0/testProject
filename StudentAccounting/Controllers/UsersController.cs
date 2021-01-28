@@ -45,7 +45,7 @@ namespace StudentAccounting.Controllers
         [HttpPost("all-users")]
         public IActionResult GetAllUsers([FromBody]PageListModel pageModel)
         {
-            var users = userService.GetAllUsers(pageModel.currentPage, pageModel.sortOrder, pageModel.sortParameter);
+            var users = userService.GetAllUsers(pageModel);
 
             var count = appSettings.Value.allUsersCount;
 
@@ -72,10 +72,10 @@ namespace StudentAccounting.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet("search")]
-        public IActionResult Search(string searchParam, int page)
+        [HttpPost("search")]
+        public IActionResult Search([FromBody]PageListModel pageModel,string searchParam)
         {
-            var users = userService.SearchUsers(searchParam, page);
+            var users = userService.SearchUsers(pageModel, searchParam);
             var count = appSettings.Value.allUsersCount;
             if (!string.IsNullOrEmpty(searchParam))
             {

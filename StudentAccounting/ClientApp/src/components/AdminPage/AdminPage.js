@@ -73,7 +73,8 @@ export default class AdminPage extends React.Component {
     this.state = {
       columnsTmp: columns,
       allUsersCount: 0,
-      currentPage: 1,
+      pageNumber: 1,
+      pageSize: 2,
       loading: false,
       defaultSortOrder: "ascend",
       defaultSortParameter: "Id",
@@ -87,11 +88,14 @@ export default class AdminPage extends React.Component {
   componentDidMount() {
     this.setState({ loading: true });
     const user = JSON.parse(localStorage.getItem("user"));
+
     const data = {
-      currentPage: this.state.currentPage,
+      pageSize: this.state.pageSize,
+      pageNumber: this.state.pageNumber,
       sortOrder: this.state.defaultSortOrder,
       sortParameter: this.state.defaultSortParameter,
     };
+
     const request = {
       method: "POST",
       headers: new Headers({
@@ -101,10 +105,8 @@ export default class AdminPage extends React.Component {
       body: JSON.stringify(data),
     };
 
-    console.log("ddd");
     fetch(BASE_URL + "users/all-users", request).then((response) =>
       response.json().then((json) => {
-        console.log("ff");
         if (!response.ok) {
           message.info(json.message);
         } else {
@@ -125,17 +127,25 @@ export default class AdminPage extends React.Component {
   handleSubmit() {
     this.setState({ loading: true });
     const token = localStorage.getItem("token");
+
+    const data = {
+      pageSize: this.state.pageSize,
+      pageNumber: this.state.pageNumber,
+      sortOrder: this.state.defaultSortOrder,
+      sortParameter: this.state.defaultSortParameter,
+    };
+
     const request = {
-      method: "GET",
-      headers: new Headers({ Authorization: `Bearer ${token}` }),
+      method: "POST",
+      headers: new Headers({
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify(data),
     };
 
     fetch(
-      BASE_URL +
-        "users/search?searchParam=" +
-        this.props.searchParam +
-        "&page=" +
-        this.state.currentPage,
+      BASE_URL + "users/search?searchParam=" + this.props.searchParam,
       request
     ).then((response) =>
       response.json().then((json) => {
@@ -156,15 +166,15 @@ export default class AdminPage extends React.Component {
     console.log("Various parameters", sorter);
     this.setState({ loading: true });
     const user = JSON.parse(localStorage.getItem("user"));
+
     const data = {
-      currentPage: pagination.current,
+      pageSize: this.state.pageSize,
+      pageNumber: pagination.current,
       sortOrder: sorter.order || this.state.defaultSortOrder,
       sortParameter: sorter.column
         ? sorter.column.columnKey
         : this.state.defaultSortParameter,
     };
-
-    console.log(data.sortParameter);
 
     const request = {
       method: "POST",
@@ -208,18 +218,11 @@ export default class AdminPage extends React.Component {
           </Button>
         </Form>
         <Table
-          onHeaderRow={(columns) => {
-            return {
-              onClick: (e) => {
-                console.log(columns);
-              },
-            };
-          }}
           onChange={this.handleChange.bind(this)}
           columns={this.state.columnsTmp}
           pagination={{
-            defaultCurrent: this.state.currentPage,
-            pageSize: 3,
+            defaultCurrent: this.state.pageNumber,
+            pageSize: this.state.pageSize,
             total: this.state.allUsersCount,
           }}
           defaultExpandAllRows={false}

@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
+using StudentAccounting.Models;
 using StudentAccounting.Services.Interfase;
 using System;
 using System.Collections.Generic;
@@ -21,13 +23,11 @@ namespace StudentAccounting.Services
             this.settings = settings;
         }
 
-        public IEnumerable<User> GetAllUsers(int page, string sortOrder, string sortParameter)
+        public IEnumerable<User> GetAllUsers(PageListModel pageModel)
         {
-            int pageSize = settings.Value.pageUsersSize;
-
             var users = context.Users.Include(x => x.Courses).ToList();
 
-            users = ApplySorting(sortOrder, sortParameter, users);
+            users = ApplySorting(pageModel.sortOrder, pageModel.sortParameter, users);
 
             var courses = context.Course.ToList();
             foreach (var item in users)
@@ -38,8 +38,7 @@ namespace StudentAccounting.Services
                 }
             }
 
-            settings.Value.allUsersCount = users.ToList().Count();
-            var items = users.Skip((page - 1) * pageSize).Take(pageSize);
+            var items = Pagination(pageModel, users);
             return items;
         }
 
@@ -100,27 +99,31 @@ namespace StudentAccounting.Services
             }
         }
 
-        public IEnumerable<User> SearchUsers(string serachParam, int page)
+        public IEnumerable<User> SearchUsers(PageListModel pageModel, string serachParam)
         {
-            if (!string.IsNullOrEmpty(serachParam))
+            if (string.IsNullOrEmpty(serachParam))
             {
-                IEnumerable<User> students = context.Users.Where(s => s.FirstName.ToLower().Contains(serachParam.ToLower())
+                var users = GetAllUsers(pageModel);
+                return users;
+            }
+
+            IEnumerable<User> students = context.Users.Where(s => s.FirstName.ToLower().Contains(serachParam.ToLower())
                 || s.LastName.ToLower().Contains(serachParam.ToLower())
                 || (s.FirstName + ' ' + s.LastName).ToLower().Contains(serachParam.ToLower())
                 || (s.LastName + ' ' + s.FirstName).ToLower().Contains(serachParam.ToLower())
+                || (s.Age).ToString().Contains(serachParam.ToLower())
+                || (s.Email).ToLower().Contains(serachParam.ToLower())
                 || s.FirstName.ToLower().StartsWith(serachParam.ToLower()));
 
-                int pageSize = settings.Value.pageUsersSize;
-                var items = students.Skip((page - 1) * pageSize).Take(pageSize);
-                return items;
-            }
-            else if (string.IsNullOrEmpty(serachParam))
-            {
-                var items = GetAllUsers(page, null, null);
+            var items = Pagination(pageModel, students);
+            return items;
+        }
 
-                return items;
-            }
-            else { return null; }
+        private IEnumerable<User> Pagination(PageListModel pageModel, IEnumerable<User> students)
+        {
+            var items = students.Skip((pageModel.PageNumber - 1) * pageModel.PageSize)
+                                .Take(pageModel.PageSize);
+            return items;
         }
     }
 }
