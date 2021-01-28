@@ -27,15 +27,15 @@ namespace StudentAccounting.Models
         public SortState RegisteredDateSort { get; private set; }   
         public SortState Current { get; private set; }   
 
-        public SortModel(SortState sortOrder)
+        public SortModel(string sortOrder)
         {
-            NameSort = sortOrder == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            SurnameSort = sortOrder == SortState.SurnameAsc ? SortState.SurnameDesc : SortState.SurnameAsc;
-            AgeSort = sortOrder == SortState.AgeAsc ? SortState.AgeDesc : SortState.AgeAsc;
-            EmailSort = sortOrder == SortState.EmailAsc ? SortState.EmailDesc : SortState.EmailAsc;
-            RegisteredDateSort = sortOrder == SortState.RegisteredDateAsc ? SortState.RegisteredDateDesc : SortState.RegisteredDateAsc;
+            //NameSort = sortOrder == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            //SurnameSort = sortOrder == SortState.SurnameAsc ? SortState.SurnameDesc : SortState.SurnameAsc;
+            //AgeSort = sortOrder == SortState.AgeAsc ? SortState.AgeDesc : SortState.AgeAsc;
+            //EmailSort = sortOrder == SortState.EmailAsc ? SortState.EmailDesc : SortState.EmailAsc;
+            //RegisteredDateSort = sortOrder == SortState.RegisteredDateAsc ? SortState.RegisteredDateDesc : SortState.RegisteredDateAsc;
 
-            Current = sortOrder;
+            //Current = sortOrder;
         }
     }
 }

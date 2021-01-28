@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Options;
 using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
-using StudentAccounting.Models;
 using StudentAccounting.Services.Interfase;
 using System;
 using System.Collections.Generic;
@@ -23,58 +21,39 @@ namespace StudentAccounting.Services
             this.settings = settings;
         }
 
-        public IQueryable<User> GetAllUsers(int page, SortState sortOrder)
+        public IEnumerable<User> GetAllUsers(int page, string sortOrder, string sortParameter)
         {
             int pageSize = settings.Value.pageUsersSize;
-            IQueryable<User> users = context.Users.Include(x=>x.Courses);
-            switch (sortOrder)
-            {
-                case SortState.NameDesc:
-                    users = users.OrderByDescending(s => s.FirstName);
-                    break;
-                case SortState.SurnameAsc:
-                    users = users.OrderBy(s => s.LastName);
-                    break;
-                case SortState.SurnameDesc:
-                    users = users.OrderByDescending(s => s.LastName);
-                    break;
-                case SortState.AgeAsc:
-                    users = users.OrderBy(s => s.Age);
-                    break;
-                case SortState.AgeDesc:
-                    users = users.OrderByDescending(s => s.Age);
-                    break;
-                case SortState.EmailAsc:
-                    users = users.OrderBy(s => s.Email);
-                    break;
-                case SortState.EmailDesc:
-                    users = users.OrderByDescending(s => s.Email);
-                    break;
-                case SortState.RegisteredDateAsc:
-                    users = users.OrderBy(s => s.RegisteredDate);
-                    break;
-                case SortState.RegisteredDateDesc:
-                    users = users.OrderByDescending(s => s.RegisteredDate);
-                    break;
-                case SortState.NameAsc:
-                    break;
-                default:
-                    users = users.OrderBy(s => s.FirstName);
-                    break;
-            }
+
+            var users = context.Users.Include(x => x.Courses).ToList();
+
+            users = ApplySorting(sortOrder, sortParameter, users);
 
             var courses = context.Course.ToList();
-            foreach (var model in users)
+            foreach (var item in users)
             {
-                foreach (var course in model.Courses)
+                foreach (var course in item.Courses)
                 {
                     course.Course = courses.FirstOrDefault(x => x.Id == course.CourseId);
                 }
             }
 
-            settings.Value.allUsersCount = users.Count();
+            settings.Value.allUsersCount = users.ToList().Count();
             var items = users.Skip((page - 1) * pageSize).Take(pageSize);
             return items;
+        }
+
+        private static List<User> ApplySorting(string sortOrder, string sortParameter, List<User> users)
+        {
+            if (sortOrder == "ascend")
+            {
+                users = users.OrderBy(s => s.GetType().GetProperty(sortParameter).GetValue(s)).ToList();
+            }
+            else if (sortOrder == "descend")
+            {
+                users = users.OrderByDescending(s => s.GetType().GetProperty(sortParameter).GetValue(s)).ToList();
+            }
+            return users;
         }
 
         public async Task<User> GetUserById(int id)
@@ -83,7 +62,6 @@ namespace StudentAccounting.Services
             return user;
         }
 
-     
         public void DeleteUser(int id)
         {
             var user = context.Users.Find(id);
@@ -96,7 +74,7 @@ namespace StudentAccounting.Services
 
         public void UpdateUser(User userParam)
         {
-            var user = context.Users.FirstOrDefault(x=>x.Id==userParam.Id);
+            var user = context.Users.FirstOrDefault(x => x.Id == userParam.Id);
 
             if (user == null)
             {
@@ -122,11 +100,11 @@ namespace StudentAccounting.Services
             }
         }
 
-        public IQueryable<User> SearchUsers(string serachParam, int page)
+        public IEnumerable<User> SearchUsers(string serachParam, int page)
         {
             if (!string.IsNullOrEmpty(serachParam))
             {
-                IQueryable<User> students = context.Users.Where(s => s.FirstName.ToLower().Contains(serachParam.ToLower())
+                IEnumerable<User> students = context.Users.Where(s => s.FirstName.ToLower().Contains(serachParam.ToLower())
                 || s.LastName.ToLower().Contains(serachParam.ToLower())
                 || (s.FirstName + ' ' + s.LastName).ToLower().Contains(serachParam.ToLower())
                 || (s.LastName + ' ' + s.FirstName).ToLower().Contains(serachParam.ToLower())
@@ -138,11 +116,11 @@ namespace StudentAccounting.Services
             }
             else if (string.IsNullOrEmpty(serachParam))
             {
-                var items = GetAllUsers(page, SortState.RegisteredDateDesc);
+                var items = GetAllUsers(page, null, null);
 
                 return items;
             }
-            else { return null; }  
+            else { return null; }
         }
     }
 }

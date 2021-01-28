@@ -12,45 +12,48 @@ export default class AdminPage extends React.Component {
       {
         title: "Id",
         dataIndex: "id",
-
-        sorter: (a, b) => a.id - b.id,
-        sortDirections: ["descend"],
+        columnKey: "Id",
+        sorter: true,
+        sortDirections: ["descend", "ascend"],
       },
       {
         title: "Name",
         dataIndex: "firstName",
-        sorter: (a) => {
-          console.log("ff");
-        },
+        columnKey: "FirstName",
+
+        sorter: true,
         sortDirections: ["descend", "ascend"],
       },
       {
         title: "Surname",
         dataIndex: "lastName",
+        columnKey: "LastName",
 
-        sorter: (a, b) => a.lastName.length - b.lastName.length,
+        sorter: true,
         sortDirections: ["descend", "ascend"],
       },
       {
         title: "Age",
         dataIndex: "age",
+        columnKey: "Age",
 
-        sorter: (a, b) => a.age - b.age,
+        sorter: true,
         sortDirections: ["descend", "ascend"],
       },
       {
         title: "Email",
         dataIndex: "email",
+        columnKey: "Email",
 
-        defaultSortOrder: "descend",
-        sorter: (a, b) => a.email - b.email,
+        sorter: true,
       },
       {
         title: "Registered Date",
         dataIndex: "registeredDate",
-        defaultSortOrder: "descend",
+        columnKey: "RegisteredDate",
 
-        sorter: (a, b) => a.registeredDate - b.registeredDate,
+        sorter: true,
+        sortDirections: ["descend", "ascend"],
       },
       {
         title: "Action",
@@ -72,7 +75,8 @@ export default class AdminPage extends React.Component {
       allUsersCount: 0,
       currentPage: 1,
       loading: false,
-      sortOrder: "",
+      defaultSortOrder: "ascend",
+      defaultSortParameter: "Id",
     };
   }
 
@@ -83,17 +87,22 @@ export default class AdminPage extends React.Component {
   componentDidMount() {
     this.setState({ loading: true });
     const user = JSON.parse(localStorage.getItem("user"));
+    const data = {
+      currentPage: this.state.currentPage,
+      sortOrder: this.state.defaultSortOrder,
+      sortParameter: this.state.defaultSortParameter,
+    };
     const request = {
-      method: "GET",
+      method: "POST",
       headers: new Headers({
         Authorization: `Bearer ${user.token}`,
+        "Content-Type": "application/json",
       }),
+      body: JSON.stringify(data),
     };
+
     console.log("ddd");
-    fetch(
-      BASE_URL + "users/all-users/?page=" + this.state.currentPage,
-      request
-    ).then((response) =>
+    fetch(BASE_URL + "users/all-users", request).then((response) =>
       response.json().then((json) => {
         console.log("ff");
         if (!response.ok) {
@@ -104,7 +113,6 @@ export default class AdminPage extends React.Component {
             allUsersCount: json.count,
           });
           this.props.setUsers(json.model);
-          console.log(json.model);
         }
       })
     );
@@ -144,28 +152,35 @@ export default class AdminPage extends React.Component {
     );
   }
 
-  onChange(pagination) {
+  handleChange(pagination, filters, sorter) {
+    console.log("Various parameters", sorter);
     this.setState({ loading: true });
     const user = JSON.parse(localStorage.getItem("user"));
-    this.state.currentPage = pagination.current;
-
-    const request = {
-      method: "GET",
-      headers: new Headers({
-        Authorization: `Bearer ${user.token}`,
-      }),
+    const data = {
+      currentPage: pagination.current,
+      sortOrder: sorter.order || this.state.defaultSortOrder,
+      sortParameter: sorter.column
+        ? sorter.column.columnKey
+        : this.state.defaultSortParameter,
     };
 
-    fetch(
-      BASE_URL + "users/all-users/?page=" + this.state.currentPage,
-      request
-    ).then((response) =>
+    console.log(data.sortParameter);
+
+    const request = {
+      method: "POST",
+      headers: new Headers({
+        Authorization: `Bearer ${user.token}`,
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify(data),
+    };
+
+    fetch(BASE_URL + "users/all-users", request).then((response) =>
       response.json().then((json) => {
         if (!response.ok) {
           message.info(json.message);
         } else {
           this.setState({ loading: false });
-          console.log(json.model);
           this.props.setUsers(json.model);
         }
       })
@@ -193,14 +208,14 @@ export default class AdminPage extends React.Component {
           </Button>
         </Form>
         <Table
-          onHeaderRow={(column) => {
+          onHeaderRow={(columns) => {
             return {
-              onClick: () => {
-                console.log(column);
+              onClick: (e) => {
+                console.log(columns);
               },
             };
           }}
-          onChange={this.onChange.bind(this)}
+          onChange={this.handleChange.bind(this)}
           columns={this.state.columnsTmp}
           pagination={{
             defaultCurrent: this.state.currentPage,

@@ -8,10 +8,10 @@ namespace StudentAccounting.Services.Interfase
 {
     public interface IUserService
     {
-        IQueryable<User> GetAllUsers(int page, SortState sortOrder);
+        IEnumerable<User> GetAllUsers(int page, string sortOrder,string sortParameter);
         Task<User> GetUserById(int id);
         void UpdateUser(User user);
-        IQueryable<User> SearchUsers(string serachParam, int page);
+        IEnumerable<User> SearchUsers(string serachParam, int page);
         void DeleteUser(int id);
     }
 }

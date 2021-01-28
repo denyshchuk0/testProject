@@ -42,11 +42,10 @@ namespace StudentAccounting.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet("all-users")]
-        public IActionResult GetAllUsers(int page, SortState sortOrder)
+        [HttpPost("all-users")]
+        public IActionResult GetAllUsers([FromBody]PageListModel pageModel)
         {
-            sortOrder = SortState.RegisteredDateDesc;
-            var users = userService.GetAllUsers(page, sortOrder);
+            var users = userService.GetAllUsers(pageModel.currentPage, pageModel.sortOrder, pageModel.sortParameter);
 
             var count = appSettings.Value.allUsersCount;
 

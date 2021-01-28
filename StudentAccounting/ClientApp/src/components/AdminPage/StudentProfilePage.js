@@ -157,6 +157,8 @@ class StudentProfilePage extends React.Component {
         if (!response.ok) {
           message.info(response.message);
         } else {
+          message.info("User was updated!");
+
           this.setState({ plaintext: true, update: true });
         }
         return response;
