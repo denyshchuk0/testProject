@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace StudentAccounting.Models
+﻿namespace StudentAccounting.Models
 {
     public class PageListModel
     {
-        const int maxPageSize = 5;
+        const int maxPageSize = 20;
         public int PageNumber { get; set; } = 1;
 
-        public int pageSize = 2;
+        public int pageSize = 3;
         public int PageSize
         {
             get

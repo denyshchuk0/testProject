@@ -121,6 +121,7 @@ namespace StudentAccounting.Services
 
         private IEnumerable<User> Pagination(PageListModel pageModel, IEnumerable<User> students)
         {
+            settings.Value.allUsersCount = students.Count();
             var items = students.Skip((pageModel.PageNumber - 1) * pageModel.PageSize)
                                 .Take(pageModel.PageSize);
             return items;

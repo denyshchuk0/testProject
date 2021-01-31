@@ -3,6 +3,7 @@ import { Container, Form, FormControl, Button } from "react-bootstrap";
 import { Table, message } from "antd";
 import NavBarMain from "../NavBarMain";
 import { BASE_URL } from "../utils";
+import moment from "moment";
 
 import "antd/dist/antd.css";
 
@@ -12,14 +13,14 @@ export default class AdminPage extends React.Component {
       {
         title: "Id",
         dataIndex: "id",
-        columnKey: "Id",
+        key: "Id",
         sorter: true,
         sortDirections: ["descend", "ascend"],
       },
       {
         title: "Name",
         dataIndex: "firstName",
-        columnKey: "FirstName",
+        key: "FirstName",
 
         sorter: true,
         sortDirections: ["descend", "ascend"],
@@ -27,7 +28,7 @@ export default class AdminPage extends React.Component {
       {
         title: "Surname",
         dataIndex: "lastName",
-        columnKey: "LastName",
+        key: "LastName",
 
         sorter: true,
         sortDirections: ["descend", "ascend"],
@@ -35,7 +36,7 @@ export default class AdminPage extends React.Component {
       {
         title: "Age",
         dataIndex: "age",
-        columnKey: "Age",
+        key: "Age",
 
         sorter: true,
         sortDirections: ["descend", "ascend"],
@@ -43,14 +44,14 @@ export default class AdminPage extends React.Component {
       {
         title: "Email",
         dataIndex: "email",
-        columnKey: "Email",
+        key: "Email",
 
         sorter: true,
       },
       {
         title: "Registered Date",
         dataIndex: "registeredDate",
-        columnKey: "RegisteredDate",
+        key: "RegisteredDate",
 
         sorter: true,
         sortDirections: ["descend", "ascend"],
@@ -58,6 +59,7 @@ export default class AdminPage extends React.Component {
       {
         title: "Action",
         dataIndex: "",
+        key: "x",
 
         render: (record) => (
           <Button onClick={() => this.handleSeeMore(record.id)}>
@@ -74,7 +76,7 @@ export default class AdminPage extends React.Component {
       columnsTmp: columns,
       allUsersCount: 0,
       pageNumber: 1,
-      pageSize: 2,
+      pageSize: 3,
       loading: false,
       defaultSortOrder: "ascend",
       defaultSortParameter: "Id",
@@ -114,7 +116,14 @@ export default class AdminPage extends React.Component {
             loading: false,
             allUsersCount: json.count,
           });
-          this.props.setUsers(json.model);
+          const users = json.model;
+          users.forEach((user) => {
+            user.key = user.id;
+            user.registeredDate = moment(new Date(user.registeredDate)).format(
+              "DD/MM/YYYY"
+            );
+          });
+          this.props.setUsers(users);
         }
       })
     );
@@ -127,7 +136,6 @@ export default class AdminPage extends React.Component {
   handleSubmit() {
     this.setState({ loading: true });
     const token = localStorage.getItem("token");
-
     const data = {
       pageSize: this.state.pageSize,
       pageNumber: this.state.pageNumber,
@@ -156,7 +164,14 @@ export default class AdminPage extends React.Component {
             loading: false,
             allUsersCount: json.count,
           });
-          this.props.setUsers(json.model);
+          const users = json.model;
+          users.forEach((user) => {
+            user.key = user.id;
+            user.registeredDate = moment(new Date(user.registeredDate)).format(
+              "DD/MM/YYYY"
+            );
+          });
+          this.props.setUsers(users);
         }
       })
     );
@@ -171,9 +186,7 @@ export default class AdminPage extends React.Component {
       pageSize: this.state.pageSize,
       pageNumber: pagination.current,
       sortOrder: sorter.order || this.state.defaultSortOrder,
-      sortParameter: sorter.column
-        ? sorter.column.columnKey
-        : this.state.defaultSortParameter,
+      sortParameter: sorter.columnKey || this.state.defaultSortParameter,
     };
 
     const request = {
@@ -191,7 +204,14 @@ export default class AdminPage extends React.Component {
           message.info(json.message);
         } else {
           this.setState({ loading: false });
-          this.props.setUsers(json.model);
+          const users = json.model;
+          users.forEach((user) => {
+            user.key = user.id;
+            user.registeredDate = moment(new Date(user.registeredDate)).format(
+              "DD/MM/YYYY"
+            );
+          });
+          this.props.setUsers(users);
         }
       })
     );
