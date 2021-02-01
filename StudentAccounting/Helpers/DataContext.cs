@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using StudentAccounting.Entities;
 using StudentAccounting.Entities.Config;
@@ -8,7 +9,7 @@ namespace StudentAccounting.Helpers
     public class DataContext : DbContext
     {
         protected readonly IConfiguration Configuration;
-        
+
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Course> Course { get; set; }
         public virtual DbSet<Role> Roles { get; set; }

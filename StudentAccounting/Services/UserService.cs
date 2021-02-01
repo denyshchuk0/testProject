@@ -7,6 +7,7 @@ using StudentAccounting.Models;
 using StudentAccounting.Services.Interfase;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace StudentAccounting.Services
@@ -30,7 +31,7 @@ namespace StudentAccounting.Services
 
             var sortedUsers = ApplySorting(pageModel.sortOrder, pageModel.sortParameter, users);
 
-            var items = Pagination(pageModel, sortedUsers);
+            var items = Pagination(pageModel, sortedUsers).ToList();
             var courses = context.Course;
             foreach (var item in items)
             {
@@ -39,22 +40,31 @@ namespace StudentAccounting.Services
                     course.Course = courses.FirstOrDefault(x => x.Id == course.CourseId);
                 }
             }
-
-            return items;
+            return items.AsQueryable();
         }
 
         private static IQueryable<User> ApplySorting(string sortOrder, string sortParameter, IQueryable<User> users)
         {
-
-            if (sortOrder == "ascend")
+            var type = typeof(User);
+            var prop = type.GetProperty(sortParameter);
+            if (prop != null)
             {
-                users = users.OrderBy(s => s.GetType().GetProperty(sortParameter).GetValue(s));
+                var param = Expression.Parameter(type);
+                var expr = Expression.Lambda<Func<User, object>>(
+                    Expression.Convert(Expression.Property(param, prop), typeof(object)),
+                    param
+                );
 
+                if (sortOrder == "ascend")
+                {
+                    users = users.OrderBy(expr);
+                }
+                else if (sortOrder == "descend")
+                {
+                    users = users.OrderByDescending(expr);
+                }
             }
-            else if (sortOrder == "descend")
-            {
-                users = users.OrderByDescending(s => s.GetType().GetProperty(sortParameter).GetValue(s));
-            }
+
             return users;
         }
 
@@ -127,7 +137,8 @@ namespace StudentAccounting.Services
         {
             var items = students.Skip((pageModel.PageNumber - 1) * pageModel.PageSize)
                                 .Take(pageModel.PageSize);
-            return items;
+
+            return items.AsQueryable();
         }
     }
 }

@@ -48,7 +48,7 @@ namespace StudentAccounting.Controllers
             var users = userService.GetAllUsers(pageModel);
 
             var count = appSettings.Value.allUsersCount;
-            var model = mapper.Map<IQueryable<UserModel>>(users);
+            var model = mapper.Map<IList<UserModel>>(users);
             return Ok(new { model, count });
         }
 
