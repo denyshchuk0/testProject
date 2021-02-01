@@ -65,7 +65,11 @@ namespace StudentAccounting.Controllers
                 logger.Error("Error. Email is not confirmed");
                 return BadRequest(new { message = "Email is not confirmed" });
             }
+            return UserResult(user);
+        }
 
+        private IActionResult UserResult(User user)
+        {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -96,6 +100,7 @@ namespace StudentAccounting.Controllers
                 Token = tokenString
             });
         }
+
         [AllowAnonymous]
         [HttpPost("register")]
         public IActionResult Register([FromBody]RegisterModel model)
@@ -113,11 +118,12 @@ namespace StudentAccounting.Controllers
         public async Task<IActionResult> FacebookLogin([FromBody] FacebookToken facebookToken)
         {
             var httpClient = httpClientFactory.CreateClient();
-            httpClient.BaseAddress = new Uri("https://graph.facebook.com/v2.9/");
+            httpClient.BaseAddress = new Uri("https://graph.facebook.com/v4.0/");
             var response = await httpClient.GetAsync($"me?access_token={facebookToken.Token}&fields=id,email,first_name,last_name");
 
             if (!response.IsSuccessStatusCode)
             {
+                logger.Error("Error. Response was not success!");
                 return BadRequest();
             };
 
@@ -133,37 +139,7 @@ namespace StudentAccounting.Controllers
                 user = authenticateService.FacebookLogin(facebookAccount);
             }
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                        new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
-                        new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role?.Name)
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-            var courses = mapper.Map<ICollection<UsersCoursesModel>>(user.Courses);
-
-            return Ok(new
-            {
-                user.Id,
-                user.Email,
-                user.FirstName,
-                user.LastName,
-                user.Age,
-                user.RegisteredDate,
-                user.Role.Name,
-                courses,
-                Token = tokenString
-            });
+            return UserResult(user);
         }
 
         [AllowAnonymous]

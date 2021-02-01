@@ -1,13 +1,12 @@
 ﻿using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using RazorClassLibrary.Services;
+using RazorClassLibrary.Views.Emails.ConfirmAccount;
+using RazorClassLibrary.Views.Emails.NontificationEmails;
 using StudentAccounting.Helpers;
 using StudentAccounting.Services.Interfase;
 using System.Threading.Tasks;
-using RazorClassLibrary.Views.Emails.ConfirmAccount;
-using RazorClassLibrary.Views.Emails.NontificationEmails;
-using System;
-using RazorClassLibrary.Services;
 
 namespace StudentAccounting.Services
 {
@@ -26,16 +25,22 @@ namespace StudentAccounting.Services
         {
             var confirmAccountModel = new ConfirmAccountEmailViewModel($"{baseUrl}");
 
-            string body = await razorViewToStringRenderer.RenderViewToStringAsync("~/Views/Emails/ConfirmAccount/ConfirmAccount.cshtml", confirmAccountModel);
+            string body = await razorViewToStringRenderer
+                                .RenderViewToStringAsync(
+                                 "~/Views/Emails/ConfirmAccount/ConfirmAccount.cshtml",
+                                 confirmAccountModel);
 
             SendEmailAsync(email, "Confirm your Account", body);
         }
 
-        public async Task SendNotificationEmail(string email,string subject, string message)
+        public async Task SendNotificationEmail(string email, string subject, string message)
         {
             var scheduleEmailModel = new ScheduleEmailViewModel(message);
 
-            string body = await razorViewToStringRenderer.RenderViewToStringAsync("~/Views/Emails/NontificationEmails/ScheduleEmail.cshtml", scheduleEmailModel);
+            string body = await razorViewToStringRenderer
+                                .RenderViewToStringAsync(
+                                 "~/Views/Emails/NontificationEmails/ScheduleEmail.cshtml",
+                                 scheduleEmailModel);
 
             SendEmailAsync(email, subject, body);
         }
@@ -43,7 +48,6 @@ namespace StudentAccounting.Services
 
         public async void SendEmailAsync(string toEmail, string subject, string body)
         {
-
             var email = new MimeMessage();
             email.Sender = MailboxAddress.Parse(appSettings.EmailFrom);
             email.To.Add(MailboxAddress.Parse(toEmail));

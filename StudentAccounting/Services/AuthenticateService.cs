@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using MimeKit.Encodings;
 using NLog;
 using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
@@ -31,7 +31,7 @@ namespace StudentAccounting.Services
 
         public User Login(AuthenticateModel model)
         {
-            var user = context.Users.Include(x=>x.Role).Include(y => y.Courses).FirstOrDefault(z => z.Email.ToUpper() == model.Email.ToUpper());
+            var user = context.Users.Include(x => x.Role).Include(y => y.Courses).FirstOrDefault(z => z.Email.ToUpper() == model.Email.ToUpper());
 
             if (user == null)
             {
@@ -71,8 +71,8 @@ namespace StudentAccounting.Services
 
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
-            user.RegisteredDate = DateTime.UtcNow;
             user.VerificationToken = RandomTokenString();
+            user.RegisteredDate = DateTime.UtcNow;
 
             Role userRole = context.Roles.FirstOrDefault(r => r.Name == "student");
             if (userRole != null)
@@ -81,12 +81,11 @@ namespace StudentAccounting.Services
             }
 
             context.Users.Add(user);
-            logger.Info("User has registered!");
-
             context.SaveChanges();
+
             await emailService.SendConfirmEmail(
                 user.Email,
-                settings.Value.BaseUrl+$"authenticate/verify-email?token={user.VerificationToken}");
+                settings.Value.BaseUrl + $"authenticate/verify-email?token={user.VerificationToken}");
 
             return user;
         }
@@ -98,7 +97,7 @@ namespace StudentAccounting.Services
                 logger.Error("Username \"" + user.Email + "\" is already taken");
                 throw new Exception("Username \"" + user.Email + "\" is already taken");
             }
-            
+
             user.RegisteredDate = DateTime.UtcNow;
 
             Role userRole = context.Roles.FirstOrDefault(r => r.Name == "student");
@@ -119,7 +118,7 @@ namespace StudentAccounting.Services
 
             if (account == null)
             {
-                logger.Error("Verification failed!");
+                logger.Error($"Verification failed!");
                 throw new Exception("Verification failed");
             }
 

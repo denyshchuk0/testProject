@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using NLog;
 using StudentAccounting.Entities;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
 using StudentAccounting.Services.Interfase;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace StudentAccounting.Services
@@ -17,6 +15,7 @@ namespace StudentAccounting.Services
     {
         private readonly DataContext context;
         private readonly IOptions<AppSettings> settings;
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
         public UserService(DataContext context, IOptions<AppSettings> settings)
         {
@@ -31,7 +30,7 @@ namespace StudentAccounting.Services
 
             var sortedUsers = ApplySorting(pageModel.sortOrder, pageModel.sortParameter, users);
 
-             var items = Pagination(pageModel, sortedUsers);
+            var items = Pagination(pageModel, sortedUsers);
             var courses = context.Course;
             foreach (var item in items)
             {
@@ -67,7 +66,7 @@ namespace StudentAccounting.Services
 
         public void DeleteUser(int id)
         {
-            var user = context.Users.Find(id);
+            var user = context.Users.FirstOrDefault(x=>x.Id==id);
             if (user != null)
             {
                 context.Users.Remove(user);
@@ -81,6 +80,7 @@ namespace StudentAccounting.Services
 
             if (user == null)
             {
+                logger.Error("User not found");
                 throw new Exception("User not found");
             }
 

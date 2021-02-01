@@ -1,6 +1,7 @@
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using RazorClassLibrary.Services;
 using StudentAccounting.Helpers;
 using StudentAccounting.Models;
 using StudentAccounting.Services;
@@ -17,9 +19,6 @@ using StudentAccounting.Services.Interfase;
 using System;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using Hangfire;
-using RazorClassLibrary.Services;
 
 namespace StudentAccounting
 {
@@ -36,7 +35,6 @@ namespace StudentAccounting
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>();
-            
             services.AddHttpContextAccessor();
             services.AddCors();
             services.AddControllers();
@@ -74,7 +72,8 @@ namespace StudentAccounting
                       ValidateAudience = false
                   };
               })
-              .AddCookie(options=> {
+              .AddCookie(options =>
+              {
                   options.LoginPath = "/authenticate/facebook-login";
               }).AddFacebook(facebookOptions =>
               {
@@ -119,6 +118,7 @@ namespace StudentAccounting
             app.UseSpaStaticFiles();
             app.UseDefaultFiles();
             app.UseRouting();
+
             app.UseCors(x => x
               .AllowAnyOrigin()
               .AllowAnyMethod()

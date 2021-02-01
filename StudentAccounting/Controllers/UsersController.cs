@@ -49,7 +49,7 @@ namespace StudentAccounting.Controllers
 
             var count = appSettings.Value.allUsersCount;
             var model = mapper.Map<IQueryable<UserModel>>(users);
-            return Ok (new { model, count });
+            return Ok(new { model, count });
         }
 
         [HttpGet("all-courses")]
@@ -72,7 +72,7 @@ namespace StudentAccounting.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost("search")]
-        public IActionResult Search([FromBody]PageListModel pageModel,string searchParam)
+        public IActionResult Search([FromBody]PageListModel pageModel, string searchParam)
         {
             var users = userService.SearchUsers(pageModel, searchParam);
             var count = appSettings.Value.allUsersCount;
@@ -80,19 +80,18 @@ namespace StudentAccounting.Controllers
             {
                 count = users.Count();
             }
-            
+
             var model = mapper.Map<IList<UserModel>>(users);
 
-            return Ok(new{ model, count });
+            return Ok(new { model, count });
         }
 
         [Authorize(Roles = "admin")]
         [HttpPut("update-user/{id}")]
-        public IActionResult Update(int id,[FromBody]UpdateModel model)
+        public IActionResult Update([FromBody]UpdateModel model)
         {
             var user = mapper.Map<User>(model);
-            user.Id = id;
-
+            //user.id=id;
             userService.UpdateUser(user);
             return Ok();
         }

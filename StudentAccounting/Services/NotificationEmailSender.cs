@@ -15,7 +15,7 @@ namespace StudentAccounting.Services
 
         public void ScheduleJobs(string email, string courseName, DateTime startDate)
         {
-            var monthNotify = startDate.AddMonths(-1);//
+            var monthNotify = startDate.AddMonths(-1);
             var weekNotify = startDate.AddDays(-7);
             var dayNotify = startDate.AddHours(-8);
 
@@ -28,7 +28,7 @@ namespace StudentAccounting.Services
                     $"Your {courseName} course will start at {startDate}"),
                     monthNotify);
             }
-            if (DateTime.Now < weekNotify)
+            if (DateTime.UtcNow < weekNotify)
             {
                 BackgroundJob.Schedule(() =>
                 emailSender.SendNotificationEmail(
@@ -37,7 +37,7 @@ namespace StudentAccounting.Services
                     $"Your {courseName} course will start at {startDate}"),
                     weekNotify);
             }
-            if (DateTime.Now < dayNotify)
+            if (DateTime.UtcNow < dayNotify)
             {
                 BackgroundJob.Schedule(() =>
                 emailSender.SendNotificationEmail(
