@@ -5,6 +5,8 @@ import { message } from "antd";
 
 export default class RegisrtyPage extends React.Component {
   constructor(props) {
+    this.formRef = React.createRef();
+
     super(props);
     this.state = {
       firstName: "",
@@ -127,7 +129,7 @@ export default class RegisrtyPage extends React.Component {
               />
             </Form.Group>
 
-            <Button type="submit" style={{ width: 110 }} variant="primary">
+            <Button style={{ width: 110 }} variant="primary">
               Register
             </Button>
           </Col>

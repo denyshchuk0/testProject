@@ -26,7 +26,6 @@ class CourseCard extends React.Component {
     const courses = this.state.userCourses;
     {
       courses.map((course) => {
-        console.log(course);
         if (course.id === this.props.courseObj.id) {
           this.setState({
             color: "success",
@@ -87,7 +86,7 @@ class CourseCard extends React.Component {
           <Button
             variant={this.state.color}
             disabled={this.state.disabled}
-            courseId={this.props.courseObj.id}
+            courseid={this.props.courseObj.id}
             onClick={this.handleSubmit.bind(this)}
           >
             Sub.

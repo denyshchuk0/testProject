@@ -95,6 +95,7 @@ class StudentProfilePage extends React.Component {
   handleUpdateUser() {
     this.setState({ plaintext: false, update: false });
   }
+
   handleCancelUpdateUser() {}
   getUserForId() {
     const token = localStorage.getItem("token");

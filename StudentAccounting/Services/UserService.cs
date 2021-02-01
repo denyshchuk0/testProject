@@ -8,6 +8,7 @@ using StudentAccounting.Services.Interfase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace StudentAccounting.Services
@@ -23,14 +24,16 @@ namespace StudentAccounting.Services
             this.settings = settings;
         }
 
-        public IEnumerable<User> GetAllUsers(PageListModel pageModel)
+        public IQueryable<User> GetAllUsers(PageListModel pageModel)
         {
-            var users = context.Users.Include(x => x.Courses).ToList();
+            var users = context.Users.Include(x => x.Courses);
+            settings.Value.allUsersCount = users.Count();
 
-            users = ApplySorting(pageModel.sortOrder, pageModel.sortParameter, users);
+            var sortedUsers = ApplySorting(pageModel.sortOrder, pageModel.sortParameter, users);
 
-            var courses = context.Course.ToList();
-            foreach (var item in users)
+             var items = Pagination(pageModel, sortedUsers);
+            var courses = context.Course;
+            foreach (var item in items)
             {
                 foreach (var course in item.Courses)
                 {
@@ -38,19 +41,20 @@ namespace StudentAccounting.Services
                 }
             }
 
-            var items = Pagination(pageModel, users);
             return items;
         }
 
-        private static List<User> ApplySorting(string sortOrder, string sortParameter, List<User> users)
+        private static IQueryable<User> ApplySorting(string sortOrder, string sortParameter, IQueryable<User> users)
         {
+
             if (sortOrder == "ascend")
             {
-                users = users.OrderBy(s => s.GetType().GetProperty(sortParameter).GetValue(s)).ToList();
+                users = users.OrderBy(s => s.GetType().GetProperty(sortParameter).GetValue(s));
+
             }
             else if (sortOrder == "descend")
             {
-                users = users.OrderByDescending(s => s.GetType().GetProperty(sortParameter).GetValue(s)).ToList();
+                users = users.OrderByDescending(s => s.GetType().GetProperty(sortParameter).GetValue(s));
             }
             return users;
         }
@@ -99,15 +103,15 @@ namespace StudentAccounting.Services
             }
         }
 
-        public IEnumerable<User> SearchUsers(PageListModel pageModel, string serachParam)
+        public IQueryable<User> SearchUsers(PageListModel pageModel, string serachParam)
         {
             if (string.IsNullOrEmpty(serachParam))
             {
-                var users = GetAllUsers(pageModel);
+                var users = GetAllUsers(pageModel).AsQueryable();
                 return users;
             }
 
-            IEnumerable<User> students = context.Users.Where(s => s.FirstName.ToLower().Contains(serachParam.ToLower())
+            IQueryable<User> students = context.Users.Where(s => s.FirstName.ToLower().Contains(serachParam.ToLower())
                 || s.LastName.ToLower().Contains(serachParam.ToLower())
                 || (s.FirstName + ' ' + s.LastName).ToLower().Contains(serachParam.ToLower())
                 || (s.LastName + ' ' + s.FirstName).ToLower().Contains(serachParam.ToLower())
@@ -119,9 +123,8 @@ namespace StudentAccounting.Services
             return items;
         }
 
-        private IEnumerable<User> Pagination(PageListModel pageModel, IEnumerable<User> students)
+        private IQueryable<User> Pagination(PageListModel pageModel, IQueryable<User> students)
         {
-            settings.Value.allUsersCount = students.Count();
             var items = students.Skip((pageModel.PageNumber - 1) * pageModel.PageSize)
                                 .Take(pageModel.PageSize);
             return items;

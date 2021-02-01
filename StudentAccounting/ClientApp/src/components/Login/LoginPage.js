@@ -14,6 +14,7 @@ export default class LoginPage extends React.Component {
       password: "",
       loading: false,
       validated: false,
+      isMounted: false,
     };
   }
 
@@ -27,65 +28,49 @@ export default class LoginPage extends React.Component {
     });
   };
 
+  componentWillUnmount() {
+    this.setState({ loading: false });
+  }
+
   handleSubmit = (event) => {
     const form = this.refs["form"];
 
     if (form.checkValidity() === false) {
-      console.log("val");
       event.preventDefault();
       event.stopPropagation();
       this.setState({ validated: true });
       return;
     }
+
     const data = {
       email: this.state.email,
       password: this.state.password,
     };
 
-    const request = {
-      method: "POST",
-      headers: new Headers({ "Content-Type": "application/json" }),
-      body: JSON.stringify(data),
-    };
-
-    fetch(BASE_URL + "authenticate/authenticate", request).then((response) =>
-      response.json().then((json) => {
-        if (!response.ok) {
-          message.info(json.message);
-        } else {
-          localStorage.setItem("user", JSON.stringify(json));
-          localStorage.setItem("token", json.token);
-          localStorage.setItem("role", json.name);
-          var role = localStorage.getItem("role");
-          if (role === "admin") {
-            this.props.history.push("/admin");
-          } else {
-            this.props.history.push("/main");
-            localStorage.setItem("courses", JSON.stringify(json.courses));
-          }
-        }
-      })
-    );
+    this.login("authenticate/authenticate", data);
   };
 
   async handleFacebook() {
-    this.setState({
-      loading: true,
-    });
     const { authResponse } = await new Promise(window.FB.login);
+
     if (!authResponse) return;
     const data = {
       token: authResponse.accessToken,
     };
+
+    this.login("authenticate/facebook-login", data);
+  }
+
+  login(route, data) {
+    this.setState({ loading: true });
     const request = {
       method: "POST",
       headers: new Headers({ "Content-Type": "application/json" }),
       body: JSON.stringify(data),
     };
 
-    fetch(BASE_URL + "authenticate/facebook-login", request).then((response) =>
+    fetch(BASE_URL + route, request).then((response) => {
       response.json().then((json) => {
-        console.log(json);
         if (!response.ok) {
           message.info(json.message);
         } else {
@@ -96,15 +81,12 @@ export default class LoginPage extends React.Component {
           if (role === "admin") {
             this.props.history.push("/admin");
           } else {
-            this.props.history.push("/main");
             localStorage.setItem("courses", JSON.stringify(json.courses));
+            this.props.history.push("/main");
           }
-          this.setState({
-            loading: false,
-          });
         }
-      })
-    );
+      });
+    });
   }
 
   handleRegistry() {
@@ -157,7 +139,6 @@ export default class LoginPage extends React.Component {
                     </Form.Group>
 
                     <Button
-                      // type="submit"
                       className="btnLogin"
                       variant="primary"
                       onClick={this.handleSubmit.bind(this)}

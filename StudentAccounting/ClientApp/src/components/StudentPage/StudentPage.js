@@ -15,6 +15,9 @@ export default class SudentPage extends React.Component {
     };
   }
   componentDidMount() {
+    this.getAllCourses();
+  }
+  getAllCourses() {
     this.setState({
       loading: true,
     });
@@ -23,49 +26,24 @@ export default class SudentPage extends React.Component {
       method: "GET",
       headers: new Headers({ Authorization: `Bearer ${token}` }),
     };
-
     fetch(
       BASE_URL + "users/all-courses/?page=" + this.state.startPage,
       request
-    ).then((response) =>
+    ).then((response) => {
       response.json().then((json) => {
-        console.log(json.count);
         if (!response.ok) {
           message.info(json.message);
         } else {
-          this.setState({ loading: false, coursesCount: json.count });
           this.props.setCourses(json.model);
+          this.setState({ loading: false, coursesCount: json.count });
         }
-      })
-    );
+      });
+    });
   }
 
   onChange(pagination) {
-    this.setState({
-      loading: true,
-    });
-    const token = localStorage.getItem("token");
-    const request = {
-      method: "GET",
-      headers: new Headers({ Authorization: `Bearer ${token}` }),
-    };
-
     this.state.startPage = pagination;
-    fetch(
-      BASE_URL + "users/all-courses/?page=" + this.state.startPage,
-      request
-    ).then((response) =>
-      response.json().then((json) => {
-        if (!response.ok) {
-          message.info(json.message);
-        } else {
-          this.setState({
-            loading: false,
-          });
-          this.props.setCourses(json.model);
-        }
-      })
-    );
+    this.getAllCourses();
   }
 
   render() {
