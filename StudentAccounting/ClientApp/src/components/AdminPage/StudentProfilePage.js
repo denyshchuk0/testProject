@@ -35,30 +35,7 @@ class StudentProfilePage extends React.Component {
       });
       this.setState({ loading: false });
     } else {
-      const token = localStorage.getItem("token");
-      const request = {
-        method: "GET",
-        headers: new Headers({ Authorization: `Bearer ${token}` }),
-      };
-
-      fetch(BASE_URL + `users/${this.props.match.params.id}`, request).then(
-        (response) => {
-          if (!response.ok) {
-            message.info(response.message);
-          } else {
-            this.setState({ loading: false });
-            response.json().then((data) =>
-              this.setState({
-                id: data.id,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                age: parseInt(data.age, 10),
-                email: data.email,
-              })
-            );
-          }
-        }
-      );
+      this.getUserById();
     }
   }
 
@@ -87,6 +64,7 @@ class StudentProfilePage extends React.Component {
           message.info(response.message);
         } else {
           this.props.history.push("/admin");
+          message.info("User was deleted");
         }
       }
     );
@@ -96,8 +74,12 @@ class StudentProfilePage extends React.Component {
     this.setState({ plaintext: false, update: false });
   }
 
-  handleCancelUpdateUser() {}
-  getUserForId() {
+  handleCancelUpdateUser() {
+    this.getUserById();
+    this.setState({ plaintext: true, update: true });
+  }
+
+  getUserById() {
     const token = localStorage.getItem("token");
     const request = {
       method: "GET",
@@ -117,8 +99,6 @@ class StudentProfilePage extends React.Component {
               lastName: data.lastName,
               age: parseInt(data.age, 10),
               email: data.email,
-              plaintext: true,
-              update: true,
             })
           );
         }

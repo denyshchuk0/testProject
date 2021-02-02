@@ -46,25 +46,24 @@ namespace StudentAccounting.Services
         private static IQueryable<User> ApplySorting(string sortOrder, string sortParameter, IQueryable<User> users)
         {
             var type = typeof(User);
-            var prop = type.GetProperty(sortParameter);
-            if (prop != null)
+            var property = type.GetProperty(sortParameter);
+            if (property != null)
             {
-                var param = Expression.Parameter(type);
-                var expr = Expression.Lambda<Func<User, object>>(
-                    Expression.Convert(Expression.Property(param, prop), typeof(object)),
-                    param
+                var parameter = Expression.Parameter(type);
+                var expression = Expression.Lambda<Func<User, object>>(
+                    Expression.Convert(Expression.Property(parameter, property), typeof(object)),
+                    parameter
                 );
 
                 if (sortOrder == "ascend")
                 {
-                    users = users.OrderBy(expr);
+                    users = users.OrderBy(expression);
                 }
                 else if (sortOrder == "descend")
                 {
-                    users = users.OrderByDescending(expr);
+                    users = users.OrderByDescending(expression);
                 }
             }
-
             return users;
         }
 

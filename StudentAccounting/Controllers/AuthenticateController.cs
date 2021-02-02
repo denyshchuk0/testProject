@@ -107,11 +107,17 @@ namespace StudentAccounting.Controllers
         {
             registerValidations.Validate(model);
             var user = mapper.Map<User>(model);
-
-            authenticateService.Register(user, model.Password);
-            return Ok();
+            try
+            {
+                authenticateService.Register(user, model.Password);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+           
         }
-
         [HttpPost]
         [AllowAnonymous]
         [Route("facebook-login")]

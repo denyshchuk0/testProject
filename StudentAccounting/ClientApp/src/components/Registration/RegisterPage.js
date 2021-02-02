@@ -5,9 +5,8 @@ import { message } from "antd";
 
 export default class RegisrtyPage extends React.Component {
   constructor(props) {
-    this.formRef = React.createRef();
-
     super(props);
+
     this.state = {
       firstName: "",
       lastName: "",
@@ -54,23 +53,18 @@ export default class RegisrtyPage extends React.Component {
     };
 
     fetch(BASE_URL + "authenticate/register", request).then((response) => {
+      console.log(response);
       if (!response.ok) {
         message.info(response.message);
       } else {
         this.props.history.push("/confirm-email");
       }
-      return response;
     });
   };
 
   render() {
     return (
-      <Form
-        noValidate
-        validated={this.state.validated}
-        onSubmit={this.handleSubmit.bind(this)}
-        ref="form"
-      >
+      <Form noValidate validated={this.state.validated} ref="form">
         <Form.Row className="justify-content-md-center">
           <Col xs={3}>
             <h1>Registration</h1>
@@ -81,6 +75,7 @@ export default class RegisrtyPage extends React.Component {
                 placeholder="Enter first name"
                 value={this.state.firstName}
                 name="firstName"
+                type="text"
                 onChange={this.handleChange.bind(this)}
               />
             </Form.Group>
@@ -91,6 +86,7 @@ export default class RegisrtyPage extends React.Component {
                 placeholder="Enter last name"
                 value={this.state.lastName}
                 name="lastName"
+                type="text"
                 onChange={this.handleChange.bind(this)}
               />
               <Form.Group controlId="formAge">
@@ -101,6 +97,7 @@ export default class RegisrtyPage extends React.Component {
                   placeholder="Enter age"
                   value={this.state.age}
                   name="age"
+                  type="number"
                   onChange={this.handleChange.bind(this)}
                 />
               </Form.Group>
@@ -129,7 +126,11 @@ export default class RegisrtyPage extends React.Component {
               />
             </Form.Group>
 
-            <Button style={{ width: 110 }} variant="primary">
+            <Button
+              style={{ width: 110 }}
+              variant="primary"
+              onClick={this.handleSubmit.bind(this)}
+            >
               Register
             </Button>
           </Col>

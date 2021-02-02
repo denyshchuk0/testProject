@@ -63,7 +63,7 @@ namespace StudentAccounting.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetUserById(int id)
         {
             var user = userService.GetUserById(id);
             var model = mapper.Map<UserModel>(user.Result);
@@ -91,7 +91,6 @@ namespace StudentAccounting.Controllers
         public IActionResult Update([FromBody]UpdateModel model)
         {
             var user = mapper.Map<User>(model);
-            //user.id=id;
             userService.UpdateUser(user);
             return Ok();
         }

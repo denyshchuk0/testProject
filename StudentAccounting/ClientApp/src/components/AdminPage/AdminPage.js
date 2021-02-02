@@ -88,9 +88,6 @@ export default class AdminPage extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({ loading: true });
-    const user = JSON.parse(localStorage.getItem("user"));
-
     const data = {
       pageSize: this.state.pageSize,
       pageNumber: this.state.pageNumber,
@@ -98,35 +95,7 @@ export default class AdminPage extends React.Component {
       sortParameter: this.state.defaultSortParameter,
     };
 
-    const request = {
-      method: "POST",
-      headers: new Headers({
-        Authorization: `Bearer ${user.token}`,
-        "Content-Type": "application/json",
-      }),
-      body: JSON.stringify(data),
-    };
-
-    fetch(BASE_URL + "users/all-users", request).then((response) =>
-      response.json().then((json) => {
-        if (!response.ok) {
-          message.info(json.message);
-        } else {
-          this.setState({
-            loading: false,
-            allUsersCount: json.count,
-          });
-          const users = json.model;
-          users.forEach((user) => {
-            user.key = user.id;
-            user.registeredDate = moment(new Date(user.registeredDate)).format(
-              "DD/MM/YYYY"
-            );
-          });
-          this.props.setUsers(users);
-        }
-      })
-    );
+    this.getAllUsers(data, "users/all-users");
   }
 
   handleSeeMore = (key) => {
@@ -134,8 +103,6 @@ export default class AdminPage extends React.Component {
   };
 
   handleSubmit() {
-    this.setState({ loading: true });
-    const token = localStorage.getItem("token");
     const data = {
       pageSize: this.state.pageSize,
       pageNumber: this.state.pageNumber,
@@ -143,6 +110,25 @@ export default class AdminPage extends React.Component {
       sortParameter: this.state.defaultSortParameter,
     };
 
+    this.getAllUsers(
+      data,
+      "users/search?searchParam=" + this.props.searchParam
+    );
+  }
+
+  handleChange(pagination, filters, sorter) {
+    const data = {
+      pageSize: this.state.pageSize,
+      pageNumber: pagination.current,
+      sortOrder: sorter.order || this.state.defaultSortOrder,
+      sortParameter: sorter.columnKey || this.state.defaultSortParameter,
+    };
+    this.getAllUsers(data, "users/all-users");
+  }
+
+  getAllUsers(data, route) {
+    this.setState({ loading: true });
+    const token = localStorage.getItem("token");
     const request = {
       method: "POST",
       headers: new Headers({
@@ -152,64 +138,23 @@ export default class AdminPage extends React.Component {
       body: JSON.stringify(data),
     };
 
-    fetch(
-      BASE_URL + "users/search?searchParam=" + this.props.searchParam,
-      request
-    ).then((response) =>
+    fetch(BASE_URL + route, request).then((response) =>
       response.json().then((json) => {
         if (!response.ok) {
           message.info(json.message);
         } else {
-          this.setState({
-            loading: false,
-            allUsersCount: json.count,
-          });
+          this.setState({ loading: false, allUsersCount: json.count });
           const users = json.model;
           users.forEach((user) => {
             user.key = user.id;
             user.registeredDate = moment(new Date(user.registeredDate)).format(
               "DD/MM/YYYY"
             );
-          });
-          this.props.setUsers(users);
-        }
-      })
-    );
-  }
-
-  handleChange(pagination, filters, sorter) {
-    console.log("Various parameters", sorter);
-    this.setState({ loading: true });
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    const data = {
-      pageSize: this.state.pageSize,
-      pageNumber: pagination.current,
-      sortOrder: sorter.order || this.state.defaultSortOrder,
-      sortParameter: sorter.columnKey || this.state.defaultSortParameter,
-    };
-
-    const request = {
-      method: "POST",
-      headers: new Headers({
-        Authorization: `Bearer ${user.token}`,
-        "Content-Type": "application/json",
-      }),
-      body: JSON.stringify(data),
-    };
-
-    fetch(BASE_URL + "users/all-users", request).then((response) =>
-      response.json().then((json) => {
-        if (!response.ok) {
-          message.info(json.message);
-        } else {
-          this.setState({ loading: false });
-          const users = json.model;
-          users.forEach((user) => {
-            user.key = user.id;
-            user.registeredDate = moment(new Date(user.registeredDate)).format(
-              "DD/MM/YYYY"
-            );
+            user.courses.forEach((course) => {
+              course.startDate = moment(new Date(course.startDate)).format(
+                "DD/MM/YYYY"
+              );
+            });
           });
           this.props.setUsers(users);
         }
@@ -256,6 +201,10 @@ export default class AdminPage extends React.Component {
                       dataIndex: "id",
                     },
                     {
+                      title: "Cours name",
+                      dataIndex: ["course", "name"],
+                    },
+                    {
                       title: "Start Date",
                       dataIndex: "startDate",
                     },
@@ -264,6 +213,7 @@ export default class AdminPage extends React.Component {
                   size="small"
                   pagination={false}
                 />
+                {console.log(record.courses)}
               </div>
             ),
             rowExpandable: (record) => record.courses.length !== 0,
