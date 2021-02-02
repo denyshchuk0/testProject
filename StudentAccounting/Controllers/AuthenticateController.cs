@@ -52,20 +52,24 @@ namespace StudentAccounting.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]AuthenticateModel model)
         {
-            authenticateValidator.Validate(model);
-            var user = authenticateService.Login(model);
+           var result = authenticateValidator.Validate(model);
+            if (result.IsValid)
+            {
+                var user = authenticateService.Login(model);
 
-            if (user == null)
-            {
-                logger.Error("Error. User not found!");
-                return NotFound(new { message = "User not found!" });
+                if (user == null)
+                {
+                    logger.Error("Error. User not found!");
+                    return NotFound(new { message = "User not found!" });
+                }
+                if (!user.isVerificated)
+                {
+                    logger.Error("Error. Email is not confirmed");
+                    return BadRequest(new { message = "Email is not confirmed" });
+                }
+                return UserResult(user);
             }
-            if (!user.isVerificated)
-            {
-                logger.Error("Error. Email is not confirmed");
-                return BadRequest(new { message = "Email is not confirmed" });
-            }
-            return UserResult(user);
+            return BadRequest(result.Errors);
         }
 
         private IActionResult UserResult(User user)
@@ -105,17 +109,21 @@ namespace StudentAccounting.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody]RegisterModel model)
         {
-            registerValidations.Validate(model);
-            var user = mapper.Map<User>(model);
-            try
+            var result=registerValidations.Validate(model);
+            if (result.IsValid)
             {
-                authenticateService.Register(user, model.Password);
-                return Ok();
+                var user = mapper.Map<User>(model);
+                try
+                {
+                    authenticateService.Register(user, model.Password);
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(new { message = ex.Message });
+                }
             }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            return BadRequest(result.Errors);
            
         }
         [HttpPost]

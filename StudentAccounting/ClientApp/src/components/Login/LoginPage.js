@@ -14,7 +14,7 @@ export default class LoginPage extends React.Component {
       password: "",
       loading: false,
       validated: false,
-      isMounted: false,
+      isInvalid: false,
     };
   }
 
@@ -34,10 +34,10 @@ export default class LoginPage extends React.Component {
 
   handleSubmit = (event) => {
     const form = this.refs["form"];
-
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
+
       this.setState({ validated: true });
       return;
     }
@@ -130,6 +130,7 @@ export default class LoginPage extends React.Component {
                       <Form.Label>Password</Form.Label>
                       <Form.Control
                         required
+                        isInvalid={this.state.isInvalid}
                         type="password"
                         placeholder="Password"
                         name="password"
