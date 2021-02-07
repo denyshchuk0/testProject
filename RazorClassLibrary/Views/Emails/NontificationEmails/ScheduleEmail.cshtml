@@ -3,16 +3,17 @@
 @model ScheduleEmailViewModel
 
 @{
-    ViewData["EmailTitle"] = "Welcome!";
+    ViewData["EmailTitle"] = "Attention!";
 }
 
 <p>
-    We're excited to have you get started. First, you need to confirm your account. Just press the button below.
+    You have signed up for the course. Read carefully what is written below.
 </p>
 
 <br />
-<h1> @Model.Message</h1>
+<p><h2>@Model.Message</h2></p>
 <br />
+
 
 <p>
     If you have any questions, just reply to this email—we're always happy to help out.
@@ -21,5 +22,5 @@
 <br />
 
 <p>
-    The Contoso Team
+    Student Accounting Services
 </p>
