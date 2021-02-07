@@ -27,7 +27,7 @@ namespace StudentAccounting.Services
 
             string body = await razorViewToStringRenderer
                                 .RenderViewToStringAsync(
-                                 "~/Views/Emails/ConfirmAccount/ConfirmAccount.cshtml",
+                                 "~/Views/Emails/ConfirmAccount/ConfirmAccountEmail.cshtml",
                                  confirmAccountModel);
 
             SendEmailAsync(email, "Confirm your Account", body);

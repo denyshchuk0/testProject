@@ -55,7 +55,6 @@ C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\bin\Debug\netcoreapp3.1\RazorClassLib.pdb
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\bin\Debug\netcoreapp3.1\RazorClassLib.Views.dll
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\bin\Debug\netcoreapp3.1\RazorClassLib.Views.pdb
-C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.csprojAssemblyReference.cache
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.csproj.CoreCompileInputs.cache
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.RazorAssemblyInfo.cache
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.RazorAssemblyInfo.cs
@@ -64,8 +63,6 @@ C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.TagHelpers.input.cache
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.TagHelpers.output.cache
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.RazorCoreGenerate.cache
-C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\Razor\Views\Emails\ConfirmAccount\ConfirmAccount.cshtml.g.cs
-C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\Razor\Views\Emails\ViewStart.cshtml.g.cs
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\Razor\Views\Shared\EmailButton.cshtml.g.cs
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\Razor\Views\Shared\EmailLayout.cshtml.g.cs
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.RazorTargetAssemblyInfo.cache
@@ -77,3 +74,5 @@ C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.pdb
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\RazorClassLib.csproj.CopyComplete
 C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\Razor\Views\Emails\NontificationEmails\ScheduleEmail.cshtml.g.cs
+C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\Razor\Views\Emails\ConfirmAccount\ConfirmAccountEmail.cshtml.g.cs
+C:\Users\denys\OneDrive\Рабочий стол\my\testProject\RazorClassLibrary\obj\Debug\netcoreapp3.1\Razor\Views\Emails\_ViewStart.cshtml.g.cs
