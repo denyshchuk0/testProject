@@ -76,7 +76,7 @@ export default class AdminPage extends React.Component {
       columnsTmp: columns,
       allUsersCount: 0,
       pageNumber: 1,
-      pageSize: 3,
+      pageSize: 5,
       loading: false,
       defaultSortOrder: "ascend",
       defaultSortParameter: "Id",
@@ -189,6 +189,7 @@ export default class AdminPage extends React.Component {
             defaultCurrent: this.state.pageNumber,
             pageSize: this.state.pageSize,
             total: this.state.allUsersCount,
+            showSizeChanger: false,
           }}
           defaultExpandAllRows={false}
           expandable={{
