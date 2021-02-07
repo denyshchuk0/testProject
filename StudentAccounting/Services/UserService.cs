@@ -54,7 +54,6 @@ namespace StudentAccounting.Services
                     Expression.Convert(Expression.Property(parameter, property), typeof(object)),
                     parameter
                 );
-
                 if (sortOrder == "ascend")
                 {
                     users = users.OrderBy(expression);

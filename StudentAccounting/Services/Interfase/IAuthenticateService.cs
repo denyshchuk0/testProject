@@ -1,4 +1,5 @@
-﻿using StudentAccounting.Entities;
+﻿using Microsoft.AspNetCore.Identity;
+using StudentAccounting.Entities;
 using StudentAccounting.Models;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace StudentAccounting.Services.Interfase
     {
         User Login(AuthenticateModel model);
         void VerifyEmail(string token);
-        void Register(User user, string password);
+        Task<IdentityResult> Register(User user, string password);
         User RegisterFacebook(User user);
         User FacebookLogin(FacebookAccount model);
     }

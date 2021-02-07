@@ -60,14 +60,15 @@ namespace StudentAccounting.Services
             return user;
         }
 
-        public async void Register(User user, string password)
+        public async Task<IdentityResult> Register(User user, string password)
         {
             if (context.Users.Any(x => x.Email.ToUpper() == user.Email.ToUpper()))
             {
                 logger.Error("Username \"" + user.Email + "\" is already taken");
-                //throw new Exception("Username \"" + user.Email + "\" is already taken");
+                return IdentityResult.Failed();
+                //throw new ArgumentException("Username \"" + user.Email + "\" is already taken");
             }
-            
+
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
@@ -88,6 +89,7 @@ namespace StudentAccounting.Services
             await emailService.SendConfirmEmail(
                 user.Email,
                 settings.Value.BaseUrl + $"authenticate/verify-email?token={user.VerificationToken}");
+            return IdentityResult.Success;
         }
 
         public User RegisterFacebook(User user)

@@ -113,19 +113,20 @@ namespace StudentAccounting.Controllers
             if (result.IsValid)
             {
                 var user = mapper.Map<User>(model);
-                try
+                var res = authenticateService.Register(user, model.Password);
+                if (res.Result.Succeeded)
                 {
-                    authenticateService.Register(user, model.Password);
                     return Ok();
                 }
-                catch (Exception ex)
-                {
-                    return BadRequest(new { message = ex.Message });
-                }
+                return Conflict();
             }
-            return BadRequest(result.Errors);
+            return Conflict(result.Errors);
            
         }
+
+        [Route("/error")]
+        public IActionResult Error() => Problem();
+
         [HttpPost]
         [AllowAnonymous]
         [Route("facebook-login")]
@@ -138,7 +139,7 @@ namespace StudentAccounting.Controllers
             if (!response.IsSuccessStatusCode)
             {
                 logger.Error("Error. Response was not success!");
-                return BadRequest();
+                return Conflict();
             };
 
             var result = await response.Content.ReadAsStringAsync();
