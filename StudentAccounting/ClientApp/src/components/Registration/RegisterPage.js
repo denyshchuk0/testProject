@@ -1,7 +1,18 @@
 import React from "react";
-import { Form, Button, Col } from "react-bootstrap";
+//import { Form, Button, Col } from "react-bootstrap";
 import { BASE_URL } from "../utils";
-import { message } from "antd";
+import {
+  Form,
+  Input,
+  Select,
+  Row,
+  Col,
+  Layout,
+  Button,
+  message,
+  InputNumber,
+  Typography,
+} from "antd";
 
 export default class RegisrtyPage extends React.Component {
   constructor(props) {
@@ -17,125 +28,178 @@ export default class RegisrtyPage extends React.Component {
     };
   }
 
-  handleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-
-    this.setState((prevstate) => {
-      const newState = { ...prevstate };
-      newState[name] = value;
-      return newState;
-    });
-  };
-
-  handleSubmit = (event) => {
-    const form = this.refs["form"];
-
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.setState({ validated: true });
-      return;
-    }
-
-    const data = {
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      age: this.state.age,
-      email: this.state.email,
-      password: this.state.password,
-    };
-
-    const request = {
-      method: "POST",
-      headers: new Headers({ "Content-Type": "application/json" }),
-      body: JSON.stringify(data),
-    };
-
-    fetch(BASE_URL + "authenticate/register", request).then((response) => {
-      console.log(response);
-      if (!response.ok) {
-        message.info(response.message);
-      } else {
-        this.props.history.push("/confirm-email");
-      }
-    });
-  };
+  handleSubmit = (data) => {};
 
   render() {
+    const formItemLayout = {
+      labelCol: {
+        xs: {
+          span: 24,
+        },
+        sm: {
+          span: 8,
+        },
+      },
+      wrapperCol: {
+        xs: {
+          span: 24,
+        },
+        sm: {
+          span: 16,
+        },
+      },
+    };
+    const tailFormItemLayout = {
+      wrapperCol: {
+        xs: {
+          span: 24,
+          offset: 0,
+        },
+        sm: {
+          span: 16,
+          offset: 8,
+        },
+      },
+    };
+
+    const onFinish = (values) => {
+      const data = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        age: values.age,
+        email: values.email,
+        password: values.password,
+      };
+
+      console.log(data);
+      const request = {
+        method: "POST",
+        headers: new Headers({ "Content-Type": "application/json" }),
+        body: JSON.stringify(data),
+      };
+
+      fetch(BASE_URL + "authenticate/register", request).then((response) => {
+        console.log(response);
+        if (!response.ok) {
+          message.info(response.message);
+        } else {
+          this.props.history.push("/confirm-email");
+        }
+      });
+    };
+    const { Header, Footer, Sider, Content } = Layout;
+
     return (
-      <Form noValidate validated={this.state.validated} ref="form">
-        <Form.Row className="justify-content-md-center">
-          <Col xs={3}>
-            <h1>Registration</h1>
-            <Form.Group controlId="formFirstName">
-              <Form.Label>First Name</Form.Label>
-              <Form.Control
-                required
-                placeholder="Enter first name"
-                value={this.state.firstName}
-                name="firstName"
-                type="text"
-                onChange={this.handleChange.bind(this)}
-              />
-            </Form.Group>
-            <Form.Group controlId="formLastName">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control
-                required
-                placeholder="Enter last name"
-                value={this.state.lastName}
-                name="lastName"
-                type="text"
-                onChange={this.handleChange.bind(this)}
-              />
-              <Form.Group controlId="formAge">
-                <Form.Label>Age</Form.Label>
-                <Form.Control
-                  required
-                  type="number"
-                  placeholder="Enter age"
-                  value={this.state.age}
+      <Layout>
+        <Header>
+          <div className="logo">
+            <Typography.Text level={5} keyboard>
+              Student Accounting
+            </Typography.Text>
+          </div>
+        </Header>
+        <Content>
+          <Row>
+            <Col span={7} offset={11}>
+              <br />
+              <Typography.Title>Registration</Typography.Title>
+            </Col>
+            <Col span={8} offset={8}>
+              <Form
+                {...formItemLayout}
+                name="register"
+                onFinish={onFinish}
+                scrollToFirstError
+              >
+                <Form.Item
+                  name="firstName"
+                  label="First Name"
+                  rules={[{ required: true }]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  name="lastName"
+                  label="Last Name"
+                  rules={[{ required: true }]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  name="email"
+                  label="E-mail"
+                  rules={[
+                    {
+                      type: "email",
+                      message: "The input is not valid E-mail!",
+                    },
+                    {
+                      required: true,
+                      message: "Please input your E-mail!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
                   name="age"
-                  type="number"
-                  onChange={this.handleChange.bind(this)}
-                />
-              </Form.Group>
-            </Form.Group>
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                required
-                type="email"
-                placeholder="Enter email"
-                value={this.state.email}
-                name="email"
-                onChange={this.handleChange.bind(this)}
-              />
-            </Form.Group>
+                  label="Age"
+                  rules={[{ type: "number", min: 0, max: 99 }]}
+                >
+                  <InputNumber />
+                </Form.Item>
+                <Form.Item
+                  name="password"
+                  label="Password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your password!",
+                    },
+                  ]}
+                  hasFeedback
+                >
+                  <Input.Password />
+                </Form.Item>
 
-            <Form.Group controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                required
-                type="password"
-                placeholder="Password"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleChange.bind(this)}
-              />
-            </Form.Group>
+                <Form.Item
+                  name="confirm"
+                  label="Confirm Password"
+                  dependencies={["password"]}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please confirm your password!",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue("password") === value) {
+                          return Promise.resolve();
+                        }
 
-            <Button
-              style={{ width: 110 }}
-              variant="primary"
-              onClick={this.handleSubmit.bind(this)}
-            >
-              Register
-            </Button>
-          </Col>
-        </Form.Row>
-      </Form>
+                        return Promise.reject(
+                          "The two passwords that you entered do not match!"
+                        );
+                      },
+                    }),
+                  ]}
+                >
+                  <Input.Password />
+                </Form.Item>
+                <Form.Item {...tailFormItemLayout}>
+                  <Button type="primary" htmlType="submit">
+                    Register
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Col>
+          </Row>
+        </Content>
+        <Footer>2021</Footer>
+      </Layout>
     );
   }
 }

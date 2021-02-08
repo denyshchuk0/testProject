@@ -1,8 +1,21 @@
 import React from "react";
-import { Form, Button, Col, Container, Row } from "react-bootstrap";
 import "../style/LoginPage.css";
 import { BASE_URL } from "../utils";
-import { message, Spin } from "antd";
+import { ReactComponent as Logo } from "../img/graduation-hat.svg";
+import {
+  Form,
+  Input,
+  Divider,
+  Button,
+  message,
+  Spin,
+  Layout,
+  Row,
+  Col,
+  Image,
+  Typography,
+} from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 export default class LoginPage extends React.Component {
   constructor(props) {
@@ -33,14 +46,14 @@ export default class LoginPage extends React.Component {
   }
 
   handleSubmit = (event) => {
-    const form = this.refs["form"];
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
+    // const form = this.refs["form"];
+    // if (form.checkValidity() === false) {
+    //   event.preventDefault();
+    //   event.stopPropagation();
 
-      this.setState({ validated: true });
-      return;
-    }
+    //   this.setState({ validated: true });
+    //   return;
+    // }
 
     const data = {
       email: this.state.email,
@@ -68,7 +81,7 @@ export default class LoginPage extends React.Component {
       headers: new Headers({ "Content-Type": "application/json" }),
       body: JSON.stringify(data),
     };
-
+    console.log(request);
     fetch(BASE_URL + route, request).then((response) => {
       response.json().then((json) => {
         if (!response.ok) {
@@ -94,81 +107,118 @@ export default class LoginPage extends React.Component {
   }
 
   render() {
+    const { Header, Footer, Sider, Content } = Layout;
+
+    const onFinish = (values) => {
+      const data = {
+        email: values.email,
+        password: values.password,
+      };
+
+      this.login("authenticate/authenticate", data);
+    };
+
     return (
       <React.Fragment>
         {this.state.loading ? (
-          <Container>
-            <Row className="justify-content-md-center">
+          <Row>
+            <Col span={4} offset={10}>
               <Spin size="large" />
-            </Row>
-          </Container>
+            </Col>
+          </Row>
         ) : (
-          <Container>
-            <Form noValidate validated={this.state.validated} ref="form">
-              <Form.Row className="justify-content-md-center">
-                <Row>
-                  <Col>
-                    <Form.Group controlId="formBasicEmail">
-                      <h1>Welcome</h1>
-                      <br />
-                      <Form.Label>Email address</Form.Label>
-                      <Form.Control
-                        required
-                        type="email"
-                        placeholder="Enter email"
-                        value={this.state.email}
-                        name="email"
-                        onChange={this.handleChange.bind(this)}
+          <Layout>
+            <Header>
+              <div className="logo">
+                <Typography.Text level={5} keyboard>
+                  Student Accounting
+                </Typography.Text>
+              </div>
+            </Header>
+            <Content>
+              <Row>
+                <Col span={4} offset={10}>
+                  <Logo />
+                  <Typography.Title level={3}>
+                    Student Accounting
+                  </Typography.Title>
+                  <br />
+                  <Form
+                    name="normal_login"
+                    initialValues={{
+                      remember: true,
+                    }}
+                    onFinish={onFinish}
+                  >
+                    <Form.Item
+                      name="email"
+                      rules={[
+                        {
+                          type: "email",
+                          message: "The input is not valid E-mail!",
+                        },
+                        {
+                          required: true,
+                          message: "Please input your E-mail!",
+                        },
+                      ]}
+                    >
+                      <Input
+                        prefix={
+                          <UserOutlined className="site-form-item-icon" />
+                        }
+                        placeholder="Email"
                       />
-
-                      <Form.Text className="text-muted">
-                        We'll never share your email with anyone else.
-                      </Form.Text>
-                    </Form.Group>
-
-                    <Form.Group controlId="formBasicPassword">
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control
-                        required
-                        isInvalid={this.state.isInvalid}
+                    </Form.Item>
+                    <Form.Item
+                      name="password"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input your Password!",
+                        },
+                      ]}
+                    >
+                      <Input
+                        prefix={
+                          <LockOutlined className="site-form-item-icon" />
+                        }
                         type="password"
                         placeholder="Password"
-                        name="password"
-                        value={this.state.password}
-                        onChange={this.handleChange.bind(this)}
                       />
-                    </Form.Group>
+                    </Form.Item>
 
-                    <Button
-                      className="btnLogin"
-                      variant="primary"
-                      onClick={this.handleSubmit.bind(this)}
-                    >
-                      Login
-                    </Button>
-                    <Button
-                      className="btnFacebook"
-                      variant="primary"
-                      onClick={this.handleFacebook.bind(this)}
-                    >
-                      Facebook
-                    </Button>
-                  </Col>
-                </Row>
-              </Form.Row>
-              <Form.Row className="justify-content-md-center">
-                <Row>
-                  <Button
-                    className="btnRegistry"
-                    variant="primary"
-                    onClick={this.handleRegistry.bind(this)}
-                  >
-                    Register
-                  </Button>
-                </Row>
-              </Form.Row>
-            </Form>
-          </Container>
+                    <Form.Item>
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="login-form-button"
+                      >
+                        Log in
+                      </Button>
+                      <Button
+                        type="primary"
+                        className="facebook-form-button"
+                        onClick={this.handleFacebook.bind(this)}
+                      >
+                        Facebook
+                      </Button>
+                      <Divider plain>Or</Divider>
+
+                      <Button
+                        type="link"
+                        block
+                        onClick={this.handleRegistry.bind(this)}
+                      >
+                        register now!
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                </Col>
+              </Row>
+            </Content>
+            <Footer style={{ textAlign: "center" }}>2021</Footer>
+          </Layout>
         )}
       </React.Fragment>
     );

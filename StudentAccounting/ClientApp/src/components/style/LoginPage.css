@@ -1,18 +1,27 @@
-h1 {
-  text-align: center;
+@import "~antd/dist/antd.css";
+
+.login-form {
+  max-width: 300px;
 }
-.btnRegistry {
-  background-color: darkcyan;
-  margin-top: 5px;
-  width: 225px;
+.login-form-forgot {
   float: right;
+}
+.ant-col-rtl .login-form-forgot {
+  float: left;
+}
+.login-form-button {
+  width: 47%;
+  margin-right: 6%;
+}
+.facebook-form-button {
+  width: 47%;
 }
 
-.btnFacebook {
-  width: 110px;
-  float: right;
+.ant-divider-horizontal.ant-divider-with-text {
+  margin: 0px;
 }
-.btnLogin {
-  width: 110px;
-  float: left;
+
+.ant-row-rtl #components-layout-demo-top .logo {
+  float: right;
+  margin: 16px 0 16px 24px;
 }
