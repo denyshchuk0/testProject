@@ -1,7 +1,25 @@
 import React from "react";
-import { Form, Col, Container, Row, Button } from "react-bootstrap";
+//import { Form, Col, Container, Row, Button } from "react-bootstrap";
 import NavBarMain from "../NavBarMain";
-import { Popconfirm, Spin, message } from "antd";
+import {
+  Popconfirm,
+  Spin,
+  message,
+  Layout,
+  PageHeader,
+  Tabs,
+  Button,
+  Statistic,
+  Descriptions,
+  Image,
+  Typography,
+  Row,
+  Col,
+  Form,
+  InputNumber,
+  Input,
+  Divider,
+} from "antd";
 import "../style/StudentProfile.css";
 import { withRouter } from "react-router";
 import { BASE_URL } from "../utils";
@@ -88,19 +106,22 @@ class StudentProfilePage extends React.Component {
 
     fetch(BASE_URL + `users/${this.props.match.params.id}`, request).then(
       (response) => {
+        console.log(response);
         if (!response.ok) {
           message.info(response.message);
         } else {
           this.setState({ loading: false });
-          response.json().then((data) =>
+          response.json().then((data) => {
             this.setState({
               id: data.id,
               firstName: data.firstName,
               lastName: data.lastName,
               age: parseInt(data.age, 10),
               email: data.email,
-            })
-          );
+            });
+            this.state.firstName = data.firstName;
+            console.log(this.state.firstName);
+          });
         }
       }
     );
@@ -148,16 +169,132 @@ class StudentProfilePage extends React.Component {
   };
 
   render() {
-    return (
-      <Container>
-        <NavBarMain />
+    const formItemLayout = {
+      labelCol: {
+        xs: {
+          span: 24,
+        },
+        sm: {
+          span: 8,
+        },
+      },
+      wrapperCol: {
+        xs: {
+          span: 24,
+        },
+        sm: {
+          span: 16,
+        },
+      },
+    };
 
+    const sharedProps = {
+      defaultValue: this.state.firstName,
+    };
+
+    const residences = [
+      {
+        value: this.state.firstName,
+        label: "First Name",
+      },
+    ];
+
+    return (
+      <Layout>
+        <NavBarMain />
         {this.state.loading ? (
-          <Container>
+          <Spin size="large" />
+        ) : (
+          <React.Fragment>
+            <PageHeader
+              className="site-page-header"
+              onBack={() => window.history.back()}
+              title="Home"
+              subTitle="Student profile"
+              // extra={[
+              //   <Button key="2">Update</Button>,
+              //   <Button key="1" type="danger">
+              //     Delete
+              //   </Button>,
+              // ]}
+            ></PageHeader>
+            <Divider />
+            <Layout.Content
+              className="site-layout"
+              style={{ padding: "0 50px", marginTop: 20 }}
+            >
+              <Row>
+                <Col span={8} offset={8}>
+                  <Image width={200} height={200} />
+                  <Form {...formItemLayout} scrollToFirstError>
+                    <Form.Item
+                      name="firstName"
+                      label="First Name"
+                      rules={[{ required: true }]}
+                      onChange={this.handleChange.bind(this)}
+                    >
+                      <span className="ant-form-text">
+                        {this.state.firstName}
+                      </span>
+                    </Form.Item>
+                    <Form.Item label="Last Name" rules={[{ required: true }]}>
+                      <Input
+                        value={this.state.lastName}
+                        onChange={this.handleChange.bind(this)}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      name="input-number"
+                      label="Age"
+                      rules={[{ type: "number", min: 0, max: 99 }]}
+                    >
+                      <InputNumber
+                        min={1}
+                        max={100}
+                        name="age"
+                        value={this.state.age}
+                        onChange={this.handleChange.bind(this)}
+                      />
+                    </Form.Item>
+
+                    <Form.Item
+                      name="email"
+                      label="E-mail"
+                      onChange={this.handleChange.bind(this)}
+                      rules={[
+                        {
+                          type: "email",
+                          message: "The input is not valid E-mail!",
+                        },
+                        {
+                          required: true,
+                          message: "Please input your E-mail!",
+                        },
+                      ]}
+                    >
+                      <Input
+                        name="email"
+                        disabled={this.state.plaintext}
+                        bordered={!this.state.plaintext}
+                        value={this.state.email}
+                      />
+                    </Form.Item>
+                  </Form>
+                </Col>
+              </Row>
+            </Layout.Content>
+          </React.Fragment>
+        )}
+      </Layout>
+    );
+  }
+}
+
+{
+  /* {this.state.loading ? (
             <Row className="justify-content-md-center">
               <Spin size="large" />
             </Row>
-          </Container>
         ) : (
           <Row noGutters className="justify-content-md-center">
             <Col xs={6}>
@@ -225,7 +362,6 @@ class StudentProfilePage extends React.Component {
                     />
                   </Col>
                 </Form.Group>
-                <Container>
                   <Row className="justify-content-md-center">
                     <Col lg="4">
                       <React.Fragment>
@@ -272,14 +408,9 @@ class StudentProfilePage extends React.Component {
                       </React.Fragment>
                     </Col>
                   </Row>
-                </Container>
               </Form>
             </Col>
-          </Row>
-        )}
-      </Container>
-    );
-  }
+          </Row> */
 }
 
 export default withRouter(StudentProfilePage);

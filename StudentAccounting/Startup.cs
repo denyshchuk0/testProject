@@ -105,7 +105,6 @@ namespace StudentAccounting
             }
             else
             {
-                app.UseExceptionHandler("/error");
                 app.UseHsts();
             }
 

@@ -16,3 +16,16 @@
   float: right;
   margin: 16px 0 16px 24px;
 }
+
+.ant-menu-dark.ant-menu-horizontal {
+  height: 64px;
+}
+
+.ant-divider-vertical {
+  height: 50px;
+  border-left: 1px solid rgb(255 255 255);
+}
+
+.ant-typography code {
+  margin: 0 0 0 56em;
+}

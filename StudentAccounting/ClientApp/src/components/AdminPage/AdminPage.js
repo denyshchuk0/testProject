@@ -82,8 +82,7 @@ export default class AdminPage extends React.Component {
   }
 
   onSearchParamChange(event) {
-    console.log(event);
-    this.props.setSearchParamText(event);
+    this.props.setSearchParamText(event.target.value);
   }
 
   componentDidMount() {
@@ -163,20 +162,23 @@ export default class AdminPage extends React.Component {
 
   render() {
     return (
-      <Layout className="layout">
-        <NavBarMain />
-        <Layout.Content
-          className="site-layout"
-          style={{ padding: "0 50px", marginTop: 64 }}
-        >
-          <Input.Search
-            placeholder="input search text"
-            allowClear
-            enterButton="Search"
-            size="large"
-            onSearch={this.handleSubmit.bind(this)}
-          />
-          {/* <Form inline style={{ float: "right" }}>
+      <React.Fragment>
+        <Layout className="layout">
+          <NavBarMain />
+          <Layout.Content
+            className="site-layout"
+            style={{ padding: "0 50px", marginTop: 64 }}
+          >
+            <Input.Search
+              placeholder="input search text"
+              allowClear
+              enterButton="Search"
+              size="large"
+              value={this.props.searchParam}
+              onChange={this.onSearchParamChange.bind(this)}
+              onSearch={this.handleSubmit}
+            />
+            {/* <Form inline style={{ float: "right" }}>
           <FormControl
             type="text"
             placeholder="Search"
@@ -190,50 +192,51 @@ export default class AdminPage extends React.Component {
             Search
           </Button>
         </Form> */}
-          <Table
-            onChange={this.handleChange.bind(this)}
-            columns={this.state.columnsTmp}
-            pagination={{
-              defaultCurrent: this.state.pageNumber,
-              pageSize: this.state.pageSize,
-              total: this.state.allUsersCount,
-              showSizeChanger: false,
-            }}
-            defaultExpandAllRows={false}
-            expandable={{
-              expandedRowRender: (record) => (
-                <div>
-                  <Table
-                    columns={[
-                      {
-                        title: "Id Cours",
-                        dataIndex: "id",
-                      },
-                      {
-                        title: "Cours name",
-                        dataIndex: ["course", "name"],
-                      },
-                      {
-                        title: "Start Date",
-                        dataIndex: "startDate",
-                      },
-                    ]}
-                    dataSource={record.courses}
-                    size="small"
-                    pagination={false}
-                  />
-                  {console.log(record.courses)}
-                </div>
-              ),
-              rowExpandable: (record) => record.courses.length !== 0,
-            }}
-            expandRowByClick
-            dataSource={this.props.users}
-            loading={this.state.loading}
-          />
-          ,
-        </Layout.Content>
-      </Layout>
+            <Table
+              onChange={this.handleChange.bind(this)}
+              columns={this.state.columnsTmp}
+              pagination={{
+                defaultCurrent: this.state.pageNumber,
+                pageSize: this.state.pageSize,
+                total: this.state.allUsersCount,
+                showSizeChanger: false,
+              }}
+              defaultExpandAllRows={false}
+              expandable={{
+                expandedRowRender: (record) => (
+                  <div>
+                    <Table
+                      columns={[
+                        {
+                          title: "Id Cours",
+                          dataIndex: "id",
+                        },
+                        {
+                          title: "Cours name",
+                          dataIndex: ["course", "name"],
+                        },
+                        {
+                          title: "Start Date",
+                          dataIndex: "startDate",
+                        },
+                      ]}
+                      dataSource={record.courses}
+                      size="small"
+                      pagination={false}
+                    />
+                    {console.log(record.courses)}
+                  </div>
+                ),
+                rowExpandable: (record) => record.courses.length !== 0,
+              }}
+              expandRowByClick
+              dataSource={this.props.users}
+              loading={this.state.loading}
+            />
+            ,
+          </Layout.Content>
+        </Layout>
+      </React.Fragment>
     );
   }
 }
