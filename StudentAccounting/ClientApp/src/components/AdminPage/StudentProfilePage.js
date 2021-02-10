@@ -1,28 +1,27 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+
 //import { Form, Col, Container, Row, Button } from "react-bootstrap";
 import NavBarMain from "../NavBarMain";
 import {
-  Popconfirm,
   Spin,
   message,
   Layout,
   PageHeader,
-  Tabs,
   Button,
-  Statistic,
-  Descriptions,
   Image,
-  Typography,
   Row,
   Col,
   Form,
   InputNumber,
   Input,
   Divider,
+  Modal,
+  Radio,
 } from "antd";
 import "../style/StudentProfile.css";
 import { withRouter } from "react-router";
 import { BASE_URL } from "../utils";
+import { ModalFooter } from "react-bootstrap";
 
 class StudentProfilePage extends React.Component {
   constructor(props) {
@@ -36,7 +35,9 @@ class StudentProfilePage extends React.Component {
       loading: false,
       plaintext: true,
       update: true,
-      validated: false,
+      validated: true,
+      visibleUpdate: false,
+      visibleDelete: false,
     };
   }
 
@@ -94,6 +95,8 @@ class StudentProfilePage extends React.Component {
 
   handleCancelUpdateUser() {
     this.getUserById();
+    this.setState({ visibleUpdate: false });
+    console.log(this.state.firstName);
     this.setState({ plaintext: true, update: true });
   }
 
@@ -119,7 +122,6 @@ class StudentProfilePage extends React.Component {
               age: parseInt(data.age, 10),
               email: data.email,
             });
-            this.state.firstName = data.firstName;
             console.log(this.state.firstName);
           });
         }
@@ -167,8 +169,20 @@ class StudentProfilePage extends React.Component {
       }
     );
   };
-
+  validate = () => {
+    if (
+      this.state.firstName === "" ||
+      this.state.lastName === "" ||
+      this.state.age < 0
+    ) {
+      this.state.validated = false;
+    } else {
+      this.state.validated = true;
+    }
+  };
   render() {
+    const [form] = Form.useForm();
+
     const formItemLayout = {
       labelCol: {
         xs: {
@@ -188,17 +202,6 @@ class StudentProfilePage extends React.Component {
       },
     };
 
-    const sharedProps = {
-      defaultValue: this.state.firstName,
-    };
-
-    const residences = [
-      {
-        value: this.state.firstName,
-        label: "First Name",
-      },
-    ];
-
     return (
       <Layout>
         <NavBarMain />
@@ -211,12 +214,6 @@ class StudentProfilePage extends React.Component {
               onBack={() => window.history.back()}
               title="Home"
               subTitle="Student profile"
-              // extra={[
-              //   <Button key="2">Update</Button>,
-              //   <Button key="1" type="danger">
-              //     Delete
-              //   </Button>,
-              // ]}
             ></PageHeader>
             <Divider />
             <Layout.Content
@@ -224,64 +221,144 @@ class StudentProfilePage extends React.Component {
               style={{ padding: "0 50px", marginTop: 20 }}
             >
               <Row>
-                <Col span={8} offset={8}>
-                  <Image width={200} height={200} />
-                  <Form {...formItemLayout} scrollToFirstError>
-                    <Form.Item
-                      name="firstName"
-                      label="First Name"
-                      rules={[{ required: true }]}
-                      onChange={this.handleChange.bind(this)}
-                    >
+                <Col span={4}>
+                  <Image
+                    width={200}
+                    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                  />
+                </Col>
+                <Col span={6}>
+                  <Form {...formItemLayout}>
+                    <Form.Item label="First Name">
                       <span className="ant-form-text">
                         {this.state.firstName}
                       </span>
                     </Form.Item>
-                    <Form.Item label="Last Name" rules={[{ required: true }]}>
-                      <Input
-                        value={this.state.lastName}
-                        onChange={this.handleChange.bind(this)}
-                      />
+                    <Form.Item label="Last Name">
+                      <span className="ant-form-text">
+                        {this.state.lastName}
+                      </span>
                     </Form.Item>
-                    <Form.Item
-                      name="input-number"
-                      label="Age"
-                      rules={[{ type: "number", min: 0, max: 99 }]}
-                    >
-                      <InputNumber
-                        min={1}
-                        max={100}
-                        name="age"
-                        value={this.state.age}
-                        onChange={this.handleChange.bind(this)}
-                      />
+                    <Form.Item label="Age">
+                      <span className="ant-form-text">{this.state.age}</span>
                     </Form.Item>
 
-                    <Form.Item
-                      name="email"
-                      label="E-mail"
-                      onChange={this.handleChange.bind(this)}
-                      rules={[
-                        {
-                          type: "email",
-                          message: "The input is not valid E-mail!",
-                        },
-                        {
-                          required: true,
-                          message: "Please input your E-mail!",
-                        },
-                      ]}
-                    >
-                      <Input
-                        name="email"
-                        disabled={this.state.plaintext}
-                        bordered={!this.state.plaintext}
-                        value={this.state.email}
-                      />
+                    <Form.Item label="E-mail">
+                      <span className="ant-form-text">{this.state.email}</span>
+                    </Form.Item>
+                    <Form.Item>
+                      <Button
+                        onClick={() => {
+                          this.setState({ visibleUpdate: true });
+                        }}
+                      >
+                        Update
+                      </Button>
+                      ,
+                      <Button
+                        onClick={() => {
+                          this.setState({ visibleDelete: true });
+                        }}
+                      >
+                        Delete
+                      </Button>
                     </Form.Item>
                   </Form>
                 </Col>
               </Row>
+              <Modal
+                visible={this.state.visibleUpdate}
+                title="Update your`s information"
+                okText="Update"
+                cancelText="Cancel"
+                onCancel={() => {
+                  this.getUserById();
+                  this.setState({ visibleUpdate: false });
+                  console.log(this.state.firstName);
+                  this.setState({ plaintext: true, update: true });
+                }}
+                onOk={() => {
+                  this.validate.bind(this);
+                  if (this.state.validated) {
+                    console.log(this.state.firstName);
+                  }
+                }}
+              >
+                <Form
+                  layout="vertical"
+                  initialValues={{
+                    modifier: "public",
+                    remember: false,
+                    ["firstName"]: this.state.firstName,
+                  }}
+                  name="form_in_modal"
+                >
+                  <Form.Item
+                    name="name"
+                    label="Name"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input the name!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      name="firstName"
+                      type="text"
+                      defaultValue={"fffffffffffff"}
+                      onChange={this.handleChange.bind(this)}
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="surname"
+                    label="Surname"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input the surname!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      name="lastName"
+                      type="textarea"
+                      onChange={this.handleChange.bind(this)}
+                      defaultValue={this.state.lastName}
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="age"
+                    label="Age"
+                    rules={[
+                      {
+                        required: true,
+                        type: "number",
+                        min: 0,
+                        max: 99,
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      name="age"
+                      onChange={this.handleChange.bind(this)}
+                      defaultValue={this.state.age}
+                    />
+                  </Form.Item>
+                </Form>
+              </Modal>
+              <Modal
+                title="Confirm delete"
+                visible={this.state.visibleDelete}
+                okText="Yes"
+                cancelText="No"
+                onOk={this.handleDeleteUser.bind(this)}
+                onCancel={() => {
+                  this.setState({ visibleDelete: false });
+                }}
+              >
+                <p>Do you really want to delete?</p>
+              </Modal>
             </Layout.Content>
           </React.Fragment>
         )}
