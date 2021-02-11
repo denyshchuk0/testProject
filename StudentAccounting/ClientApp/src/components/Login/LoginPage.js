@@ -46,15 +46,6 @@ export default class LoginPage extends React.Component {
   }
 
   handleSubmit = (event) => {
-    // const form = this.refs["form"];
-    // if (form.checkValidity() === false) {
-    //   event.preventDefault();
-    //   event.stopPropagation();
-
-    //   this.setState({ validated: true });
-    //   return;
-    // }
-
     const data = {
       email: this.state.email,
       password: this.state.password,
@@ -70,7 +61,6 @@ export default class LoginPage extends React.Component {
     const data = {
       token: authResponse.accessToken,
     };
-
     this.login("authenticate/facebook-login", data);
   }
 

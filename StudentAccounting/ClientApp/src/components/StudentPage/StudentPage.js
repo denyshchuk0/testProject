@@ -1,7 +1,6 @@
 import React from "react";
 import CourseCard from "./CourseCard";
-import { Container, Row } from "react-bootstrap";
-import { Pagination } from "antd";
+import { Pagination, Layout, Row, Col, Divider } from "antd";
 import { BASE_URL } from "../utils";
 import { Spin, message } from "antd";
 
@@ -50,25 +49,31 @@ export default class SudentPage extends React.Component {
     const courses = this.props.courses;
     return (
       <React.Fragment>
-        {this.state.loading ? (
-          <Container>
-            <Row className="justify-content-md-center">
+        <Layout.Content style={{ padding: "0 50px" }}>
+          {this.state.loading ? (
+            <Row>
               <Spin size="large" />
             </Row>
-          </Container>
-        ) : (
-          <div>
-            {courses.map((course) => (
-              <CourseCard key={course.id} courseObj={course} />
-            ))}
-            <Pagination
-              onChange={this.onChange.bind(this)}
-              pageSize={1}
-              defaultCurrent={this.state.startPage}
-              total={this.state.coursesCount}
-            />
-          </div>
-        )}
+          ) : (
+            <Row>
+              <Divider orientation="left">Courses</Divider>
+
+              <Col span={18} offset={3}>
+                <div>
+                  {courses.map((course) => (
+                    <CourseCard key={course.id} courseObj={course} />
+                  ))}
+                  <Pagination
+                    onChange={this.onChange.bind(this)}
+                    pageSize={2}
+                    defaultCurrent={this.state.startPage}
+                    total={this.state.coursesCount}
+                  />
+                </div>
+              </Col>
+            </Row>
+          )}
+        </Layout.Content>
       </React.Fragment>
     );
   }

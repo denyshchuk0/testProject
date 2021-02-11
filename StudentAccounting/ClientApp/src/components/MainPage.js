@@ -1,17 +1,17 @@
 import React, { Component } from "react";
-import { Container } from "react-bootstrap";
 import StudentPageContainer from "././StudentPage/StudentPageContainer";
 import NavBarMain from "./NavBarMain";
+import { message, Layout, Input, Button, Divider } from "antd";
 
 export default class MainPage extends Component {
   static displayName = MainPage.name;
 
   render() {
     return (
-      <Container>
+      <Layout>
         <NavBarMain />
         <StudentPageContainer />
-      </Container>
+      </Layout>
     );
   }
 }

@@ -49,6 +49,7 @@ class StudentProfilePage extends React.Component {
         age: parseInt(user.age, 10),
         email: user.email,
       });
+      console.log(user);
       this.setState({ loading: false });
     } else {
       this.getUserById();

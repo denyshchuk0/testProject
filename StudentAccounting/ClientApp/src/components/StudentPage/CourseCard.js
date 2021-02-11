@@ -1,10 +1,10 @@
 import React from "react";
 import moment from "moment";
 
-import { Card, Button } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { withRouter } from "react-router";
 import { BASE_URL } from "../utils";
-import { message, DatePicker } from "antd";
+import { message, DatePicker, Divider, Button, Row, Col, Tag } from "antd";
 
 class CourseCard extends React.Component {
   constructor(props) {
@@ -78,28 +78,40 @@ class CourseCard extends React.Component {
 
   render() {
     return (
-      <Card style={{ margin: 10 }}>
-        <Card.Header as="h5">Cours #{this.props.courseObj.id}</Card.Header>
-        <Card.Body>
-          <Card.Title>{this.props.courseObj.name}</Card.Title>
-          <Card.Text>{this.props.courseObj.description}</Card.Text>
-          <Button
-            variant={this.state.color}
-            disabled={this.state.disabled}
-            courseid={this.props.courseObj.id}
-            onClick={this.handleSubmit.bind(this)}
-          >
-            Sub.
-          </Button>
-          <DatePicker
-            style={{ margin: 5 }}
-            disabledDate={this.disabledDate.bind(this)}
-            defaultValue={this.state.defaultDate}
-            onChange={this.onChange.bind(this)}
-            disabled={this.state.disabled}
-          />
-        </Card.Body>
-      </Card>
+      <div>
+        <Card style={{ margin: 20 }}>
+          <Card.Header as="h5">
+            <Row>
+              <Col span={12}>Cours #{this.props.courseObj.id}</Col>
+              <Col span={6} offset={6}>
+                <Tag hidden={!this.state.disabled} color="success">
+                  you are subscribed to this course
+                </Tag>
+              </Col>
+            </Row>
+          </Card.Header>
+          <Card.Body>
+            <Card.Title>{this.props.courseObj.name}</Card.Title>
+            <Card.Text>{this.props.courseObj.description}</Card.Text>
+            <Button
+              type="primary"
+              variant={this.state.color}
+              disabled={this.state.disabled}
+              courseid={this.props.courseObj.id}
+              onClick={this.handleSubmit.bind(this)}
+            >
+              Subscribe
+            </Button>
+            <DatePicker
+              style={{ margin: 5 }}
+              disabledDate={this.disabledDate.bind(this)}
+              defaultValue={this.state.defaultDate}
+              onChange={this.onChange.bind(this)}
+              disabled={this.state.disabled}
+            />
+          </Card.Body>
+        </Card>
+      </div>
     );
   }
 }
