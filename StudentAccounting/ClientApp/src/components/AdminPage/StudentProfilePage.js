@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-
-//import { Form, Col, Container, Row, Button } from "react-bootstrap";
+import React from "react";
 import NavBarMain from "../NavBarMain";
+import anon from "../img/anon.svg";
 import {
   Spin,
   message,
@@ -16,12 +15,10 @@ import {
   Input,
   Divider,
   Modal,
-  Radio,
 } from "antd";
 import "../style/StudentProfile.css";
 import { withRouter } from "react-router";
 import { BASE_URL } from "../utils";
-import { ModalFooter } from "react-bootstrap";
 
 class StudentProfilePage extends React.Component {
   constructor(props) {
@@ -129,15 +126,7 @@ class StudentProfilePage extends React.Component {
     );
   }
 
-  handleSaveUpdateUser = (event) => {
-    const form = this.refs["form"];
-
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.setState({ validated: true });
-      return;
-    }
+  handleSaveUpdateUser = () => {
     const data = {
       id: this.state.id,
       firstName: this.state.firstName,
@@ -163,7 +152,7 @@ class StudentProfilePage extends React.Component {
         } else {
           message.info("User was updated!");
 
-          this.setState({ plaintext: true, update: true });
+          this.setState({ visibleUpdate: false });
         }
         return response;
       }
@@ -180,9 +169,8 @@ class StudentProfilePage extends React.Component {
       this.state.validated = true;
     }
   };
-  render() {
-    const [form] = Form.useForm();
 
+  render() {
     const formItemLayout = {
       labelCol: {
         xs: {
@@ -220,274 +208,155 @@ class StudentProfilePage extends React.Component {
               className="site-layout"
               style={{ padding: "0 50px", marginTop: 20 }}
             >
-              <Row>
-                <Col span={4}>
-                  <Image
-                    width={200}
-                    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                  />
-                </Col>
-                <Col span={6}>
-                  <Form {...formItemLayout}>
-                    <Form.Item label="First Name">
-                      <span className="ant-form-text">
-                        {this.state.firstName}
-                      </span>
-                    </Form.Item>
-                    <Form.Item label="Last Name">
-                      <span className="ant-form-text">
-                        {this.state.lastName}
-                      </span>
-                    </Form.Item>
-                    <Form.Item label="Age">
-                      <span className="ant-form-text">{this.state.age}</span>
-                    </Form.Item>
+              <div style={{ minHeight: 436 }}>
+                <Row>
+                  <Col span={4} offset={3}>
+                    <Image width={200} src={anon} />
+                  </Col>
+                  <Col span={7}>
+                    <Form {...formItemLayout}>
+                      <Form.Item label="First Name">
+                        <span className="ant-form-text">
+                          {this.state.firstName}
+                        </span>
+                      </Form.Item>
+                      <Form.Item label="Last Name">
+                        <span className="ant-form-text">
+                          {this.state.lastName}
+                        </span>
+                      </Form.Item>
+                      <Form.Item label="Age">
+                        <span className="ant-form-text">{this.state.age}</span>
+                      </Form.Item>
 
-                    <Form.Item label="E-mail">
-                      <span className="ant-form-text">{this.state.email}</span>
+                      <Form.Item label="E-mail">
+                        <span className="ant-form-text">
+                          {this.state.email}
+                        </span>
+                      </Form.Item>
+                      <Form.Item>
+                        <Button
+                          className="udBtn"
+                          onClick={() => {
+                            this.setState({ visibleUpdate: true });
+                          }}
+                        >
+                          Update
+                        </Button>
+                        ,
+                        <Button
+                          className="udBtn"
+                          danger
+                          onClick={() => {
+                            this.setState({ visibleDelete: true });
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </Form.Item>
+                    </Form>
+                  </Col>
+                </Row>
+                <Modal
+                  visible={this.state.visibleUpdate}
+                  title="Update your`s information"
+                  okText="Update"
+                  cancelText="Cancel"
+                  destroyOnClose={true}
+                  onCancel={() => {
+                    this.getUserById();
+                    this.setState({ visibleUpdate: false });
+                  }}
+                  onOk={() => {
+                    this.validate();
+                    if (this.state.validated) {
+                      this.handleSaveUpdateUser();
+                    }
+                  }}
+                >
+                  <Form
+                    layout="vertical"
+                    initialValues={{
+                      modifier: "public",
+                      remember: false,
+                    }}
+                    name="form_in_modal"
+                  >
+                    <Form.Item
+                      name="name"
+                      label="Name"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input the name!",
+                        },
+                      ]}
+                    >
+                      <Input
+                        name="firstName"
+                        type="text"
+                        defaultValue={this.state.firstName}
+                        onChange={this.handleChange.bind(this)}
+                      />
                     </Form.Item>
-                    <Form.Item>
-                      <Button
-                        onClick={() => {
-                          this.setState({ visibleUpdate: true });
-                        }}
-                      >
-                        Update
-                      </Button>
-                      ,
-                      <Button
-                        onClick={() => {
-                          this.setState({ visibleDelete: true });
-                        }}
-                      >
-                        Delete
-                      </Button>
+                    <Form.Item
+                      name="surname"
+                      label="Surname"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input the surname!",
+                        },
+                      ]}
+                    >
+                      <Input
+                        name="lastName"
+                        type="textarea"
+                        onChange={this.handleChange.bind(this)}
+                        defaultValue={this.state.lastName}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      name="age"
+                      label="Age"
+                      rules={[
+                        {
+                          required: true,
+                          type: "number",
+                          min: 0,
+                          max: 99,
+                        },
+                      ]}
+                    >
+                      <InputNumber
+                        name="age"
+                        onChange={this.handleChange.bind(this)}
+                        defaultValue={this.state.age}
+                      />
                     </Form.Item>
                   </Form>
-                </Col>
-              </Row>
-              <Modal
-                visible={this.state.visibleUpdate}
-                title="Update your`s information"
-                okText="Update"
-                cancelText="Cancel"
-                onCancel={() => {
-                  this.getUserById();
-                  this.setState({ visibleUpdate: false });
-                  console.log(this.state.firstName);
-                  this.setState({ plaintext: true, update: true });
-                }}
-                onOk={() => {
-                  this.validate.bind(this);
-                  if (this.state.validated) {
-                    console.log(this.state.firstName);
-                  }
-                }}
-              >
-                <Form
-                  layout="vertical"
-                  initialValues={{
-                    modifier: "public",
-                    remember: false,
-                    ["firstName"]: this.state.firstName,
+                </Modal>
+                <Modal
+                  title="Confirm delete"
+                  visible={this.state.visibleDelete}
+                  okText="Yes"
+                  cancelText="No"
+                  onOk={this.handleDeleteUser.bind(this)}
+                  onCancel={() => {
+                    this.setState({ visibleDelete: false });
                   }}
-                  name="form_in_modal"
                 >
-                  <Form.Item
-                    name="name"
-                    label="Name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input the name!",
-                      },
-                    ]}
-                  >
-                    <Input
-                      name="firstName"
-                      type="text"
-                      defaultValue={"fffffffffffff"}
-                      onChange={this.handleChange.bind(this)}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    name="surname"
-                    label="Surname"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input the surname!",
-                      },
-                    ]}
-                  >
-                    <Input
-                      name="lastName"
-                      type="textarea"
-                      onChange={this.handleChange.bind(this)}
-                      defaultValue={this.state.lastName}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    name="age"
-                    label="Age"
-                    rules={[
-                      {
-                        required: true,
-                        type: "number",
-                        min: 0,
-                        max: 99,
-                      },
-                    ]}
-                  >
-                    <InputNumber
-                      name="age"
-                      onChange={this.handleChange.bind(this)}
-                      defaultValue={this.state.age}
-                    />
-                  </Form.Item>
-                </Form>
-              </Modal>
-              <Modal
-                title="Confirm delete"
-                visible={this.state.visibleDelete}
-                okText="Yes"
-                cancelText="No"
-                onOk={this.handleDeleteUser.bind(this)}
-                onCancel={() => {
-                  this.setState({ visibleDelete: false });
-                }}
-              >
-                <p>Do you really want to delete?</p>
-              </Modal>
+                  <p>Do you really want to delete?</p>
+                </Modal>
+              </div>
             </Layout.Content>
+            <Divider />
           </React.Fragment>
         )}
+        <Layout.Footer>Help!</Layout.Footer>
       </Layout>
     );
   }
-}
-
-{
-  /* {this.state.loading ? (
-            <Row className="justify-content-md-center">
-              <Spin size="large" />
-            </Row>
-        ) : (
-          <Row noGutters className="justify-content-md-center">
-            <Col xs={6}>
-              <Form
-                style={{ margin: 10 }}
-                noValidate
-                validated={this.state.validated}
-                ref="form"
-              >
-                <Form.Group as={Row} controlId="formName">
-                  <Form.Label className="lbForm" column sm="6">
-                    Name
-                  </Form.Label>
-                  <Col sm="6">
-                    <Form.Control
-                      required
-                      type="text"
-                      value={this.state.firstName}
-                      name="firstName"
-                      onChange={this.handleChange.bind(this)}
-                      readOnly={this.state.plaintext}
-                    />
-                  </Col>
-                </Form.Group>
-                <Form.Group as={Row} controlId="formSurname">
-                  <Form.Label className="lbForm" column sm="6">
-                    Surname
-                  </Form.Label>
-                  <Col sm="6">
-                    <Form.Control
-                      required
-                      type="text"
-                      value={this.state.lastName}
-                      name="lastName"
-                      onChange={this.handleChange.bind(this)}
-                      readOnly={this.state.plaintext}
-                    />
-                  </Col>
-                </Form.Group>
-                <Form.Group as={Row} controlId="formPlaintextEmail">
-                  <Form.Label className="lbForm" column sm="6">
-                    Email
-                  </Form.Label>
-                  <Col sm="6">
-                    <Form.Control
-                      required
-                      type="email"
-                      value={this.state.email}
-                      name="email"
-                      readOnly
-                    />
-                  </Col>
-                </Form.Group>
-                <Form.Group as={Row} controlId="formAge">
-                  <Form.Label className="lbForm" column sm="6">
-                    Age
-                  </Form.Label>
-                  <Col sm="6">
-                    <Form.Control
-                      type="number"
-                      value={this.state.age}
-                      name="age"
-                      onChange={this.handleChange.bind(this)}
-                      readOnly={this.state.plaintext}
-                    />
-                  </Col>
-                </Form.Group>
-                  <Row className="justify-content-md-center">
-                    <Col lg="4">
-                      <React.Fragment>
-                        {this.state.update ? (
-                          <Popconfirm
-                            title="Sure to update?"
-                            onConfirm={this.handleUpdateUser.bind(this)}
-                          >
-                            <Button className="udBtn" variant="warning">
-                              Update
-                            </Button>
-                          </Popconfirm>
-                        ) : (
-                          <Button
-                            className="udBtn"
-                            variant="warning"
-                            onClick={this.handleSaveUpdateUser.bind(this)}
-                          >
-                            Save
-                          </Button>
-                        )}
-                      </React.Fragment>
-                    </Col>
-                    <Col lg="4">
-                      <React.Fragment>
-                        {this.state.update ? (
-                          <Popconfirm
-                            title="Sure to delete?"
-                            onConfirm={this.handleDeleteUser.bind(this)}
-                          >
-                            <Button className="udBtn" variant="danger">
-                              Delete
-                            </Button>
-                          </Popconfirm>
-                        ) : (
-                          <Button
-                            className="udBtn"
-                            variant="danger"
-                            onClick={this.handleCancelUpdateUser.bind(this)}
-                          >
-                            Cancel
-                          </Button>
-                        )}
-                      </React.Fragment>
-                    </Col>
-                  </Row>
-              </Form>
-            </Col>
-          </Row> */
 }
 
 export default withRouter(StudentProfilePage);

@@ -1,6 +1,5 @@
 import React from "react";
-//import { Container, FormControl, Button } from "react-bootstrap";
-import { Table, message, Layout, Input, Button } from "antd";
+import { Table, message, Layout, Input, Button, Divider } from "antd";
 import NavBarMain from "../NavBarMain";
 import { BASE_URL } from "../utils";
 import moment from "moment";
@@ -178,20 +177,6 @@ export default class AdminPage extends React.Component {
               onChange={this.onSearchParamChange.bind(this)}
               onSearch={this.handleSubmit}
             />
-            {/* <Form inline style={{ float: "right" }}>
-          <FormControl
-            type="text"
-            placeholder="Search"
-            className="mr-sm-2"
-            value={this.props.searchParam}
-            name="searchParam"
-          />
-          <Button
-            variant="outline-success"
-          >
-            Search
-          </Button>
-        </Form> */}
             <Table
               onChange={this.handleChange.bind(this)}
               columns={this.state.columnsTmp}
@@ -233,8 +218,9 @@ export default class AdminPage extends React.Component {
               dataSource={this.props.users}
               loading={this.state.loading}
             />
-            ,
+            <Divider />
           </Layout.Content>
+          <Layout.Footer></Layout.Footer>
         </Layout>
       </React.Fragment>
     );

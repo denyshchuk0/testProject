@@ -11,9 +11,13 @@
 }
 
 .udBtn {
-  width: 157px;
+  width: 113px;
 }
 
 .ant-divider-horizontal {
   margin: 0px;
+}
+.site-layout-content {
+  width: 100%;
+  height: 100%;
 }
