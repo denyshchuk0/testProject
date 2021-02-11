@@ -65,7 +65,6 @@ export default class LoginPage extends React.Component {
   }
 
   login(route, data) {
-    this.setState({ loading: true });
     const request = {
       method: "POST",
       headers: new Headers({ "Content-Type": "application/json" }),
@@ -77,6 +76,7 @@ export default class LoginPage extends React.Component {
         if (!response.ok) {
           message.info(json.message);
         } else {
+          this.setState({ loading: true });
           localStorage.setItem("user", JSON.stringify(json));
           localStorage.setItem("token", json.token);
           localStorage.setItem("role", json.name);
@@ -110,22 +110,20 @@ export default class LoginPage extends React.Component {
 
     return (
       <React.Fragment>
-        {this.state.loading ? (
-          <Row>
-            <Col span={4} offset={10}>
-              <Spin size="large" />
-            </Col>
-          </Row>
-        ) : (
-          <Layout>
-            <Header>
-              <div className="logo">
-                <Typography.Text level={5} keyboard>
-                  Student Accounting
-                </Typography.Text>
-              </div>
-            </Header>
-            <Content>
+        <Layout>
+          <Header>
+            <div className="logo">
+              <Typography.Text level={5} keyboard>
+                Student Accounting
+              </Typography.Text>
+            </div>
+          </Header>
+          {this.state.loading ? (
+            <Row justify="space-around">
+              <Spin size="large" style={{ marginTop: 220 }} />
+            </Row>
+          ) : (
+            <Content style={{ minHeight: 525 }}>
               <Row>
                 <Col span={4} offset={10}>
                   <Logo />
@@ -207,9 +205,9 @@ export default class LoginPage extends React.Component {
                 </Col>
               </Row>
             </Content>
-            <Footer style={{ textAlign: "center" }}>2021</Footer>
-          </Layout>
-        )}
+          )}
+          <Footer style={{ textAlign: "center" }}>2021</Footer>
+        </Layout>
       </React.Fragment>
     );
   }

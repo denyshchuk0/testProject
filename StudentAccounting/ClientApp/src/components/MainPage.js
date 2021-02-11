@@ -8,7 +8,7 @@ export default class MainPage extends Component {
 
   render() {
     return (
-      <Layout>
+      <Layout className="site-layout">
         <NavBarMain />
         <StudentPageContainer />
       </Layout>

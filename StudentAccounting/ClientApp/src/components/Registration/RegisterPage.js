@@ -4,7 +4,6 @@ import { BASE_URL } from "../utils";
 import {
   Form,
   Input,
-  Select,
   Row,
   Col,
   Layout,
@@ -12,6 +11,7 @@ import {
   message,
   InputNumber,
   Typography,
+  Divider,
 } from "antd";
 
 export default class RegisrtyPage extends React.Component {
@@ -198,7 +198,9 @@ export default class RegisrtyPage extends React.Component {
             </Col>
           </Row>
         </Content>
-        <Footer>2021</Footer>
+        <Divider />
+
+        <Footer style={{ textAlign: "center" }}>Help!</Footer>
       </Layout>
     );
   }

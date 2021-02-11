@@ -49,31 +49,34 @@ export default class SudentPage extends React.Component {
     const courses = this.props.courses;
     return (
       <React.Fragment>
-        <Layout.Content style={{ padding: "0 50px" }}>
+        <Layout.Content style={{ minHeight: 525 }}>
+          <Divider orientation="left">Courses</Divider>
+
           {this.state.loading ? (
-            <Row>
-              <Spin size="large" />
+            <Row justify="space-around">
+              <Spin size="large" style={{ marginTop: 220 }} />
             </Row>
           ) : (
             <Row>
-              <Divider orientation="left">Courses</Divider>
-
               <Col span={18} offset={3}>
                 <div>
                   {courses.map((course) => (
                     <CourseCard key={course.id} courseObj={course} />
                   ))}
-                  <Pagination
-                    onChange={this.onChange.bind(this)}
-                    pageSize={2}
-                    defaultCurrent={this.state.startPage}
-                    total={this.state.coursesCount}
-                  />
+                  <Row justify="end" style={{ marginRight: 20 }}>
+                    <Pagination
+                      onChange={this.onChange.bind(this)}
+                      pageSize={2}
+                      defaultCurrent={this.state.startPage}
+                      total={this.state.coursesCount}
+                    />
+                  </Row>
                 </div>
               </Col>
             </Row>
           )}
         </Layout.Content>
+        <Layout.Footer style={{ textAlign: "center" }}>Help!</Layout.Footer>
       </React.Fragment>
     );
   }

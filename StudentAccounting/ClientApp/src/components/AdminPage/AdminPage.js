@@ -166,8 +166,7 @@ export default class AdminPage extends React.Component {
         <Layout className="layout">
           <NavBarMain />
           <Layout.Content
-            className="site-layout"
-            style={{ padding: "0 50px", marginTop: 64 }}
+            style={{ padding: "0 50px", minHeight: 300, marginTop: 44 }}
           >
             <Input.Search
               placeholder="input search text"
@@ -221,7 +220,7 @@ export default class AdminPage extends React.Component {
             />
             <Divider />
           </Layout.Content>
-          <Layout.Footer></Layout.Footer>
+          <Layout.Footer style={{ textAlign: "center" }}>Help! </Layout.Footer>
         </Layout>
       </React.Fragment>
     );

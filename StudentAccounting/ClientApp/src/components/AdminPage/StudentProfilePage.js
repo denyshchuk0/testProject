@@ -30,8 +30,6 @@ class StudentProfilePage extends React.Component {
       age: 0,
       email: "",
       loading: false,
-      plaintext: true,
-      update: true,
       validated: true,
       visibleUpdate: false,
       visibleDelete: false,
@@ -49,7 +47,6 @@ class StudentProfilePage extends React.Component {
         age: parseInt(user.age, 10),
         email: user.email,
       });
-      console.log(user);
       this.setState({ loading: false });
     } else {
       this.getUserById();
@@ -87,18 +84,14 @@ class StudentProfilePage extends React.Component {
     );
   }
 
-  handleUpdateUser() {
-    this.setState({ plaintext: false, update: false });
-  }
-
   handleCancelUpdateUser() {
     this.getUserById();
     this.setState({ visibleUpdate: false });
-    console.log(this.state.firstName);
-    this.setState({ plaintext: true, update: true });
   }
 
   getUserById() {
+    this.setState({ loading: true });
+
     const token = localStorage.getItem("token");
     const request = {
       method: "GET",
@@ -111,7 +104,6 @@ class StudentProfilePage extends React.Component {
         if (!response.ok) {
           message.info(response.message);
         } else {
-          this.setState({ loading: false });
           response.json().then((data) => {
             this.setState({
               id: data.id,
@@ -119,8 +111,8 @@ class StudentProfilePage extends React.Component {
               lastName: data.lastName,
               age: parseInt(data.age, 10),
               email: data.email,
+              loading: false,
             });
-            console.log(this.state.firstName);
           });
         }
       }
@@ -194,22 +186,21 @@ class StudentProfilePage extends React.Component {
     return (
       <Layout>
         <NavBarMain />
-        {this.state.loading ? (
-          <Spin size="large" />
-        ) : (
-          <React.Fragment>
-            <PageHeader
-              className="site-page-header"
-              onBack={() => window.history.back()}
-              title="Home"
-              subTitle="Student profile"
-            ></PageHeader>
-            <Divider />
-            <Layout.Content
-              className="site-layout"
-              style={{ padding: "0 50px", marginTop: 20 }}
-            >
-              <div style={{ minHeight: 436 }}>
+        <Layout.Content className="site-layout" style={{ minHeight: 530 }}>
+          <PageHeader
+            className="site-page-header"
+            onBack={() => window.history.back()}
+            title="Home"
+            subTitle="Student profile"
+          ></PageHeader>
+          <Divider />
+          {this.state.loading ? (
+            <Row justify="space-around">
+              <Spin size="large" style={{ marginTop: 220 }} />
+            </Row>
+          ) : (
+            <React.Fragment>
+              <div style={{ marginTop: 30 }}>
                 <Row>
                   <Col span={4} offset={3}>
                     <Image width={200} src={anon} />
@@ -350,11 +341,12 @@ class StudentProfilePage extends React.Component {
                   <p>Do you really want to delete?</p>
                 </Modal>
               </div>
-            </Layout.Content>
-            <Divider />
-          </React.Fragment>
-        )}
-        <Layout.Footer>Help!</Layout.Footer>
+            </React.Fragment>
+          )}
+        </Layout.Content>
+        <Divider />
+
+        <Layout.Footer style={{ textAlign: "center" }}>Help!</Layout.Footer>
       </Layout>
     );
   }
