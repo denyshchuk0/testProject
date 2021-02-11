@@ -81,6 +81,7 @@ export default class AdminPage extends React.Component {
   }
 
   onSearchParamChange(event) {
+    console.log(event.target.value);
     this.props.setSearchParamText(event.target.value);
   }
 
@@ -91,7 +92,7 @@ export default class AdminPage extends React.Component {
       sortOrder: this.state.defaultSortOrder,
       sortParameter: this.state.defaultSortParameter,
     };
-
+    console.log(data);
     this.getAllUsers(data, "users/all-users");
   }
 
@@ -175,7 +176,7 @@ export default class AdminPage extends React.Component {
               size="large"
               value={this.props.searchParam}
               onChange={this.onSearchParamChange.bind(this)}
-              onSearch={this.handleSubmit}
+              onSearch={this.handleSubmit.bind(this)}
             />
             <Table
               onChange={this.handleChange.bind(this)}
